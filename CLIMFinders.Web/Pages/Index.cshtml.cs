@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CLIMFinders.Pages
+namespace CLIMFinders.Web.Pages
 {
     //[Authorize(Roles = "SuperAdmin")]
     public class IndexModel : PageModel

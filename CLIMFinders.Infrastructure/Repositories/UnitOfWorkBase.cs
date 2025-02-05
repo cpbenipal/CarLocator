@@ -11,7 +11,7 @@ namespace CLIMFinders.Repositories
      
         public UnitOfWorkBase(ApplicationDbContext applicationDbContext)
         {
-            applicationDbContext = this.applicationDbContext;
+            this.applicationDbContext = applicationDbContext;
         } 
         #region Repository Manager
         public IRepositoryBase<T> GetRepository<T>() where T : class

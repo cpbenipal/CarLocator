@@ -7,9 +7,9 @@ using System.Text;
 namespace CLIMFinders.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
-    {
+    { 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-
+         
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<Businesses> Businesses { get; set; }

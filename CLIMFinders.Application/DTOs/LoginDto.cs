@@ -16,7 +16,7 @@ namespace CLIMFinders.Application.DTOs
         [Required, DataType(DataType.Password)]
         public string Password { get; set; }
     }
-    public class LoginResponse
+    public class LoginResponseDto
     {
         public int Id { get; set; }
         public string FullName { get; set; }

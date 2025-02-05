@@ -8,10 +8,8 @@ namespace CLIMFinders.Repositories
 {
     public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
-        private ApplicationDbContext _context;
-        private DbSet<T> table;
-         
-
+        private readonly ApplicationDbContext _context;
+        private DbSet<T> table; 
         public RepositoryBase(ApplicationDbContext _context)
         {
             this._context = _context;

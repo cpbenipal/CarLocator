@@ -12,6 +12,17 @@ logger.Info("Application is starting...");
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+    
+
+    // Clear default logging providers and use NLog
+    builder.Logging.ClearProviders();
+    builder.Host.UseNLog();
+    // Register JWT Middleware
+   // builder.Services.AddTransient<JwtMiddleware>();
+    builder.Services.ConfigureRepositoryWrapper();
+    // Add services to the container.
+    builder.Services.AddRazorPages();
+
     var config = builder.Configuration;
     // Configure JWT Authentication
     var jwtSettings = config.GetSection("JwtSettings");
@@ -31,24 +42,16 @@ try
                 IssuerSigningKey = new SymmetricSecurityKey(secretKey)
             };
         });
-    
 
-    // Clear default logging providers and use NLog
-    builder.Logging.ClearProviders();
-    builder.Host.UseNLog();
-    // Register JWT Middleware
-   // builder.Services.AddTransient<JwtMiddleware>();
-    builder.Services.ConfigureRepositoryWrapper();
-    // Add services to the container.
-    builder.Services.AddRazorPages();
 
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        options.UseSqlServer(connectionString));
     
     builder.Services.AddAuthentication();
     builder.Services.AddAuthorization();
-    builder.Services.AddControllersWithViews();
-
+    builder.Services.AddControllersWithViews(); 
+    builder.Services.AddAutoMapper(typeof(GenericMappingProfile));
     var app = builder.Build();
     
     // Configure the HTTP request pipeline.
@@ -68,6 +71,7 @@ try
     app.UseAuthorization();
 
     app.MapRazorPages();
+    app.UseStatusCodePagesWithRedirects("/Login?returnUrl={0}");
 
     app.Run();
 }

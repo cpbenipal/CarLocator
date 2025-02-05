@@ -1,5 +1,6 @@
 ﻿using CLIMFinders.Application.Interfaces;
 using CLIMFinders.Application.Services;
+using CLIMFinders.Infrastructure.Repositories;
 using CLIMFinders.Repositories;
 
 namespace CLIMFinders.Web.ServiceExtension
@@ -10,6 +11,8 @@ namespace CLIMFinders.Web.ServiceExtension
         {
             services.AddScoped<IJwtTokenService, JwtTokenService>(); 
             services.AddScoped<IUnitOfWork, UnitOfWorkBase>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IHashManager, HashManager>();
         }
     }
 }
