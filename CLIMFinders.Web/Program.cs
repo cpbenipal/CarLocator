@@ -9,28 +9,50 @@ using System.Text;
 
 var logger = LogManager.Setup().LoadConfigurationFromFile("NLog.config").GetCurrentClassLogger();
 logger.Info("Application is starting...");
+
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-    
-
-    // Clear default logging providers and use NLog
-    builder.Logging.ClearProviders();
-    builder.Host.UseNLog();
-    // Register JWT Middleware
-   // builder.Services.AddTransient<JwtMiddleware>();
-    builder.Services.ConfigureRepositoryWrapper();
-    // Add services to the container.
-    builder.Services.AddRazorPages();
-
     var config = builder.Configuration;
-    // Configure JWT Authentication
+
+    // Configure JWT Authentication Settings
     var jwtSettings = config.GetSection("JwtSettings");
     var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Secret"]);
 
+    // Enable CORS
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAll", policy =>
+        {
+            policy.WithOrigins(jwtSettings["Issuer"])
+                  .AllowAnyMethod()
+                  .AllowAnyHeader()
+                  .AllowCredentials();
+        });
+    });
+
+    // Configure Logging with NLog
+    builder.Logging.ClearProviders();
+    builder.Host.UseNLog();
+
+    // Register Services
+    builder.Services.ConfigureRepositoryWrapper();
+
+    // Add Controllers and Razor Pages
+    builder.Services.AddControllers();
+    builder.Services.AddRazorPages();
+
+    // Configure Database
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(connectionString));
+
+    // Configure JWT Authentication
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
+            options.RequireHttpsMetadata = false;
+            options.SaveToken = true;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -43,35 +65,49 @@ try
             };
         });
 
+    // Configure Authorization Policies
+    builder.Services.AddAuthorizationBuilder()
+        .AddPolicy("SuperAdminPolicy", policy => policy.RequireRole("SuperAdmin"))
+        .AddPolicy("UsersPolicy", policy => policy.RequireRole("Users"))
+        .AddPolicy("TowPolicy", policy => policy.RequireRole("Tow"))
+        .AddPolicy("ImpoundPolicy", policy => policy.RequireRole("Impound"))
+        .AddPolicy("IMCAndTowPolicy", policy => policy.RequireRole("Impound", "Tow"));
 
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(connectionString));
-    
-    builder.Services.AddAuthentication();
-    builder.Services.AddAuthorization();
-    builder.Services.AddControllersWithViews(); 
+    // Register AutoMapper
     builder.Services.AddAutoMapper(typeof(GenericMappingProfile));
+
     var app = builder.Build();
-    
-    // Configure the HTTP request pipeline.
+
+    // Configure Middleware Pipeline
     if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler("/Error");
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
 
-    app.UseHttpsRedirection();
-    app.UseStaticFiles();
+    app.UseMiddleware<JwtCookieMiddleware>(); // Custom Middleware to Extract JWT from Cookies
 
     app.UseRouting();
+    app.UseCors("AllowAll");
     app.UseAuthentication();
-    app.UseMiddleware<JwtMiddleware>();
-    app.UseAuthorization();
 
-    app.MapRazorPages();
-    app.UseStatusCodePagesWithRedirects("/Login?returnUrl={0}");
+    // Redirect Unauthorized Requests
+    app.UseStatusCodePages(async context =>
+    {
+        if (context.HttpContext.Response.StatusCode == 403) // Forbidden
+        {
+            context.HttpContext.Response.Redirect("/Unauthorized");
+        }
+    });
+
+    app.UseAuthorization();
+    app.UseStaticFiles();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+        endpoints.MapRazorPages();
+    });
 
     app.Run();
 }

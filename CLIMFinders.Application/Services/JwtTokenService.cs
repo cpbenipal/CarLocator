@@ -1,4 +1,6 @@
-﻿using CLIMFinders.Application.Interfaces;
+﻿using CLIMFinders.Application.DTOs;
+using CLIMFinders.Application.Enums;
+using CLIMFinders.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -7,34 +9,26 @@ using System.Text;
 
 namespace CLIMFinders.Application.Services
 {
-    public class JwtTokenService: IJwtTokenService
+    public class JwtTokenService(IConfiguration config) : IJwtTokenService
     {
-        private readonly IConfiguration _config;
+        private readonly IConfiguration _config = config;
 
-        public JwtTokenService(IConfiguration config)
-        {
-            _config = config;
-        }
-
-        public string GenerateToken(string userId, string role)
-        {
-            var jwtSettings = _config.GetSection("JwtSettings");
-            var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Secret"]);
-
-            var claims = new[]
+        public string GenerateToken(LoginResponseDto user)
+        { 
+            var claims = new List<Claim>
             {
-            new Claim(JwtRegisteredClaimNames.Sub, userId),
-            new Claim(ClaimTypes.Role, role),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+                new(ClaimTypes.Name, user.FullName),
+                new(ClaimTypes.Email, user.Email),
+                new(ClaimTypes.Role, value: Enum.GetName(typeof(RoleEnum), user.RoleId))
+            };
 
-            var credentials = new SigningCredentials(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha256);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Secret"]));
             var token = new JwtSecurityToken(
-                issuer: jwtSettings["Issuer"],
-                audience: jwtSettings["Audience"],
+                issuer: _config["JwtSettings:Issuer"],
+                audience: _config["JwtSettings:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtSettings["ExpiryMinutes"])),
-                signingCredentials: credentials
+                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["JwtSettings:ExpiryMinutes"])),
+                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);

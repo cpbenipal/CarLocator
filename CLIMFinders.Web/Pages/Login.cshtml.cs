@@ -1,6 +1,7 @@
 using CLIMFinders.Application.DTOs;
 using CLIMFinders.Application.Enums;
 using CLIMFinders.Application.Interfaces;
+using CLIMFinders.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,35 +10,40 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CLIMFinders.Web.Pages
 {
     [AllowAnonymous]
-    public class LoginModel : PageModel
+    public class LoginModel(IJwtTokenService jwtTokenService, IAuthService authService) : PageModel
     {
-        private readonly IAuthService authService;
-
-        public LoginModel(IAuthService authService)
-        {
-            this.authService = authService;
-        }
+        private readonly IAuthService authService = authService;
+        private readonly IJwtTokenService _jwtTokenService = jwtTokenService;
 
         public void OnGet()
-        {
-
+        { 
         }
-        public IActionResult OnPostAsync()
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
-            }
+            } 
 
             var result = authService.UserLogin(Input);
 
-            if (result!=null)
+            if (result != null)
             {
-                if(result.RoleId == (int)RoleEnum.SuperAdmin)
+                var token = _jwtTokenService.GenerateToken(result);
+
+                //Response.Cookies.Append("AuthToken", token, new CookieOptions
+                //{
+                //    HttpOnly = true,
+                //    Secure = true,
+                //    SameSite = SameSiteMode.Strict
+                //});
+                Response.Cookies.Append("AuthToken", token, new CookieOptions { HttpOnly = true, Secure = true, Expires = DateTime.UtcNow.AddHours(2) });
+                return result.RoleId switch
                 {
-                    return RedirectToPage("/Dashboard", new { area = "Admin" });
-                }
-                return RedirectToPage("/Index");
+                    (int)RoleEnum.SuperAdmin => RedirectToPage("/Dashboard", new { area = "Admin" }),
+                    (int)RoleEnum.Impound or (int)RoleEnum.Tow => RedirectToPage("/ManageVehicals", new { area = "Business" }),
+                    _ => RedirectToPage("/Index"),
+                };
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");

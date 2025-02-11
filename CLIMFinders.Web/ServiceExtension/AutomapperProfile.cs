@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CLIMFinders.Application.DTOs;
+using CLIMFinders.Domain.Entities;
 using Given.DataContext.Entities;
 using System.Diagnostics.Metrics;
 using System.Reflection;
@@ -11,6 +12,7 @@ namespace CLIMFinders.Web.ServiceExtension
         public GenericMappingProfile()
         {
             CreateMap<User, LoginResponseDto>().ReverseMap();
+            CreateMap<Businesses, RegisterDto>().ReverseMap();
         }
     }
 }

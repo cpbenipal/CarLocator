@@ -13,14 +13,19 @@ namespace CLIMFinders.Domain.Entities
         [Key]
         public int Id { get; set; }
         public string VIN { get; set; }
-        public string Make { get; set; }
-        public string Model { get; set; }
-        public int Year { get; set; }
-        public string Color { get; set; }
-        public string Status { get; set; }
+        public int MakeId { get; set; }
+        public int ModelId { get; set; }
+        public int Year { get; set; } 
+        public int ColorId { get; set; }
+        public int Status { get; set; }
         public string Note { get; set; }
+        public DateTime PickedOn { get;set;} = DateTime.Now;
         public int BusinessId { get; set; }
         [ForeignKey("BusinessId")]
-        public Businesses Businesses { get; set; } 
+        public Businesses Businesses { get; set; }
+        [ForeignKey("MakeId")]
+        public VehicleMake VehicleMake { get; set; } 
+        [ForeignKey("ModelId")]
+        public VehicleModel VehicleModel { get; set; } 
     }
 }

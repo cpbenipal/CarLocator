@@ -13,6 +13,8 @@ namespace CLIMFinders.Web.ServiceExtension
             services.AddScoped<IUnitOfWork, UnitOfWorkBase>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IHashManager, HashManager>();
+            services.AddScoped<IRegisterService, RegisterService>();
+            services.AddScoped<IVehicleService, VehicleService>();
         }
     }
 }

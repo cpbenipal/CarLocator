@@ -9,7 +9,7 @@ namespace CLIMFinders.Repositories
     public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         private readonly ApplicationDbContext _context;
-        private DbSet<T> table; 
+        private DbSet<T> table;
         public RepositoryBase(ApplicationDbContext _context)
         {
             this._context = _context;
@@ -19,9 +19,13 @@ namespace CLIMFinders.Repositories
         {
             return table.ToList();
         }
+        public IEnumerable<T> GetAllNoTracking()
+        {
+            return table.AsNoTracking().ToList();
+        }
         public IEnumerable<T> GetAllFiltered(Expression<Func<T, bool>> expression)
         {
-             var a=table.Where(expression).ToList();
+            var a = table.Where(expression).ToList();
             return a;
         }
         public T FirstOrDefaultAsync(Expression<Func<T, bool>> expression)
@@ -32,32 +36,46 @@ namespace CLIMFinders.Repositories
         {
             return table.Find(id);
         }
-        public T GetByInclude(Expression<Func<T, object>>[] includes, Expression<Func<T, bool>> expression)
+        public T GetByInclude(Func<T, bool> where, params Expression<Func<T, object>>[] navigationProperties)
         {
+            T item = null;
 
-            foreach (var include in includes)
-            {
-                table = (DbSet<T>)table.Include(include);
-            }
+            IQueryable<T> dbQuery = table;
 
-            return table.FirstOrDefault(expression);
+            //Apply eager loading
+            foreach (Expression<Func<T, object>> navigationProperty in navigationProperties)
+                dbQuery = dbQuery.Include<T, object>(navigationProperty);
+
+            item = dbQuery
+                .AsNoTracking() //Don't track any changes for the selected item
+                .FirstOrDefault(where); //Apply where clause
+
+            return item;
         }
-        public IEnumerable<T> GetAllInclude(Expression<Func<T, bool>>[] includes)
+        public IList<T> GetAllInclude(params Expression<Func<T, object>>[] navigationProperties)
         {
+            List<T> list;
 
-            foreach (var include in includes)
-            {
-                table = (DbSet<T>)table.Include(include);
-            }
+            IQueryable<T> dbQuery = table;
 
-            return table.ToList();
+            //Apply eager loading
+            foreach (Expression<Func<T, object>> navigationProperty in navigationProperties)
+                dbQuery = dbQuery.Include<T, object>(navigationProperty);
+
+            list = dbQuery
+                .AsNoTracking()
+                .ToList<T>();
+
+            return list;
         }
+
         public T Insert(T obj)
         {
             table.Add(obj);
             return obj;
         }
-        public List<T> InsertList(List<T> obj)
+         
+        public List<T> InsertRange(List<T> obj)
         {
             table.AddRange(obj);
             return obj;
@@ -68,20 +86,29 @@ namespace CLIMFinders.Repositories
             _context.Entry(obj).State = EntityState.Modified;
             return obj;
         }
-        public object Delete(object id)
+        public List<T> UpdateRange(List<T> obj)
         {
-            T existing = table.Find(id);
-            var res = table.Remove(existing);
-            return res;
+            obj.ToList().ForEach(e =>
+            {
+                _context.Entry(e).State = EntityState.Modified;
+            });
+            return obj;
         }
-        public void DeleteList(Expression<Func<T, bool>> expression)
+        public void Delete(object id)
+        { 
+            T existing = table.Find(id);
+            table.Remove(existing);
+
+        }
+        public void DeleteRange(Expression<Func<T, bool>> expression)
         {
             var list = table.Where(expression).ToList();
-            table.RemoveRange(list); 
+            table.RemoveRange(list);
         }
         public void Save()
         {
             _context.SaveChanges();
         }
+
     }
 }

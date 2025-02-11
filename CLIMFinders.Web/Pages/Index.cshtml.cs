@@ -6,20 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CLIMFinders.Web.Pages
-{
-    //[Authorize(Roles = "SuperAdmin")]
+{ 
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
-        private readonly IJwtTokenService _jwtTokenService;
-        public IndexModel(ILogger<IndexModel> logger, IJwtTokenService _jwtTokenService)
+        private readonly ILogger<IndexModel> _logger; 
+        public IndexModel(ILogger<IndexModel> logger)
         {
-            _logger = logger; this._jwtTokenService = _jwtTokenService;
+            _logger = logger;  
         }
 
         public void OnGet()
-        {
-            var token = _jwtTokenService.GenerateToken("1", "SuperAdmin");
+        {           
         }
     }
 }

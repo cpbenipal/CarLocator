@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CLIMFinders.Application.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace CLIMFinders.Application.Interfaces
 {
     public interface IJwtTokenService
     {
-        string GenerateToken(string userId, string role);
+        string GenerateToken(LoginResponseDto user);
     }
 }
