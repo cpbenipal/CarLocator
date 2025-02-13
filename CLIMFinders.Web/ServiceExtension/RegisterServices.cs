@@ -15,6 +15,7 @@ namespace CLIMFinders.Web.ServiceExtension
             services.AddScoped<IHashManager, HashManager>();
             services.AddScoped<IRegisterService, RegisterService>();
             services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<IUserService, UserService>();
         }
     }
 }

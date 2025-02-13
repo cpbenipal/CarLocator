@@ -3,69 +3,79 @@
 @{
     ViewData["Title"] = Model.Input.Id == 0 ? "Add Vehicle" : "Edit Vehicle";
 }
-<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-4">
-            <h2 class="text-center">@(Model.Input.Id == 0 ? "Add Vehicle" : "Edit Vehicle")</h2>
-
+        <div class="col-md-8">
+            <h2 class="text-center mb-4">@(Model.Input.Id == 0 ? "Add Vehicle" : "Edit Vehicle")</h2>
             <form asp-action="AddVehicle" method="post">
-                <input type="hidden" asp-for="Input.Id" />
-                <div class="form-group">
-                    <label asp-for="Input.VIN" class="form-label"></label>
-                    <input asp-for="Input.VIN" class="form-control" required />
-                    <span asp-validation-for="Input.VIN" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.PickedOn" class="form-label"></label>
-                    <input type="datetime-local" id="Input.PickedOn" required name="Input.PickedOn" class="form-control" />
-                    <span asp-validation-for="Input.PickedOn" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.MakeId" class="form-label"></label>
-                    <select asp-for="Input.MakeId" class="form-control" required asp-items="Model.VehicleMakes">
-                        <option value="">-- Choose One --</option>
-                    </select>
-                    <span asp-validation-for="Input.MakeId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.ModelId" class="form-label"></label>
-                    <select asp-for="Input.ModelId" class="form-control" required>
-                        <option value="">-- Choose One --</option>
-                    </select>
-                    <span asp-validation-for="Input.ModelId" class="text-danger"></span>
-                </div>
+                <input asp-for="Input.Id" type="hidden" />
 
-                <div class="form-group">
-                    <label asp-for="Input.Year" class="form-label"></label>
-                    <select asp-for="Input.Year" class="form-control" required asp-items="Model.ModelYear">
-                        <option value="">-- Choose One --</option>
-                    </select>
-                    <span asp-validation-for="Input.Year" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.ColorId" class="form-label"></label>
-                    <select asp-for="Input.ColorId" class="form-control" required asp-items="Model.VehicleColors">
-                        <option value="">-- Choose One --</option>
-                    </select>
-                    <span asp-validation-for="Input.ColorId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Status" class="form-label"></label>
-                    <select asp-for="Input.Status" class="form-control" required asp-items="Model.StatusOptions">
-                        <option value="">-- Choose One --</option>
-                    </select>
-                    <span asp-validation-for="Input.Status" class="text-danger"></span>
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Input.VIN" class="form-label"></label>
+                            <input asp-for="Input.VIN" class="form-control" required />
+                            <span asp-validation-for="Input.VIN" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Input.PickedOn" class="form-label"></label>
+                            <input type="datetime-local" asp-for="Input.PickedOn" required class="form-control" />
+                            <span asp-validation-for="Input.PickedOn" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Input.MakeId" class="form-label"></label>
+                            <select asp-for="Input.MakeId" class="form-control" required asp-items="Model.VehicleMakes">
+                                <option value="">-- Choose One --</option>
+                            </select>
+                            <span asp-validation-for="Input.MakeId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Input.ModelId" class="form-label"></label>
+                            <select asp-for="Input.ModelId" class="form-control" required asp-items="Model.VehicleModels">
+                                <option value="">-- Choose One --</option>
+                            </select>
+                            <span asp-validation-for="Input.ModelId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <!-- Right Column -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Input.Year" class="form-label"></label>
+                            <select asp-for="Input.Year" class="form-control" required asp-items="Model.ModelYear">
+                                <option value="">-- Choose One --</option>
+                            </select>
+                            <span asp-validation-for="Input.Year" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Input.ColorId" class="form-label"></label>
+                            <select asp-for="Input.ColorId" class="form-control" required asp-items="Model.VehicleColors">
+                                <option value="">-- Choose One --</option>
+                            </select>
+                            <span asp-validation-for="Input.ColorId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Input.Status" class="form-label"></label>
+                            <select asp-for="Input.Status" class="form-control" required asp-items="Model.StatusOptions">
+                                <option value="">-- Choose One --</option>
+                            </select>
+                            <span asp-validation-for="Input.Status" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.Note" class="form-label"></label>
-                    <textarea asp-for="Input.Note" class="form-control" rows="5"></textarea>
+                    <textarea asp-for="Input.Note" class="form-control" rows="2"></textarea>
                 </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                 <button type="submit" id="testButton" class="btn btn-success">Save </button>
                 <a href="@Url.Action("OnGet", "ManageVehicles")" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </div>
 </div>
-<script type="text/javascript" src="~/js/vehiclescripts.js"></script>
+
+<script type="text/javascript" src="~/customJs/vehiclescripts.js"></script>
+ 

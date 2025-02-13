@@ -1,41 +1,70 @@
-﻿<!DOCTYPE html>
+﻿ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - IMPOUND CAR FINDER</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - IMPOUND FINDER</title>
 
-    <meta content="" name="description" />
-    <meta content="" name="keywords" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta content="telephone=no" name="format-detection" />
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Find impounded cars quickly and easily." />
+    <meta name="keywords" content="impound, car finder, vehicle search" />
+    <meta name="format-detection" content="telephone=no" />
     <meta name="HandheldFriendly" content="true" />
-    <link rel="stylesheet" href="~/css/master.css" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
 
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="@Url.Content("~/css/master.css")" />  
+  
+    <!-- Load jQuery first -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Then load DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <!-- DataTables CSS (optional but recommended) -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <style>
+        /* Full height layout */
+        html, body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Main content should grow to fill space */
+        .main-content {
+            flex: 1;
+        }
+
+        /* Footer at the bottom */
+        .footer {
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            background: #f8f9fa;
+            border-top: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">CLIMFinders</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand" asp-area="" asp-page="/Index"><img src="~/images/logo-dark.jpg"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
-
+                    </ul>
+                    <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
@@ -56,19 +85,19 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <div class="container main-content">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted">
         <div class="container">
-            &copy; 2025 - IMPOUND CAR FINDER - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; @DateTime.Now.Year - IMPOUND FINDER - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
-
-
+      
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

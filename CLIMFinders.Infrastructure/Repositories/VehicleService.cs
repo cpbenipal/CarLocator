@@ -1,34 +1,27 @@
 ﻿using AutoMapper;
-using Azure;
 using CLIMFinders.Application.DTOs;
 using CLIMFinders.Application.Interfaces;
 using CLIMFinders.Domain.Entities;
-using Given.DataContext.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CLIMFinders.Infrastructure.Repositories
 {
-    public class VehicleService : IVehicleService
+    public class VehicleService(IUnitOfWork unitOfWork, IMapper mapper, IUserService userService) : IVehicleService
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IMapper mapper;
+        private readonly IUnitOfWork unitOfWork = unitOfWork;
+        private readonly IMapper mapper = mapper;
+        private readonly IUserService _userService = userService;
 
-        public VehicleService(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            this.unitOfWork = unitOfWork;
-            this.mapper = mapper;
-        }
-        public List<VehicleListDto> GetVehicles() 
+        public List<VehicleListDto> GetVehicles()
         {
             try
             {
                 var repository = unitOfWork.GetRepository<Vehicles>();
-                var response = repository.GetAllInclude().ToList();
-
+                var response = repository.GetAllInclude(v => v.VehicleMake, v => v.VehicleModel, v => v.VehicleColor).ToList();
                 var lstVehicles = mapper.Map<List<VehicleListDto>>(response);
                 lstVehicles.ForEach(v =>
                 {
-                    v.BoundStatus = v.Status.ToString();
+                    v.BoundStatus = StatusOptions().FirstOrDefault(e => e.Value == v.Status.ToString()).Text;
                 });
 
                 return lstVehicles;
@@ -69,7 +62,7 @@ namespace CLIMFinders.Infrastructure.Repositories
             try
             {
                 var repository = unitOfWork.GetRepository<VehicleModel>();
-                var response = repository.GetAll().Where(e => Id == 0 || e.Id == Id);
+                var response = repository.GetAll().Where(e => Id == 0 || e.MakeId == Id);
                 return DropdownHelper.GetDropdownList(response, e => e.Id, e => e.Name);
             }
             catch
@@ -92,7 +85,7 @@ namespace CLIMFinders.Infrastructure.Repositories
             int currentYear = DateTime.Now.Year;
 
             var years = new List<SelectListItem>();
-             
+
             for (int year = currentYear; year >= startYear; year--)
             {
                 years.Add(new SelectListItem { Value = year.ToString(), Text = year.ToString() });
@@ -127,10 +120,11 @@ namespace CLIMFinders.Infrastructure.Repositories
             }
             else
             {
-                if (model.Id > 0)
+                if (model.Id == 0)
                 {
                     var mappedObj = mapper.Map<Vehicles>(model);
-                    mappedObj.AddedById = mappedObj.ModifiedById = model.LoginId;
+                    mappedObj.BusinessId = _userService.GetBusinessId();
+                    mappedObj.AddedById = mappedObj.ModifiedById = _userService.GetUserId();
                     var entity = repository.Insert(mappedObj);
                     response.Id = entity.Id;
                     response.Name = entity.VIN;
@@ -139,7 +133,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                 else
                 {
                     var detail = repository.GetById(model.Id);
-                    detail.BusinessId = model.BusinessId;
+                    detail.BusinessId = _userService.GetBusinessId();
                     detail.Status = model.Status;
                     detail.VIN = model.VIN;
                     detail.ColorId = model.ColorId;
@@ -148,7 +142,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                     detail.Note = model.Note;
                     detail.PickedOn = model.PickedOn;
                     detail.Year = model.Year;
-                    detail.ModifiedById = model.LoginId;
+                    detail.ModifiedById = _userService.GetUserId();
                     repository.Update(detail);
                     response.Id = detail.Id;
                     response.Name = detail.VIN;
@@ -158,11 +152,24 @@ namespace CLIMFinders.Infrastructure.Repositories
             }
             return response;
         }
-
+        public VehicleDto GetVehicle(int Id)
+        {
+            try
+            {
+                var repository = unitOfWork.GetRepository<Vehicles>();
+                var response = repository.GetById(Id);
+                var vehicle = mapper.Map<VehicleDto>(response);
+                return vehicle;
+            }
+            catch
+            {
+                throw;
+            }
+        }
         bool IsVehicleExists(string vIN, int Id)
         {
             var repository = unitOfWork.GetRepository<Vehicles>();
-            return repository != null && repository.GetAll().Any(x => x.VIN == vIN && x.Id == Id);
+            return repository != null && repository.GetAll().Any(x => x.VIN == vIN && x.Id != Id);
         }
     }
 }

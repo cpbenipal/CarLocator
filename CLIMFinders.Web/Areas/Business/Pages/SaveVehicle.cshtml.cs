@@ -18,41 +18,45 @@ namespace CLIMFinders.Web.Areas.Business.Pages
         public List<SelectListItem> VehicleColors { get; set; }
         public List<SelectListItem> VehicleMakes { get; set; }
         public List<SelectListItem> ModelYear { get; set; }
+        public List<SelectListItem> VehicleModels { get; set; }
         public List<SelectListItem> StatusOptions { get; set; }
 
         public void OnGet(int? id)
+        {
+            if (id.HasValue)
+            {
+                Input = vehicleService.GetVehicle(id.Value);
+            }
+            BindDropdowns();
+        }
+
+        private void BindDropdowns()
         {
             VehicleMakes = vehicleService.GetVehicleMakes();
             VehicleColors = vehicleService.GetVehicleColors();
             ModelYear = vehicleService.PopulateYear();
             StatusOptions = vehicleService.StatusOptions();
-            if (id.HasValue)
+            if (Input.Id > 0)
             {
-                GetVehicle(id.Value);
+                VehicleModels = vehicleService.GetVehicleModel(Input.MakeId);
             }
-        }
-
-        private void GetVehicle(int value)
-        {
-            Input.Id = value;
         }
 
         public IActionResult OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
+                BindDropdowns();
                 return Page();
             }
             var result = vehicleService.SaveVehicle(Input);
-            if (result.Id > 0)
+            if (result.Id == -1)
             {
-                return RedirectToPage("/ManageVehicals", new { area = "Admin" });
-            }
-            else
-            {
+                BindDropdowns();
                 ModelState.AddModelError(string.Empty, result.Status);
             }
-            return Page();
+            return RedirectToPage("/ManageVehicals", new { area = "Business" });
+
         }
         [BindProperty]
         public VehicleDto Input { get; set; } = new();

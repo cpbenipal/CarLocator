@@ -26,6 +26,8 @@ namespace CLIMFinders.Domain.Entities
         [ForeignKey("MakeId")]
         public VehicleMake VehicleMake { get; set; } 
         [ForeignKey("ModelId")]
-        public VehicleModel VehicleModel { get; set; } 
+        public VehicleModel VehicleModel { get; set; }
+        [ForeignKey("ColorId")]
+        public VehicleColor VehicleColor { get; set; }
     }
 }

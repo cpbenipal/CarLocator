@@ -14,14 +14,18 @@ namespace CLIMFinders.Application.Services
         private readonly IConfiguration _config = config;
 
         public string GenerateToken(LoginResponseDto user)
-        { 
+        {
             var claims = new List<Claim>
             {
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Name, user.FullName),
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Role, value: Enum.GetName(typeof(RoleEnum), user.RoleId))
             };
-
+            if (!string.IsNullOrEmpty(user.BusinessId))
+            {
+                claims.Add(new Claim(CustomClaimTypes.BusinessId, user.BusinessId));
+            }
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Secret"]));
             var token = new JwtSecurityToken(
                 issuer: _config["JwtSettings:Issuer"],

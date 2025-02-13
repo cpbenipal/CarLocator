@@ -22,6 +22,6 @@ namespace CLIMFinders.Domain.Entities
         public string ZipCode { get; set; }
         public string? Description { get; set; }
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public User? User { get; set; }
     }
 }

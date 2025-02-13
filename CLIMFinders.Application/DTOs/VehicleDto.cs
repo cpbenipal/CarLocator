@@ -1,13 +1,16 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CLIMFinders.Application.DTOs
 {
-    public class VehicleDto: EntityDto
+    public class VehicleDto
     {
-        public int Id { get; set; } 
-        [RegularExpression(@"^[A-HJ-NPR-Za-hj-npr-z\d]{8}[\dX][A-HJ-NPR-Za-hj-npr-z\d]{2}\d{6}$",
-        ErrorMessage = "Invalid VIN number format.")]
+        public int Id { get; set; }
+        [Required]
+        [StringLength(17, MinimumLength = 17, ErrorMessage = "VIN must be exactly 17 characters.")]
+        [RegularExpression(@"^[A-HJ-NPR-Z0-9]+$", ErrorMessage = "VIN can only contain letters (A-Z, except I, O, Q) and numbers (0-9).")]
+
         [DisplayName("Vehicle Identification Number")]
         public string VIN { get; set; }
         [DisplayName("Make")]
@@ -19,9 +22,9 @@ namespace CLIMFinders.Application.DTOs
         [DisplayName("Color")]
         public int ColorId { get; set; }
         public int Status { get; set; }
-        public string Note { get; set; }
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Required")]
+        public string Note { get; set; }        
         [DisplayName("Vehicle Pickup Date & Time")]
+        [DataType(DataType.DateTime)]
         public DateTime PickedOn { get; set; } = DateTime.Now;
         public int BusinessId { get; set; }
     }
@@ -34,17 +37,18 @@ namespace CLIMFinders.Application.DTOs
     {
         public int Id { get; set; }
         public string VIN { get; set; }
+        public int MakeId { get; set; }
         public string Make { get; set; }
+        public int ModelId { get; set; }
         public string Model { get; set; }
-        [DisplayName("Picked Date")]
-        public DateTime PickedOn { get; set; }
-        [DisplayName("Last Updated")]
-        public DateTime ModifiedOn { get; set; }
         public int Year { get; set; }
+        public int ColorId { get; set; }
+        public string Color { get; set; }
         public int Status { get; set; }
-        [DisplayName("Status")]
+        public int BusinessId { get; set; }
         public string BoundStatus { get; set; }
-
+        [DataType(DataType.DateTime)]
+        public DateTime PickedOn { get; set; }
     }
 
 }

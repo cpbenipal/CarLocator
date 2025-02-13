@@ -21,6 +21,7 @@ namespace Given.DataContext.Entities
         public byte[]? Photo { get; set; }
         [ForeignKey("RoleId")]
         public Roles Roles { get; set; }
+        public Businesses? Businesses { get; set; }
 
     }
 }

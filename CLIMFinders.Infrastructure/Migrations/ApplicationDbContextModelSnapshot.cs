@@ -76,7 +76,8 @@ namespace CLIMFinders.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Businesses");
                 });
@@ -1041,6 +1042,8 @@ namespace CLIMFinders.Infrastructure.Migrations
 
                     b.HasIndex("BusinessId");
 
+                    b.HasIndex("ColorId");
+
                     b.HasIndex("MakeId");
 
                     b.HasIndex("ModelId");
@@ -1129,24 +1132,24 @@ namespace CLIMFinders.Infrastructure.Migrations
                         {
                             Id = 1,
                             AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 9, 13, 52, 37, 281, DateTimeKind.Local).AddTicks(4863),
+                            AddedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(2721),
                             Amount = 0m,
                             Duration = 0,
                             IsDeleted = false,
                             ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 9, 13, 52, 37, 281, DateTimeKind.Local).AddTicks(4876),
+                            ModifiedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(2734),
                             Tier = "Free Tier"
                         },
                         new
                         {
                             Id = 2,
                             AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 9, 13, 52, 37, 281, DateTimeKind.Local).AddTicks(4879),
+                            AddedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(2737),
                             Amount = 10m,
                             Duration = 1,
                             IsDeleted = false,
                             ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 9, 13, 52, 37, 281, DateTimeKind.Local).AddTicks(4879),
+                            ModifiedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(2738),
                             Tier = "Paid Tier"
                         });
                 });
@@ -1217,17 +1220,17 @@ namespace CLIMFinders.Infrastructure.Migrations
                         {
                             Id = 1,
                             AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 9, 13, 52, 37, 281, DateTimeKind.Local).AddTicks(5944),
-                            ConfirmedOn = new DateTime(2025, 2, 9, 13, 52, 37, 281, DateTimeKind.Local).AddTicks(5949),
+                            AddedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(3785),
+                            ConfirmedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(3789),
                             Email = "admin@admin.com",
                             FullName = "SuperAdmin",
                             IsConfirmed = true,
                             IsDeleted = false,
                             ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 9, 13, 52, 37, 281, DateTimeKind.Local).AddTicks(5947),
+                            ModifiedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(3786),
                             Password = "MDAwMA==",
-                            PasswordHash = new byte[] { 179, 151, 254, 60, 117, 180, 141, 225, 186, 242, 115, 59, 253, 111, 226, 159, 198, 68, 93, 150, 248, 1, 118, 254, 126, 236, 181, 222, 32, 197, 235, 189, 11, 194, 234, 225, 205, 120, 40, 36, 118, 179, 5, 164, 61, 140, 200, 31, 156, 190, 148, 32, 21, 28, 202, 1, 236, 25, 131, 82, 136, 162, 252, 1, 7, 115, 201, 49, 224, 159, 232, 179, 210, 210, 208, 81, 86, 244, 174, 4, 117, 8, 169, 4, 200, 20, 121, 89, 218, 99, 154, 151, 26, 21, 21, 208, 219, 44, 76, 31, 0, 22, 24, 89, 149, 87, 89, 39, 211, 162, 117, 148, 99, 74, 69, 122, 158, 116, 77, 100, 255, 194, 16, 125, 1, 77, 11, 184 },
-                            PasswordSalt = new byte[] { 159, 2, 167, 254, 55, 233, 244, 232, 76, 83, 18, 28, 25, 79, 175, 247, 225, 6, 52, 212, 160, 207, 180, 158, 15, 177, 156, 142, 41, 85, 175, 67, 168, 141, 181, 145, 162, 138, 94, 134, 5, 207, 110, 137, 208, 157, 62, 233, 25, 134, 29, 141, 199, 222, 145, 147, 133, 17, 21, 146, 24, 44, 241, 251 },
+                            PasswordHash = new byte[] { 28, 175, 105, 236, 37, 188, 192, 237, 28, 119, 135, 18, 176, 236, 92, 76, 68, 148, 119, 166, 199, 215, 235, 210, 104, 151, 224, 146, 83, 247, 90, 216, 254, 158, 25, 225, 131, 227, 197, 232, 233, 133, 90, 159, 185, 249, 224, 118, 121, 113, 205, 43, 183, 108, 220, 67, 42, 5, 221, 190, 11, 245, 124, 240, 179, 213, 115, 105, 202, 11, 99, 107, 191, 217, 214, 143, 5, 93, 239, 234, 151, 121, 9, 242, 215, 234, 189, 125, 85, 67, 137, 70, 243, 189, 8, 119, 118, 42, 42, 219, 205, 123, 242, 4, 29, 180, 93, 103, 20, 0, 53, 152, 118, 239, 45, 21, 216, 14, 41, 239, 5, 73, 29, 58, 227, 177, 253, 144 },
+                            PasswordSalt = new byte[] { 224, 123, 183, 47, 137, 172, 238, 85, 34, 196, 127, 134, 167, 111, 143, 118, 96, 126, 114, 42, 82, 152, 17, 91, 196, 25, 6, 48, 10, 198, 245, 6, 57, 53, 50, 47, 28, 108, 101, 72, 209, 41, 59, 172, 56, 95, 6, 27, 230, 107, 208, 151, 124, 33, 89, 187, 84, 175, 28, 157, 75, 124, 201, 229 },
                             RoleId = 1
                         });
                 });
@@ -1235,8 +1238,8 @@ namespace CLIMFinders.Infrastructure.Migrations
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Businesses", b =>
                 {
                     b.HasOne("Given.DataContext.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("Businesses")
+                        .HasForeignKey("CLIMFinders.Domain.Entities.Businesses", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1333,6 +1336,12 @@ namespace CLIMFinders.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CLIMFinders.Domain.Entities.VehicleColor", "VehicleColor")
+                        .WithMany()
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CLIMFinders.Domain.Entities.VehicleMake", "VehicleMake")
                         .WithMany()
                         .HasForeignKey("MakeId")
@@ -1346,6 +1355,8 @@ namespace CLIMFinders.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Businesses");
+
+                    b.Navigation("VehicleColor");
 
                     b.Navigation("VehicleMake");
 
@@ -1361,6 +1372,11 @@ namespace CLIMFinders.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("Given.DataContext.Entities.User", b =>
+                {
+                    b.Navigation("Businesses");
                 });
 #pragma warning restore 612, 618
         }

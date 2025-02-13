@@ -24,7 +24,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                 var login = unitOfWork.GetRepository<User>();
                 var encryptedText = _hashManager.EncryptPlainText(loginDto.Password);
 
-                var response = login.GetAll().FirstOrDefault(e => e.Email == loginDto.Email && e.Password == encryptedText && e.IsDeleted == false && e.IsConfirmed == true);
+                var response = login.GetAllInclude(navigationProperties: u => u.Businesses).FirstOrDefault(e => e.Email == loginDto.Email && e.Password == encryptedText && e.IsDeleted == false && e.IsConfirmed == true);
                 var mapped = _mapper.Map<LoginResponseDto>(response);
 
                 return mapped;

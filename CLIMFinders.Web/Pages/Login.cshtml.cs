@@ -30,13 +30,8 @@ namespace CLIMFinders.Web.Pages
             if (result != null)
             {
                 var token = _jwtTokenService.GenerateToken(result);
-
-                //Response.Cookies.Append("AuthToken", token, new CookieOptions
-                //{
-                //    HttpOnly = true,
-                //    Secure = true,
-                //    SameSite = SameSiteMode.Strict
-                //});
+                 
+                result.Token = token;
                 Response.Cookies.Append("AuthToken", token, new CookieOptions { HttpOnly = true, Secure = true, Expires = DateTime.UtcNow.AddHours(2) });
                 return result.RoleId switch
                 {
@@ -50,6 +45,6 @@ namespace CLIMFinders.Web.Pages
             return Page();
         }
         [BindProperty]
-        public LoginDto Input { get; set; }
+        public LoginDto Input { get; set; }  
     }
 }

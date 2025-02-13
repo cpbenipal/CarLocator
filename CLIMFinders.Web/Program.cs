@@ -2,6 +2,7 @@ using CLIMFinders.Infrastructure.Data;
 using CLIMFinders.Web.ServiceExtension;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
@@ -38,6 +39,10 @@ try
     // Register Services
     builder.Services.ConfigureRepositoryWrapper();
 
+    builder.Services.AddSingleton<IWebHostEnvironment>(builder.Environment);
+    builder.Services.AddSingleton<IFileProvider>(
+    new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
+    );
     // Add Controllers and Razor Pages
     builder.Services.AddControllers();
     builder.Services.AddRazorPages();
@@ -77,7 +82,9 @@ try
     builder.Services.AddAutoMapper(typeof(GenericMappingProfile));
 
     var app = builder.Build();
-
+   
+    app.UseCors("AllowAll");
+    app.UseStaticFiles();
     // Configure Middleware Pipeline
     if (!app.Environment.IsDevelopment())
     {
@@ -85,30 +92,34 @@ try
         app.UseHsts();
     }
 
+
     app.UseMiddleware<JwtCookieMiddleware>(); // Custom Middleware to Extract JWT from Cookies
 
     app.UseRouting();
-    app.UseCors("AllowAll");
+
     app.UseAuthentication();
 
     // Redirect Unauthorized Requests
     app.UseStatusCodePages(async context =>
     {
-        if (context.HttpContext.Response.StatusCode == 403) // Forbidden
+        if (context.HttpContext.Response.StatusCode == 403 && !context.HttpContext.Response.HasStarted || context.HttpContext.Response.StatusCode == 401) // Forbidden
         {
             context.HttpContext.Response.Redirect("/Unauthorized");
+        }
+        else if (context.HttpContext.Response.StatusCode == 404 && !context.HttpContext.Response.HasStarted)
+        {
+            context.HttpContext.Response.Redirect("/NotFound");
         }
     });
 
     app.UseAuthorization();
-    app.UseStaticFiles();
+
 
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapControllers();
         endpoints.MapRazorPages();
-    });
-
+    }); 
     app.Run();
 }
 catch (Exception ex)

@@ -1,13 +1,4 @@
-/*------------------------------------------------------------------
-[Master Stylesheet]
-
-Project:  Isnaider
-Version:  1.0
-Assigned to:  WebNik
-Primary use:  Isnaider
--------------------------------------------------------------------*/
-
-
+ 
 /* FONTS*/
 @import 'https://fonts.googleapis.com/css?family=Arimo:400,400i,700,700i';
 @import '../fonts/fontawesome-free-5.8.1/css/all.min.css';
@@ -21,20 +12,18 @@ Primary use:  Isnaider
 
 /* PLUGIN CSS */
 
-@import '../libs/bootstrap-4.1.3/bootstrap.css';                /* bootstrap */
-@import '../plugins/headers/header.css';                /* header */
-@import '../plugins/headers/yamm.css';                /* header */
-@import '../plugins/slider-pro/slider-pro.css';         /* main slider */
-@import '../plugins/slick/slick.css';         /* sliders */
-@import '../plugins/slick/slick-theme.css';         /* sliders */
-@import '../plugins/magnific-popup/magnific-popup.css';            /* modal */
-@import '../plugins/animate/animate.css';                        /* animations */
-@import '../plugins/flowplayer/skin/playful.css';          /* video-player */
-@import '../plugins/noUiSlider/nouislider.css';          /* slider number */
-@import '../plugins/bootstrap-select/css/bootstrap-select.min.css';                /* bootstrap-select */
-
-
-
+@import '../jsfiles/lib/bootstrap/dist/css/bootstrap.min.css';                /* bootstrap */
+@import '../jsfiles/plugins/headers/header.css';                /* header */
+@import '../jsfiles/plugins/headers/yamm.css';                /* header */
+@import '../jsfiles/plugins/slider-pro/slider-pro.css';         /* main slider */
+@import '../jsfiles/plugins/slick/slick.css';         /* sliders */
+@import '../jsfiles/plugins/slick/slick-theme.css';         /* sliders */
+@import '../jsfiles/plugins/magnific-popup/magnific-popup.css';            /* modal */
+@import '../jsfiles/plugins/animate/animate.css';                        /* animations */
+@import '../jsfiles/plugins/flowplayer/skin/playful.css';          /* video-player */
+@import '../jsfiles/plugins/noUiSlider/nouislider.css';          /* slider number */
+@import '../jsfiles/plugins/bootstrap-select/css/bootstrap-select.min.css';                /* bootstrap-select */
+ 
 /* MAIN CSS */
 
 @import 'main.css';

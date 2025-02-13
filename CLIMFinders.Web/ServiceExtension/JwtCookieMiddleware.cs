@@ -18,7 +18,6 @@ namespace CLIMFinders.Web.ServiceExtension
             {
                 AttachUserToContext(_configuration, context, token);
             }
-
             await _next(context);
         }
 
@@ -26,7 +25,6 @@ namespace CLIMFinders.Web.ServiceExtension
         {
             var jwtSettings = config.GetSection("JwtSettings");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Secret"]));
-
             var tokenHandler = new JwtSecurityTokenHandler();
             try
             {
