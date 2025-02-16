@@ -1,20 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CLIMFinders.Application.DTOs
 {
-    public class RegisterDto
+    public class BusinessDto : PersonInfoDto
     {
-        [Required, EmailAddress]
-        public string Email { get; set; }
-        [Required]
-        public string Name { get; set; }
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        [DisplayName("Contact Person")]
         public string ContactPerson { get; set; }
         [Required, Phone]
         public string Phone { get; set; }
@@ -25,10 +20,60 @@ namespace CLIMFinders.Application.DTOs
         [Required]
         public string State { get; set; }
         [Required]
+        [DisplayName("Zip Code")]
         public string ZipCode { get; set; }
         public string Description { get; set; }
         [Required]
-        public int FacilityId { get; set; }
-        
-    } 
+        [DisplayName("Facility Id")]
+        public int RoleId { get; set; }
+    }
+
+    public class BusinessCreditDto : BusinessDto
+    {
+        public int Id { get; set; }
+        [DisplayName("New Password")]
+        [DataType(DataType.Password)]
+        [Required]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{10,}", ErrorMessage = "Password must be atleast 10 characters with one at least one lower case, one upper case, one number and one special character ")]
+        public string NewPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        [Compare("NewPassword", ErrorMessage = "Password does not match")]
+        [Required]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{10,}", ErrorMessage = "Password must be atleast 10 characters with one at least one lower case, one upper case, one number and one special character ")]
+        [DisplayName("Confirm Password")]
+        [NotMapped]
+        public string ConfirmPassword { get; set; }
+    }
+    public class PersonInfoDto
+    {
+        [Required, EmailAddress]
+        public string Email { get; set; }
+        [Required]
+        [DisplayName("Business Name")]
+        public string Name { get; set; }
+    }
+    public class ChangePasswordDto
+    {
+         
+        [DisplayName("Old Password")]
+        [DataType(DataType.Password)]
+        [Required]
+        //[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{10,}", ErrorMessage = "Password must be atleast 10 characters with one at least one lower case, one upper case, one number and one special character ")]
+        public string OldPassword { get; set; }
+
+        [DisplayName("New Password")]
+        [DataType(DataType.Password)]
+        [Required]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{10,}", ErrorMessage = "Password must be atleast 10 characters with one at least one lower case, one upper case, one number and one special character ")]
+        public string NewPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        [Compare("NewPassword", ErrorMessage = "Password does not match")]
+        [Required]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{10,}", ErrorMessage = "Password must be atleast 10 characters with one at least one lower case, one upper case, one number and one special character ")]
+        [DisplayName("Confirm Password")]
+        [NotMapped]
+        public string ConfirmPassword { get; set; }
+    }
 }

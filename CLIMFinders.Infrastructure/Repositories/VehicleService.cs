@@ -6,18 +6,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CLIMFinders.Infrastructure.Repositories
 {
-    public class VehicleService(IUnitOfWork unitOfWork, IMapper mapper, IUserService userService) : IVehicleService
+    public class VehicleService(IUnitOfWork unitOfWork, IMapper mapper, IUserService userService, IStaticSelectOptionService staticSelectOptionService) : IVehicleService
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
         private readonly IMapper mapper = mapper;
         private readonly IUserService _userService = userService;
+        private readonly IStaticSelectOptionService _staticSelectOptionService = staticSelectOptionService;
+
 
         public List<VehicleListDto> GetVehicles()
         {
             try
             {
                 var repository = unitOfWork.GetRepository<Vehicles>();
-                var response = repository.GetAllInclude(v => v.VehicleMake, v => v.VehicleModel, v => v.VehicleColor).ToList();
+                var response = repository.GetAllInclude(v => v.VehicleMake, v => v.VehicleModel, v => v.VehicleColor)
+                    .Where(e=>e.BusinessId == _userService.GetBusinessId())
+                    .ToList();
                 var lstVehicles = mapper.Map<List<VehicleListDto>>(response);
                 lstVehicles.ForEach(v =>
                 {
@@ -71,27 +75,12 @@ namespace CLIMFinders.Infrastructure.Repositories
             }
         }
         public List<SelectListItem> StatusOptions()
-        {
-            var options = new List<SelectListItem>
-            {
-                new() { Value = "1", Text = "Impounded" },
-                new() { Value = "2", Text = "Released" }
-            };
-            return options;
+        { 
+            return _staticSelectOptionService.StatusOptions();
         }
         public List<SelectListItem> PopulateYear()
-        {
-            int startYear = 1900;
-            int currentYear = DateTime.Now.Year;
-
-            var years = new List<SelectListItem>();
-
-            for (int year = currentYear; year >= startYear; year--)
-            {
-                years.Add(new SelectListItem { Value = year.ToString(), Text = year.ToString() });
-            }
-
-            return DropdownHelper.GetDropdownList(years, e => e.Value, e => e.Text);
+        { 
+            return _staticSelectOptionService.PopulateYear();
         }
         public ResponseDto SaveVehicle(VehicleDto vehicle)
         {
@@ -166,7 +155,13 @@ namespace CLIMFinders.Infrastructure.Repositories
                 throw;
             }
         }
-        bool IsVehicleExists(string vIN, int Id)
+        public void DeleteVehicle(int Id)
+        {
+            var repository = unitOfWork.GetRepository<Vehicles>();
+            repository.Delete(Id);
+            repository.Save(); 
+        }
+        bool IsVehicleExists(string vIN, int Id = 0)
         {
             var repository = unitOfWork.GetRepository<Vehicles>();
             return repository != null && repository.GetAll().Any(x => x.VIN == vIN && x.Id != Id);

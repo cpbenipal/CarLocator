@@ -1,73 +1,35 @@
 ﻿using CLIMFinders.Application.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CLIMFinders.Infrastructure.Repositories
 {
     public class HashManager : IHashManager
     {
-        public string DecryptCipherText(string cipherText)
+        public string GenerateSalt()
         {
-            UTF8Encoding utfEncoding = new();
-            Decoder Decode = utfEncoding.GetDecoder();
-            byte[] todecode_byte = Convert.FromBase64String(cipherText);
-            int charCount = Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
-            char[] decoded_char = new char[charCount];
-            Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
-            return string.Join("", decoded_char);
-        }
-
-        public string EncryptPlainText(string plainText)
-        {
-            byte[] encode = Encoding.UTF8.GetBytes(plainText);
-            string cipherText = Convert.ToBase64String(encode);
-            return cipherText;
-        }
-
-        public List<byte[]> HashWithSalt(string password)
-        {
-            var hash = new List<byte[]>();
-
-            if (password == null)
-                throw new ArgumentNullException(nameof(password), "Password Is Empty");
-            if (string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("Value cannot be empty or whitespace only string.", nameof(password));
-
-            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            byte[] saltBytes = new byte[16];
+            using (var rng = RandomNumberGenerator.Create())
             {
-                var hashOne = hmac.Key;
-                var hashTwo = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                hash.Add(hashOne);
-                hash.Add(hashTwo);
+                rng.GetBytes(saltBytes);
             }
-
-            return hash;
+            return Convert.ToBase64String(saltBytes);
         }
 
-        public bool VerifyPasswordWithSaltAndStoredHash(string password, byte[] storedHash, byte[] storedSalt)
+        public string HashPassword(string password, string salt)
         {
-            if (password == null)
-                throw new ArgumentNullException(nameof(password), "Password Is Empty");
-            if (string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("Value cannot be empty or whitespace only string.", nameof(password));
-            if (storedHash.Length != 64)
-                throw new ArgumentException("Invalid length of password hash (64 bytes expected).", nameof(storedHash));
-            if (storedSalt.Length != 128)
-                throw new ArgumentException("Invalid length of password salt (128 bytes expected).", nameof(storedSalt));
-
-            using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
+            using (var sha256 = SHA256.Create())
             {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                for (int i = 0; i < computedHash.Length; i++)
-                {
-                    if (computedHash[i] != storedHash[i]) return false;
-                }
+                byte[] saltedPassword = Encoding.UTF8.GetBytes(password + salt);
+                byte[] hashBytes = sha256.ComputeHash(saltedPassword);
+                return Convert.ToBase64String(hashBytes);
             }
-
-            return true;
         }
+
+        public bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
+        {
+            string enteredHash = HashPassword(enteredPassword, storedSalt);
+            return storedHash == enteredHash;
+        } 
     }
 }

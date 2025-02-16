@@ -1,5 +1,4 @@
 ﻿using CLIMFinders.Domain.Entities;
-using Given.DataContext.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
@@ -38,30 +37,52 @@ namespace CLIMFinders.Infrastructure.Data
                 new SubscriptionPlans { Id = 2, Tier = "Paid Tier", Amount = 10, Duration = 1 }
                 );
 
-            var hash = new List<byte[]>();
-            string password = "0000";
-
-            using (var hmac = new HMACSHA512())
+            string[] hash = new string[2];
+            string password = "Password@!@$1";
+            byte[] saltBytes = new byte[16];
+            using (var rng = RandomNumberGenerator.Create())
             {
-                var hashOne = hmac.Key;
-                var hashTwo = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                hash.Add(hashOne);
-                hash.Add(hashTwo);
+                rng.GetBytes(saltBytes);
+            }
+            // Salt
+            hash[0] = Convert.ToBase64String(saltBytes);
+
+
+            using (var sha256 = SHA256.Create())
+            {
+                byte[] saltedPassword = Encoding.UTF8.GetBytes(password + hash[0]);
+                byte[] hashBytes = sha256.ComputeHash(saltedPassword);
+                hash[1] = Convert.ToBase64String(hashBytes);
             }
 
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
                     Id = 1,
-                    Password = "MDAwMA==",
+                    //Password = "MDAwMA==",
                     Email = "admin@admin.com",
                     ConfirmedOn = DateTime.Now,
-                    FullName = "SuperAdmin",
+                    FullName = "Super Admin",
                     IsConfirmed = true,
-                    PasswordHash = hash[0],
-                    PasswordSalt = hash[1],
-                    RoleId = 1
+                    PasswordHash = hash[1],
+                    PasswordSalt = hash[0],
+                    RoleId = 1,
+                    AddedById = 1
                 });
+
+            //modelBuilder.Entity<Businesses>().HasData(
+            //    new Businesses
+            //    {
+            //        Id = 1,
+            //        ContactPerson = "Admin",
+            //        Description = "This is Super Admin",
+            //        AddedById = 1,
+            //        AddedOn = DateTime.Now,
+            //        ModifiedById = 1,
+            //        ModifiedOn = DateTime.Now,
+            //        UserId = 1
+            //    });
+
             modelBuilder.Entity<VehicleColor>().HasData(
             new VehicleColor { Id = 1, Name = "Black" },
             new VehicleColor { Id = 2, Name = "White" },

@@ -9,6 +9,7 @@ namespace CLIMFinders.Web.Areas.Admin.Pages
     {
         public void OnGet()
         {
+
         }
     }
 }

@@ -1,21 +1,18 @@
-﻿using CLIMFinders.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Given.DataContext.Entities
-{ 
+namespace CLIMFinders.Domain.Entities
+{
     public partial class User : BaseEntity
     {
         [Key]
         public int Id { get; set; }
         public string FullName { get; set; }  
         public string Email { get; set; }
-        public string Password { get; set; }
+       // public string Password { get; set; }
         public int RoleId { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        public string PasswordHash { get; set; }
+        public string PasswordSalt { get; set; }
         public bool? IsConfirmed { get; set; } = false;
         public DateTime? ConfirmedOn { get; set; }         
         public byte[]? Photo { get; set; }

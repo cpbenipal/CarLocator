@@ -25,6 +25,7 @@ namespace CLIMFinders.Application.DTOs
         public string Note { get; set; }        
         [DisplayName("Vehicle Pickup Date & Time")]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime PickedOn { get; set; } = DateTime.Now;
         public int BusinessId { get; set; }
     }
@@ -48,6 +49,8 @@ namespace CLIMFinders.Application.DTOs
         public int BusinessId { get; set; }
         public string BoundStatus { get; set; }
         [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
+
         public DateTime PickedOn { get; set; }
     }
 

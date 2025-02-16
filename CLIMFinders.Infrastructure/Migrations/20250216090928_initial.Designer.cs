@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CLIMFinders.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250208065543_change vechile tbl struct")]
-    partial class changevechiletblstruct
+    [Migration("20250216090928_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,7 +79,8 @@ namespace CLIMFinders.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Businesses");
                 });
@@ -174,6 +175,45 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.ToTable("Payments");
                 });
 
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.Roles", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("RoleNanme")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            RoleNanme = "SuperAdmin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            RoleNanme = "Users"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            RoleNanme = "Tow"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            RoleNanme = "Impound"
+                        });
+                });
+
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Searches", b =>
                 {
                     b.Property<int>("Id")
@@ -200,6 +240,70 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Searches");
+                });
+
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.SubscriptionPlans", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AddedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ModifiedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Tier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubscriptionPlans");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AddedById = 0,
+                            AddedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(798),
+                            Amount = 0m,
+                            Duration = 0,
+                            IsDeleted = false,
+                            ModifiedById = 0,
+                            ModifiedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(815),
+                            Tier = "Free Tier"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AddedById = 0,
+                            AddedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(818),
+                            Amount = 10m,
+                            Duration = 1,
+                            IsDeleted = false,
+                            ModifiedById = 0,
+                            ModifiedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(819),
+                            Tier = "Paid Tier"
+                        });
                 });
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Subscriptions", b =>
@@ -248,6 +352,82 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.HasIndex("TierId");
 
                     b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AddedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ConfirmedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ModifiedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Photo")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AddedById = 0,
+                            AddedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(1816),
+                            ConfirmedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(1819),
+                            Email = "admin@admin.com",
+                            FullName = "Super Admin",
+                            IsConfirmed = true,
+                            IsDeleted = false,
+                            ModifiedById = 0,
+                            ModifiedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(1818),
+                            PasswordHash = "n3doZiu1rEik5By9L1dXD5HXKYGmNmeqvruwjL3twQU=",
+                            PasswordSalt = "zN5ZA8ngQHJ4EIUEw0xydw==",
+                            RoleId = 1
+                        });
                 });
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.VehicleColor", b =>
@@ -598,6 +778,396 @@ namespace CLIMFinders.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.VehicleModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MakeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MakeId");
+
+                    b.ToTable("VehicleModels");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            MakeId = 1,
+                            Name = "MDX"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            MakeId = 1,
+                            Name = "RDX"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            MakeId = 1,
+                            Name = "TLX"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            MakeId = 2,
+                            Name = "Giulia"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            MakeId = 2,
+                            Name = "Stelvio"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            MakeId = 3,
+                            Name = "DB11"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            MakeId = 3,
+                            Name = "Vantage"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            MakeId = 4,
+                            Name = "A3"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            MakeId = 4,
+                            Name = "A4"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            MakeId = 4,
+                            Name = "Q5"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            MakeId = 4,
+                            Name = "Q7"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            MakeId = 5,
+                            Name = "Continental GT"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            MakeId = 5,
+                            Name = "Bentayga"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            MakeId = 6,
+                            Name = "3 Series"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            MakeId = 6,
+                            Name = "5 Series"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            MakeId = 6,
+                            Name = "X5"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            MakeId = 6,
+                            Name = "X7"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            MakeId = 7,
+                            Name = "Chiron"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            MakeId = 7,
+                            Name = "Veyron"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            MakeId = 8,
+                            Name = "Enclave"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            MakeId = 8,
+                            Name = "Encore"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            MakeId = 9,
+                            Name = "Escalade"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            MakeId = 9,
+                            Name = "XT5"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            MakeId = 10,
+                            Name = "Silverado"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            MakeId = 10,
+                            Name = "Malibu"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            MakeId = 10,
+                            Name = "Camaro"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            MakeId = 11,
+                            Name = "300"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            MakeId = 11,
+                            Name = "Pacifica"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            MakeId = 12,
+                            Name = "Charger"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            MakeId = 12,
+                            Name = "Challenger"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            MakeId = 13,
+                            Name = "488"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            MakeId = 13,
+                            Name = "Roma"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            MakeId = 14,
+                            Name = "500"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            MakeId = 14,
+                            Name = "Panda"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            MakeId = 15,
+                            Name = "F-150"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            MakeId = 15,
+                            Name = "Mustang"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            MakeId = 16,
+                            Name = "G70"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            MakeId = 16,
+                            Name = "G90"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            MakeId = 17,
+                            Name = "Sierra"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            MakeId = 17,
+                            Name = "Yukon"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            MakeId = 18,
+                            Name = "Civic"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            MakeId = 18,
+                            Name = "Accord"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            MakeId = 19,
+                            Name = "Elantra"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            MakeId = 19,
+                            Name = "Santa Fe"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            MakeId = 20,
+                            Name = "Q50"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            MakeId = 20,
+                            Name = "QX80"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            MakeId = 21,
+                            Name = "F-PACE"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            MakeId = 21,
+                            Name = "XE"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            MakeId = 22,
+                            Name = "Wrangler"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            MakeId = 22,
+                            Name = "Grand Cherokee"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            MakeId = 44,
+                            Name = "Model S"
+                        },
+                        new
+                        {
+                            Id = 52,
+                            MakeId = 44,
+                            Name = "Model 3"
+                        },
+                        new
+                        {
+                            Id = 53,
+                            MakeId = 44,
+                            Name = "Model X"
+                        },
+                        new
+                        {
+                            Id = 54,
+                            MakeId = 44,
+                            Name = "Model Y"
+                        },
+                        new
+                        {
+                            Id = 55,
+                            MakeId = 45,
+                            Name = "Corolla"
+                        },
+                        new
+                        {
+                            Id = 56,
+                            MakeId = 45,
+                            Name = "Camry"
+                        },
+                        new
+                        {
+                            Id = 57,
+                            MakeId = 45,
+                            Name = "RAV4"
+                        },
+                        new
+                        {
+                            Id = 58,
+                            MakeId = 46,
+                            Name = "Golf"
+                        },
+                        new
+                        {
+                            Id = 59,
+                            MakeId = 46,
+                            Name = "Passat"
+                        },
+                        new
+                        {
+                            Id = 60,
+                            MakeId = 47,
+                            Name = "XC90"
+                        },
+                        new
+                        {
+                            Id = 61,
+                            MakeId = 47,
+                            Name = "S60"
+                        });
+                });
+
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Vehicles", b =>
                 {
                     b.Property<int>("Id")
@@ -624,9 +1194,8 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Property<int>("MakeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ModelId")
+                        .HasColumnType("int");
 
                     b.Property<int>("ModifiedById")
                         .HasColumnType("int");
@@ -659,198 +1228,16 @@ namespace CLIMFinders.Infrastructure.Migrations
 
                     b.HasIndex("MakeId");
 
+                    b.HasIndex("ModelId");
+
                     b.ToTable("Vehicles");
-                });
-
-            modelBuilder.Entity("Given.DataContext.Entities.Roles", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("RoleNanme")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            RoleNanme = "SuperAdmin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            RoleNanme = "Users"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            RoleNanme = "Tow"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            RoleNanme = "Impound"
-                        });
-                });
-
-            modelBuilder.Entity("Given.DataContext.Entities.SubscriptionPlans", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AddedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ModifiedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Tier")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SubscriptionPlans");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 8, 12, 25, 42, 911, DateTimeKind.Local).AddTicks(2858),
-                            Amount = 0m,
-                            Duration = 0,
-                            IsDeleted = false,
-                            ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 8, 12, 25, 42, 911, DateTimeKind.Local).AddTicks(2874),
-                            Tier = "Free Tier"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 8, 12, 25, 42, 911, DateTimeKind.Local).AddTicks(2877),
-                            Amount = 10m,
-                            Duration = 1,
-                            IsDeleted = false,
-                            ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 8, 12, 25, 42, 911, DateTimeKind.Local).AddTicks(2877),
-                            Tier = "Paid Tier"
-                        });
-                });
-
-            modelBuilder.Entity("Given.DataContext.Entities.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AddedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ConfirmedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("IsConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ModifiedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<byte[]>("Photo")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 8, 12, 25, 42, 911, DateTimeKind.Local).AddTicks(3972),
-                            ConfirmedOn = new DateTime(2025, 2, 8, 12, 25, 42, 911, DateTimeKind.Local).AddTicks(3977),
-                            Email = "admin@admin.com",
-                            FullName = "SuperAdmin",
-                            IsConfirmed = true,
-                            IsDeleted = false,
-                            ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 8, 12, 25, 42, 911, DateTimeKind.Local).AddTicks(3974),
-                            Password = "MDAwMA==",
-                            PasswordHash = new byte[] { 78, 175, 165, 82, 128, 227, 210, 20, 132, 137, 62, 128, 4, 180, 42, 104, 104, 80, 71, 12, 53, 253, 204, 145, 16, 162, 153, 66, 190, 75, 128, 184, 200, 135, 186, 248, 224, 13, 98, 103, 32, 158, 178, 251, 26, 183, 59, 237, 138, 215, 96, 67, 244, 103, 55, 186, 230, 153, 17, 7, 4, 115, 125, 0, 195, 212, 36, 240, 225, 132, 111, 228, 152, 235, 57, 236, 253, 17, 245, 143, 219, 185, 61, 17, 141, 231, 66, 29, 250, 17, 101, 215, 197, 34, 187, 138, 207, 134, 12, 221, 130, 14, 237, 225, 224, 226, 162, 211, 255, 46, 37, 162, 143, 178, 201, 146, 233, 94, 143, 62, 212, 246, 124, 34, 222, 40, 179, 136 },
-                            PasswordSalt = new byte[] { 156, 76, 71, 67, 96, 150, 130, 48, 193, 2, 175, 27, 175, 72, 91, 255, 245, 251, 137, 55, 230, 143, 132, 181, 86, 214, 226, 129, 55, 79, 208, 242, 62, 181, 227, 47, 218, 14, 69, 192, 203, 3, 55, 247, 174, 96, 119, 107, 67, 79, 135, 119, 137, 222, 143, 113, 30, 88, 166, 228, 198, 163, 146, 101 },
-                            RoleId = 1
-                        });
                 });
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Businesses", b =>
                 {
-                    b.HasOne("Given.DataContext.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
+                        .WithOne("Businesses")
+                        .HasForeignKey("CLIMFinders.Domain.Entities.Businesses", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -859,7 +1246,7 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Matches", b =>
                 {
-                    b.HasOne("Given.DataContext.Entities.User", "User")
+                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -878,7 +1265,7 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Notifications", b =>
                 {
-                    b.HasOne("Given.DataContext.Entities.User", "User")
+                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -889,7 +1276,7 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Payments", b =>
                 {
-                    b.HasOne("Given.DataContext.Entities.User", "User")
+                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -900,7 +1287,7 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Searches", b =>
                 {
-                    b.HasOne("Given.DataContext.Entities.User", "User")
+                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -928,6 +1315,28 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Navigation("SubscriptionPlans");
                 });
 
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.User", b =>
+                {
+                    b.HasOne("CLIMFinders.Domain.Entities.Roles", "Roles")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.VehicleModel", b =>
+                {
+                    b.HasOne("CLIMFinders.Domain.Entities.VehicleMake", "VehicleMake")
+                        .WithMany()
+                        .HasForeignKey("MakeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("VehicleMake");
+                });
+
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Vehicles", b =>
                 {
                     b.HasOne("CLIMFinders.Domain.Entities.Businesses", "Businesses")
@@ -948,22 +1357,24 @@ namespace CLIMFinders.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CLIMFinders.Domain.Entities.VehicleModel", "VehicleModel")
+                        .WithMany()
+                        .HasForeignKey("ModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Businesses");
 
                     b.Navigation("VehicleColor");
 
                     b.Navigation("VehicleMake");
+
+                    b.Navigation("VehicleModel");
                 });
 
-            modelBuilder.Entity("Given.DataContext.Entities.User", b =>
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.User", b =>
                 {
-                    b.HasOne("Given.DataContext.Entities.Roles", "Roles")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Roles");
+                    b.Navigation("Businesses");
                 });
 #pragma warning restore 612, 618
         }

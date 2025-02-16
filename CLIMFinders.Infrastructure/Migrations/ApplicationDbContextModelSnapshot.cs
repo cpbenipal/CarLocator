@@ -172,6 +172,45 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.ToTable("Payments");
                 });
 
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.Roles", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("RoleNanme")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            RoleNanme = "SuperAdmin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            RoleNanme = "Users"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            RoleNanme = "Tow"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            RoleNanme = "Impound"
+                        });
+                });
+
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Searches", b =>
                 {
                     b.Property<int>("Id")
@@ -198,6 +237,70 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Searches");
+                });
+
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.SubscriptionPlans", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AddedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ModifiedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Tier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubscriptionPlans");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AddedById = 0,
+                            AddedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(798),
+                            Amount = 0m,
+                            Duration = 0,
+                            IsDeleted = false,
+                            ModifiedById = 0,
+                            ModifiedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(815),
+                            Tier = "Free Tier"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AddedById = 0,
+                            AddedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(818),
+                            Amount = 10m,
+                            Duration = 1,
+                            IsDeleted = false,
+                            ModifiedById = 0,
+                            ModifiedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(819),
+                            Tier = "Paid Tier"
+                        });
                 });
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Subscriptions", b =>
@@ -246,6 +349,82 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.HasIndex("TierId");
 
                     b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AddedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ConfirmedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ModifiedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Photo")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AddedById = 0,
+                            AddedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(1816),
+                            ConfirmedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(1819),
+                            Email = "admin@admin.com",
+                            FullName = "Super Admin",
+                            IsConfirmed = true,
+                            IsDeleted = false,
+                            ModifiedById = 0,
+                            ModifiedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(1818),
+                            PasswordHash = "n3doZiu1rEik5By9L1dXD5HXKYGmNmeqvruwjL3twQU=",
+                            PasswordSalt = "zN5ZA8ngQHJ4EIUEw0xydw==",
+                            RoleId = 1
+                        });
                 });
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.VehicleColor", b =>
@@ -1051,193 +1230,9 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.ToTable("Vehicles");
                 });
 
-            modelBuilder.Entity("Given.DataContext.Entities.Roles", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("RoleNanme")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            RoleNanme = "SuperAdmin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            RoleNanme = "Users"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            RoleNanme = "Tow"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            RoleNanme = "Impound"
-                        });
-                });
-
-            modelBuilder.Entity("Given.DataContext.Entities.SubscriptionPlans", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AddedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ModifiedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Tier")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SubscriptionPlans");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(2721),
-                            Amount = 0m,
-                            Duration = 0,
-                            IsDeleted = false,
-                            ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(2734),
-                            Tier = "Free Tier"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(2737),
-                            Amount = 10m,
-                            Duration = 1,
-                            IsDeleted = false,
-                            ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(2738),
-                            Tier = "Paid Tier"
-                        });
-                });
-
-            modelBuilder.Entity("Given.DataContext.Entities.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AddedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ConfirmedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("IsConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ModifiedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<byte[]>("Photo")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(3785),
-                            ConfirmedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(3789),
-                            Email = "admin@admin.com",
-                            FullName = "SuperAdmin",
-                            IsConfirmed = true,
-                            IsDeleted = false,
-                            ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 12, 15, 1, 23, 144, DateTimeKind.Local).AddTicks(3786),
-                            Password = "MDAwMA==",
-                            PasswordHash = new byte[] { 28, 175, 105, 236, 37, 188, 192, 237, 28, 119, 135, 18, 176, 236, 92, 76, 68, 148, 119, 166, 199, 215, 235, 210, 104, 151, 224, 146, 83, 247, 90, 216, 254, 158, 25, 225, 131, 227, 197, 232, 233, 133, 90, 159, 185, 249, 224, 118, 121, 113, 205, 43, 183, 108, 220, 67, 42, 5, 221, 190, 11, 245, 124, 240, 179, 213, 115, 105, 202, 11, 99, 107, 191, 217, 214, 143, 5, 93, 239, 234, 151, 121, 9, 242, 215, 234, 189, 125, 85, 67, 137, 70, 243, 189, 8, 119, 118, 42, 42, 219, 205, 123, 242, 4, 29, 180, 93, 103, 20, 0, 53, 152, 118, 239, 45, 21, 216, 14, 41, 239, 5, 73, 29, 58, 227, 177, 253, 144 },
-                            PasswordSalt = new byte[] { 224, 123, 183, 47, 137, 172, 238, 85, 34, 196, 127, 134, 167, 111, 143, 118, 96, 126, 114, 42, 82, 152, 17, 91, 196, 25, 6, 48, 10, 198, 245, 6, 57, 53, 50, 47, 28, 108, 101, 72, 209, 41, 59, 172, 56, 95, 6, 27, 230, 107, 208, 151, 124, 33, 89, 187, 84, 175, 28, 157, 75, 124, 201, 229 },
-                            RoleId = 1
-                        });
-                });
-
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Businesses", b =>
                 {
-                    b.HasOne("Given.DataContext.Entities.User", "User")
+                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
                         .WithOne("Businesses")
                         .HasForeignKey("CLIMFinders.Domain.Entities.Businesses", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1248,7 +1243,7 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Matches", b =>
                 {
-                    b.HasOne("Given.DataContext.Entities.User", "User")
+                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1267,7 +1262,7 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Notifications", b =>
                 {
-                    b.HasOne("Given.DataContext.Entities.User", "User")
+                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1278,7 +1273,7 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Payments", b =>
                 {
-                    b.HasOne("Given.DataContext.Entities.User", "User")
+                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1289,7 +1284,7 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Searches", b =>
                 {
-                    b.HasOne("Given.DataContext.Entities.User", "User")
+                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1315,6 +1310,17 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Navigation("Businesses");
 
                     b.Navigation("SubscriptionPlans");
+                });
+
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.User", b =>
+                {
+                    b.HasOne("CLIMFinders.Domain.Entities.Roles", "Roles")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.VehicleModel", b =>
@@ -1363,18 +1369,7 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Navigation("VehicleModel");
                 });
 
-            modelBuilder.Entity("Given.DataContext.Entities.User", b =>
-                {
-                    b.HasOne("Given.DataContext.Entities.Roles", "Roles")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Roles");
-                });
-
-            modelBuilder.Entity("Given.DataContext.Entities.User", b =>
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.User", b =>
                 {
                     b.Navigation("Businesses");
                 });

@@ -13,29 +13,33 @@ namespace CLIMFinders.Application.Services
     {
         private readonly IConfiguration _config = config;
 
-        public string GenerateToken(LoginResponseDto user)
+        public (string Token, DateTime Expiration) GenerateToken(LoginResponseDto user)
         {
             var claims = new List<Claim>
             {
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Name, user.FullName),
                 new(ClaimTypes.Email, user.Email),
-                new(ClaimTypes.Role, value: Enum.GetName(typeof(RoleEnum), user.RoleId))
+                new(ClaimTypes.Role, Enum.GetName(typeof(RoleEnum), user.RoleId))
             };
+
             if (!string.IsNullOrEmpty(user.BusinessId))
             {
                 claims.Add(new Claim(CustomClaimTypes.BusinessId, user.BusinessId));
             }
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Secret"]));
+            var expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["JwtSettings:ExpiryMinutes"]));
+
             var token = new JwtSecurityToken(
                 issuer: _config["JwtSettings:Issuer"],
                 audience: _config["JwtSettings:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["JwtSettings:ExpiryMinutes"])),
+                expires: expires, // Token expiration time
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return (new JwtSecurityTokenHandler().WriteToken(token), expires);
         }
     }
 }

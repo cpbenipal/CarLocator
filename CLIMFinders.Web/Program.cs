@@ -68,8 +68,7 @@ try
                 ValidAudience = jwtSettings["Audience"],
                 IssuerSigningKey = new SymmetricSecurityKey(secretKey)
             };
-        });
-
+        }); 
     // Configure Authorization Policies
     builder.Services.AddAuthorizationBuilder()
         .AddPolicy("SuperAdminPolicy", policy => policy.RequireRole("SuperAdmin"))
@@ -102,9 +101,14 @@ try
     // Redirect Unauthorized Requests
     app.UseStatusCodePages(async context =>
     {
-        if (context.HttpContext.Response.StatusCode == 403 && !context.HttpContext.Response.HasStarted || context.HttpContext.Response.StatusCode == 401) // Forbidden
+        if (context.HttpContext.Response.StatusCode == 403 && !context.HttpContext.Response.HasStarted) // Forbidden
         {
             context.HttpContext.Response.Redirect("/Unauthorized");
+
+        }
+        else if (context.HttpContext.Response.StatusCode == 401) 
+        {
+            context.HttpContext.Response.Redirect("/Login");
         }
         else if (context.HttpContext.Response.StatusCode == 404 && !context.HttpContext.Response.HasStarted)
         {
@@ -120,6 +124,7 @@ try
         endpoints.MapControllers();
         endpoints.MapRazorPages();
     }); 
+
     app.Run();
 }
 catch (Exception ex)

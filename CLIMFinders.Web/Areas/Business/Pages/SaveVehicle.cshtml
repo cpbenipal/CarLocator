@@ -4,11 +4,11 @@
     ViewData["Title"] = Model.Input.Id == 0 ? "Add Vehicle" : "Edit Vehicle";
 }
 
-<div class="container mt-5">
+<div class="container rounded bg-white mt-5 mb-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <h2 class="text-center mb-4">@(Model.Input.Id == 0 ? "Add Vehicle" : "Edit Vehicle")</h2>
-            <form asp-action="AddVehicle" method="post">
+            <form asp-action="SaveVehicle" method="post">
                 <input asp-for="Input.Id" type="hidden" />
 
                 <div class="row">
@@ -68,11 +68,13 @@
                     <label asp-for="Input.Note" class="form-label"></label>
                     <textarea asp-for="Input.Note" class="form-control" rows="2"></textarea>
                 </div>
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+              
+                <button type="submit" id="testButton" class="btn btn-primary btn-block mt-3">Save </button>
+                <a href="/Business/ManageVehicles" class="btn btn-secondary btn-block mt-3">Cancel</a>
 
-                <button type="submit" id="testButton" class="btn btn-success">Save </button>
-                <a href="@Url.Action("OnGet", "ManageVehicles")" class="btn btn-secondary">Cancel</a>
             </form>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
         </div>
     </div>
 </div>

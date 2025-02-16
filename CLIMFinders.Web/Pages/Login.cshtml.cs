@@ -1,10 +1,9 @@
 using CLIMFinders.Application.DTOs;
 using CLIMFinders.Application.Enums;
 using CLIMFinders.Application.Interfaces;
-using CLIMFinders.Application.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CLIMFinders.Web.Pages
@@ -23,27 +22,38 @@ namespace CLIMFinders.Web.Pages
             if (!ModelState.IsValid)
             {
                 return Page();
-            } 
+            }
 
             var result = authService.UserLogin(Input);
 
-            if (result != null)
+            if (result.Id <= 0)
             {
-                var token = _jwtTokenService.GenerateToken(result);
-                 
-                result.Token = token;
-                Response.Cookies.Append("AuthToken", token, new CookieOptions { HttpOnly = true, Secure = true, Expires = DateTime.UtcNow.AddHours(2) });
-                return result.RoleId switch
-                {
-                    (int)RoleEnum.SuperAdmin => RedirectToPage("/Dashboard", new { area = "Admin" }),
-                    (int)RoleEnum.Impound or (int)RoleEnum.Tow => RedirectToPage("/ManageVehicals", new { area = "Business" }),
-                    _ => RedirectToPage("/Index"),
-                };
+                ModelState.AddModelError(string.Empty, result.UIMessage);
+                return Page();
             }
 
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-            return Page();
+            // Generate JWT token
+            var (token, expiration) = _jwtTokenService.GenerateToken(result);
+            result.Token = token;
+
+            // Set token in HttpOnly cookie
+            Response.Cookies.Append("AuthToken", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true, // Ensures the token is only sent over HTTPS
+                SameSite = SameSiteMode.Strict,
+                Expires = expiration // Sync cookie expiration with token expiration
+            });
+
+            // Redirect based on user role
+            return result.RoleId switch
+            {
+                (int)RoleEnum.SuperAdmin => RedirectToPage("/Dashboard", new { area = "Admin" }),
+                (int)RoleEnum.Impound or (int)RoleEnum.Tow => RedirectToPage("/ManageVehicles", new { area = "Business" }),
+                _ => RedirectToPage("/Index")
+            };
         }
+
         [BindProperty]
         public LoginDto Input { get; set; }  
     }

@@ -1,11 +1,7 @@
 ﻿using CLIMFinders.Application.DTOs;
-using CLIMFinders.Application.Enums;
 using CLIMFinders.Application.Interfaces;
-using CLIMFinders.Application.Services;
-using CLIMFinders.Web.Pages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CLIMFinders.Web.Controllers
 {
@@ -22,24 +18,46 @@ namespace CLIMFinders.Web.Controllers
             return Ok(new { token = "Done" });
         }
         [HttpPost("Authenticate")]
-        [AllowAnonymous]
+        [AllowAnonymous] 
         public IActionResult Login([FromBody] LoginDto model)
         {
-            var loginObj = new LoginDto();  
-            loginObj.Email = model.Email;
-            loginObj.Password = model.Password;
-
-
-            var result = authService.UserLogin(loginObj);
-            string? token = null;
-            if (result != null)
+            if (model == null || string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Password))
             {
-                token = _jwtTokenService.GenerateToken(result);
-                result.Token = token;
-                Response.Cookies.Append("AuthToken", token, new CookieOptions { HttpOnly = true, Secure = true });
+                return BadRequest(new { message = "Invalid login request." });
             }
 
-            return Ok(new { result });
+            var loginObj = new LoginDto
+            {
+                Email = model.Email,
+                Password = model.Password
+            };
+
+            var result = authService.UserLogin(loginObj);
+
+            if (result == null)
+            {
+                return Unauthorized(new { message = "Invalid credentials." });
+            }
+
+            // Generate JWT token
+            var (token, expiration) = _jwtTokenService.GenerateToken(result);
+            result.Token = token;
+
+            // Set token in HttpOnly cookie
+            Response.Cookies.Append("AuthToken", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,  // Ensure it's sent over HTTPS
+                SameSite = SameSiteMode.Strict,
+                Expires = expiration  // Ensure cookie expiration matches token expiration
+            });
+
+            return Ok(new
+            {
+                result,
+                token,
+                expiresAt = expiration
+            });
         }
     }
 }

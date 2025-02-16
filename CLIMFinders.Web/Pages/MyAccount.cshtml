@@ -1,0 +1,97 @@
+﻿@page
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+@model CLIMFinders.Web.Pages.MyAccountModel
+@{
+    ViewData["Title"] = "Register";
+}
+<div class="container rounded bg-white mt-5 mb-5">
+    <form method="post" asp-action="MyAccount">
+        @* Bussiness Id *@
+        <input type="hidden" asp-for="Input.Id" />
+        @* Business User Id *@
+        <input type="hidden" asp-for="Input.UserId" />
+        <div class="row">
+            <div class="col-md-3 border-right">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"></div>
+            </div>
+            <div class="col-md-4 border-right">
+
+                <input type="hidden" asp-for="Input.Id" />
+                <div class="p-3 py-5">
+                    <h4 class="text-right">Business Information</h4>
+                    <div class="row mt-2">
+                        <div class="col-sm-12">
+                            <label asp-for="Input.Name" class="form-label"></label><input type="text" class="form-control" asp-for="Input.Name" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12">
+                            <label asp-for="Input.Email" class="form-label"></label><input type="email" class="form-control" asp-for="Input.Email" />
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-12">
+                            <label asp-for="Input.Phone" class="form-label"></label>
+                            <input type="text" class="form-control" asp-for="Input.Phone" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12">
+                            <label asp-for="Input.ContactPerson" class="form-label"></label>
+                            <input type="text" class="form-control" asp-for="Input.ContactPerson" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            @if (!User.IsInRole("SuperAdmin"))
+            {
+                <div class="col-md-4 border-right">
+
+
+                    <div class="p-3 py-5">
+                        <h4 class="text-right">Business Address</h4>
+
+                        <div class="row mt-2">
+                            <div class="col-sm-12">
+                                <label asp-for="Input.Address" class="form-label"></label>
+                                <input type="text" class="form-control" asp-for="Input.Address" />
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12">
+                                <label asp-for="Input.City" class="form-label"></label>
+                                <input type="text" class="form-control" asp-for="Input.City" />
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12">
+                                <label asp-for="Input.State" class="form-label"></label>
+                                <input type="text" class="form-control" asp-for="Input.State" />
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12">
+                                <label asp-for="Input.ZipCode" class="form-label"></label>
+                                <input type="text" class="form-control" asp-for="Input.ZipCode" />
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12">
+                                <label asp-for="Input.Description" class="form-label"></label>
+                                <textarea class="form-control" asp-for="Input.Description" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <button class="btn btn-primary profile-button" id="btnUpdate" type="submit">Update</button>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </form>
+</div> 

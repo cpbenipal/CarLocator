@@ -1,7 +1,6 @@
-﻿using CLIMFinders.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Given.DataContext.Entities
+namespace CLIMFinders.Domain.Entities
 {
     public partial class SubscriptionPlans: BaseEntity
     {

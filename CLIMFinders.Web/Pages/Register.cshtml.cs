@@ -1,51 +1,65 @@
 using CLIMFinders.Application.DTOs;
-using CLIMFinders.Application.Enums;
 using CLIMFinders.Application.Interfaces;
-using CLIMFinders.Application.Services;
-using CLIMFinders.Infrastructure.Repositories;
-using Given.DataContext.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CLIMFinders.Web.Pages
-{
-    public class RegisterModel(IRegisterService registerService, IJwtTokenService jwtTokenService) : PageModel
+{ 
+    public class RegisterModel(IRegisterService registerService, IJwtTokenService jwtTokenService, IStaticSelectOptionService staticSelectOptionService) : PageModel
     {
         private readonly IRegisterService registerService = registerService;
         private readonly IJwtTokenService _jwtTokenService = jwtTokenService;
-
+        private readonly IStaticSelectOptionService _staticSelectOptionService = staticSelectOptionService;
         public List<SelectListItem> Roles { get; set; }
 
         public void OnGet()
         {
-            Roles = new List<SelectListItem>
-            {
-                new SelectListItem { Text = RoleEnum.Tow.ToString(), Value = ((int)RoleEnum.Tow).ToString() },
-                new SelectListItem { Text = RoleEnum.Impound.ToString(),Value = ((int)RoleEnum.Impound).ToString() }
-            };
+            Roles = _staticSelectOptionService.RoleOptions();
         }
-        public IActionResult OnPostAsync()
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
+                var errors = ModelState.Values
+                                   .SelectMany(v => v.Errors)
+                                   .Select(e => e.ErrorMessage)
+                                   .ToList();
+                Roles = _staticSelectOptionService.RoleOptions();
                 return Page();
             }
-            var result = registerService.CreateUser(Input);
-            if (result.Id > 0)
-            {
-                var token = _jwtTokenService.GenerateToken(new LoginResponseDto() { Email = result.Email, FullName = result.Name, RoleId = result.RoleId });
+            
+            var result = registerService.CreateUser(Input); 
 
-                Response.Cookies.Append("AuthToken", token, new CookieOptions { HttpOnly = true, Secure = true });
-                return RedirectToPage("/Dashboard", new { area = "Admin" });
-            }
-            else
+            if (result == null || result.Id <= 0)
             {
-                ModelState.AddModelError(string.Empty, result.Status);
+                Roles = _staticSelectOptionService.RoleOptions();
+                ModelState.AddModelError(string.Empty, result?.Status ?? "User registration failed.");
+                return Page();
             }
-            return Page();
+
+            //// Generate JWT token
+            //var (token, expiration) = _jwtTokenService.GenerateToken(new LoginResponseDto
+            //{
+            //    Email = result.Email,
+            //    FullName = result.Name,
+            //    RoleId = result.RoleId
+            //});
+
+            //// Set token in HttpOnly cookie with expiration
+            //Response.Cookies.Append("AuthToken", token, new CookieOptions
+            //{
+            //    HttpOnly = true,
+            //    Secure = true,  // Ensures token is only sent over HTTPS
+            //    SameSite = SameSiteMode.Strict,
+            //    Expires = expiration  // Sync cookie expiration with token expiration
+            //});
+
+            return RedirectToPage("/Login");
         }
+
         [BindProperty]
-        public RegisterDto Input { get; set; }
+        public BusinessCreditDto Input { get; set; } 
     }
 }

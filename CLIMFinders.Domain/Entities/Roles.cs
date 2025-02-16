@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Given.DataContext.Entities
-{ 
+﻿namespace CLIMFinders.Domain.Entities
+{
     public partial class Roles 
     { 
         public int Id { get; set; }

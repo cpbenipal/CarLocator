@@ -18,5 +18,6 @@ namespace CLIMFinders.Application.Interfaces
         ResponseDto SaveVehicle(VehicleDto vehicle);
         List<VehicleListDto> GetVehicles();
         VehicleDto GetVehicle(int Id);
+        void DeleteVehicle(int Id);
     }
 }
