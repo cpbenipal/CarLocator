@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CLIMFinders.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CLIMFinders.Domain.Entities
 {
-    public class Businesses: BaseEntity
+    [Table("UserAddress", Schema = "dbo")]
+    public class UserAddress: BaseEntity
     {
         [Key]
         public int Id { get; set; }

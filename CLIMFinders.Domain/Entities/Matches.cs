@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CLIMFinders.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CLIMFinders.Domain.Entities
 {
-    public class Matches
+    public class Matches: BaseEntity
     {
         [Key]
         public int Id { get; set; }

@@ -25,6 +25,7 @@ namespace CLIMFinders.Infrastructure.Repositories
         {
             var options = new List<SelectListItem>
             {
+                new SelectListItem { Text = RoleEnum.Users.ToString(), Value = ((int)RoleEnum.Users).ToString() },
                 new SelectListItem { Text = RoleEnum.Tow.ToString(), Value = ((int)RoleEnum.Tow).ToString() },
                 new SelectListItem { Text = RoleEnum.Impound.ToString(),Value = ((int)RoleEnum.Impound).ToString() }
             };

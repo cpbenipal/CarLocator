@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CLIMFinders.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace CLIMFinders.Domain.Entities
 {

@@ -2,7 +2,7 @@
 
 namespace CLIMFinders.Domain.Entities
 {
-    public class Payments
+    public class Payments: BaseEntity
     {
         public int Id { get; set; }
         public int UserId { get; set; }

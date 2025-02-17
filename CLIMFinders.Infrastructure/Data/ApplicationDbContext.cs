@@ -11,7 +11,7 @@ namespace CLIMFinders.Infrastructure.Data
 
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
-        public virtual DbSet<Businesses> Businesses { get; set; }
+        public virtual DbSet<UserAddress> Businesses { get; set; }
         public virtual DbSet<Matches> Matches { get; set; }
         public virtual DbSet<Notifications> Notifications { get; set; }
         public virtual DbSet<Payments> Payments { get; set; }
@@ -33,8 +33,8 @@ namespace CLIMFinders.Infrastructure.Data
             );
 
             modelBuilder.Entity<SubscriptionPlans>().HasData(
-                new SubscriptionPlans { Id = 1, Tier = "Free Tier", Amount = 0, Duration = 0 },
-                new SubscriptionPlans { Id = 2, Tier = "Paid Tier", Amount = 10, Duration = 1 }
+                new SubscriptionPlans { Id = 1, Tier = "User Tier", Amount = 10, Duration = 1 },
+                new SubscriptionPlans { Id = 2, Tier = "Business Tier", Amount = 10, Duration = 1 }
                 );
 
             string[] hash = new string[2];

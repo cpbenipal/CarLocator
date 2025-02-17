@@ -1,3 +1,4 @@
+using CLIMFinders.Application.DTOs;
 using CLIMFinders.Infrastructure.Data;
 using CLIMFinders.Web.ServiceExtension;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
+using Stripe;
 using System.Text;
 
 var logger = LogManager.Setup().LoadConfigurationFromFile("NLog.config").GetCurrentClassLogger();
@@ -79,6 +81,17 @@ try
 
     // Register AutoMapper
     builder.Services.AddAutoMapper(typeof(GenericMappingProfile));
+
+    // Add Stripe configuration to DI container
+    builder.Services.AddSingleton<IStripeClient>(sp =>
+    {
+        var stripeSecretKey = builder.Configuration["Stripe:SecretKey"];
+        return new StripeClient(stripeSecretKey);
+    });
+
+
+  //  builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+  //  StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
     var app = builder.Build();
    

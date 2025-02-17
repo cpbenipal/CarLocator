@@ -7,35 +7,28 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CLIMFinders.Web.Pages
-{
-    [Authorize]
-    public class ChangePasswordModel(IAuthService authService) : PageModel
+{ 
+    public class ForgotPasswordModel(IAuthService authService) : PageModel
     {
-        private readonly IAuthService authService = authService;
+        private readonly IAuthService _authService = authService;
 
         public void OnGet()
         {
-
+             
         }
         
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
-            { 
+            {  
                 return Page();
             }
-            var result = authService.ChangePassword(Input);
-            //if (result == null)
-            //{
-            //    ModelState.AddModelError(string.Empty, result.Status);
-            //    return Page();
-            //}
-            ModelState.AddModelError(string.Empty, result.Status);
-
+            var respoonse = _authService.ResetPassword(Input);
+            ModelState.AddModelError(string.Empty, respoonse.Status);
             return Page();
         }
 
         [BindProperty]
-        public ChangePasswordDto Input { get; set; }
+        public ForgotPasswordDto Input { get; set; }
     }
 }

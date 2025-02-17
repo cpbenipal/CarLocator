@@ -2,7 +2,7 @@
 
 namespace CLIMFinders.Domain.Entities
 {
-    public class Notifications
+    public class Notifications: BaseEntity
     {
         public int Id { get; set; }
         public int UserId { get; set; }

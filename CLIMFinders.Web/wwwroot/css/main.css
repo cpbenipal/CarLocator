@@ -669,7 +669,7 @@ blockquote cite {
 }
 
 .group-sections {
-  background: #FEFEFE url(../media/content/bg/1.png) 50% 100%;
+  background: #FEFEFE url(../jsfiles/media/content/bg/1.png) 50% 100%;
   background-size: cover;
 }
 
@@ -779,13 +779,13 @@ html, body {
 }
 
 .section-bnr {
-  padding-top: 100px;
-  color: #FFF;
-  position: relative;
-  z-index: 1;
-  background-image: url("../media/content/b-bnr/bg.png");
-  background-position: 50%;
-  background-size: cover;
+    padding-top: 100px;
+    color: #FFF;
+    position: relative;
+    z-index: 1;
+    background-image: url("../jsfiles/media/content/b-bnr/bg.png");
+    background-position: 50%;
+    background-size: cover;
 }
 
 .b-bnr {
@@ -873,23 +873,23 @@ html, body {
 }
 
 .b-bnr-2_first {
-  background-image: url("../media/content/b-bnr/bg-1.png");
+  background-image: url("../jsfiles/media/content/b-bnr/bg-1.png");
   margin-left: -20px;
 }
 
 .b-bnr-2_last {
-  margin-right: -20px;
-  text-align: right;
-  background-image: url("../media/content/b-bnr/bg-2.png");
+    margin-right: -20px;
+    text-align: right;
+    background-image: url("../jsfiles/media/content/b-bnr/bg-2.png");
 }
 
 .b-bnr-3 {
-  color: #ffffff;
-  font-size: 18px;
-  background-image: url("../media/content/b-bnr/bg.png");
-  background-position: 50%;
-  background-size: cover;
-  padding: 80px 10vw 50px;
+    color: #ffffff;
+    font-size: 18px;
+    background-image: url("../jsfiles/media/content/b-bnr/bg.png");
+    background-position: 50%;
+    background-size: cover;
+    padding: 80px 10vw 50px;
 }
 
 .b-bnr-3__title {
@@ -922,9 +922,9 @@ html, body {
 }
 
 .section-contacts {
-  background: url(../media/content/b-contacts/bg-1.jpg) 50% 50% no-repeat;
-  background-size: cover;
-  padding-top: 90px;
+    background: url(../jsfiles/media/content/b-contacts/bg-1.jpg) 50% 50% no-repeat;
+    background-size: cover;
+    padding-top: 90px;
 }
 
 .section-contacts__inner {
@@ -961,14 +961,14 @@ html, body {
 }
 
 .section-fag:after {
-  content: '';
-  position: absolute;
-  right: 0;
-  width: 40%;
-  top: 0;
-  bottom: 0;
-  background: url("../media/content/b-faq/bg-1.jpg") no-repeat;
-  background-size: cover;
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 40%;
+    top: 0;
+    bottom: 0;
+    background: url("../jsfiles/media/content/b-faq/bg-1.jpg") no-repeat;
+    background-size: cover;
 }
 
 .b-filter__row {
@@ -1123,10 +1123,10 @@ html, body {
 }
 
 .b-forum-bnr__main {
-  background: url("../media/content/b-forum/bg-1.jpg");
-  background-size: cover;
-  padding: 45px 60px;
-  height: 100%;
+    background: url("../jsfiles/media/content/b-forum/bg-1.jpg");
+    background-size: cover;
+    padding: 45px 60px;
+    height: 100%;
 }
 
 .b-forum-bnr__title {
@@ -2916,15 +2916,15 @@ body.my-account #bbpress-forums {
 }
 
 .b-goods-vip_1 {
-  background-image: url("../media/content/b-goods/vip/bg-1.jpg");
+  background-image: url("../jsfiles/media/content/b-goods/vip/bg-1.jpg");
 }
 
 .b-goods-vip_2 {
-  background-image: url("../media/content/b-goods/vip/bg-2.jpg");
+  background-image: url("../jsfiles/media/content/b-goods/vip/bg-2.jpg");
 }
 
 .b-goods-vip_3 {
-  background-image: url("../media/content/b-goods/vip/bg-3.jpg");
+  background-image: url("../jsfiles/media/content/b-goods/vip/bg-3.jpg");
   padding-right: 0;
 }
 
@@ -3472,7 +3472,7 @@ body.my-account #bbpress-forums {
 }
 
 .section-goods-other {
-  background: url("../media/content/b-goods-other/bg-1.jpg");
+  background: url("../jsfiles/media/content/b-goods-other/bg-1.jpg");
   background-size: cover;
   color: #FFF;
   padding-left: 9.5vw;
@@ -4008,7 +4008,7 @@ body.my-account #bbpress-forums {
 }
 
 .section-article {
-  background: #f4f4f4 url("../media/content/section-article/bg.png") 50% 100%;
+  background: #f4f4f4 url("../jsfiles/media/content/section-article/bg.png") 50% 100%;
   background-size: cover;
 }
 
@@ -4473,14 +4473,14 @@ body.my-account #bbpress-forums {
 
 .b-services {
   padding-bottom: 85px;
-  background: url("../media/content/b-services/bg-main.jpg");
+  background: url("../jsfiles/media/content/b-services/bg-main.jpg");
 }
 
 .b-services-content {
   min-height: 530px;
   margin-bottom: 100px;
   position: relative;
-  background: url("../media/content/b-services/bg-info-1.jpg");
+  background: url("../jsfiles/media/content/b-services/bg-info-1.jpg");
   padding: 100px 10% 0 24%;
 }
 
@@ -4719,7 +4719,7 @@ body.my-account #bbpress-forums {
   margin-top: 170px;
   padding-top: 60px;
   padding-bottom: 60px;
-  background-image: url("../media/content/b-title-page/bg-1.jpg");
+  background-image: url("../jsfiles/media/content/b-title-page/bg-1.jpg");
   background-size: cover;
 }
 
@@ -4730,7 +4730,7 @@ body.my-account #bbpress-forums {
 .section-title-page_mod-a {
   padding-top: 94px;
   padding-bottom: 100px;
-  background-image: url("../media/content/b-title-page/bg-2.jpg");
+  background-image: url("../jsfiles/media/content/b-title-page/bg-2.jpg");
 }
 
 .section-title-page_mod-a .b-title-page {
@@ -4905,7 +4905,7 @@ body.my-account #bbpress-forums {
   padding-top: 75px;
   padding-bottom: 85px;
   color: #cfcfcf;
-  background: url(../media/content/footer/bg.jpg);
+  background: url(../jsfiles/media/content/footer/bg.jpg);
   background-size: cover;
 }
 

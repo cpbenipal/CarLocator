@@ -13,8 +13,8 @@ namespace CLIMFinders.Domain.Entities
         public DateTime EndDate { get; set; }
         public string Status { get; set; }
         [ForeignKey("BusinessId")]
-        public Businesses Businesses { get; set; }
+        public UserAddress Businesses { get; set; }
         [ForeignKey("TierId")]
-        public Businesses SubscriptionPlans { get; set; }
+        public UserAddress SubscriptionPlans { get; set; }
     }
 }

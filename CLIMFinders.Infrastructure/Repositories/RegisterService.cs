@@ -40,11 +40,11 @@ namespace CLIMFinders.Infrastructure.Repositories
                         PasswordSalt = Salt, 
                     };
                     var login = unitOfWork.GetRepository<User>();
-                    var repository = unitOfWork.GetRepository<Businesses>();
+                    var repository = unitOfWork.GetRepository<UserAddress>();
 
                     var newuser = login.Insert(mappedRequest);
                     login.Save();
-                    Businesses businesses = new()
+                    UserAddress businesses = new()
                     {
                         UserId = newuser.Id,
                         AddedById = newuser.Id,
@@ -116,7 +116,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                     repository.Update(entity);
                     repository.Save();
 
-                    var bizrepository = unitOfWork.GetRepository<Businesses>();
+                    var bizrepository = unitOfWork.GetRepository<UserAddress>();
                     var businesssDetail = bizrepository.GetById(business.Id);
                     var mapbusiness = _mapper.Map(business, businesssDetail);
                     mapbusiness.ModifiedById = business.UserId;

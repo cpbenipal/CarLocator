@@ -53,7 +53,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                     response.Status = "Current password is incorrect.";
                 }
                 else
-                { 
+                {
                     var newSalt = _hashManager.GenerateSalt();
                     entity.PasswordHash = _hashManager.HashPassword(dto.NewPassword, newSalt);
                     entity.PasswordSalt = newSalt;
@@ -70,6 +70,39 @@ namespace CLIMFinders.Infrastructure.Repositories
             }
             catch
             {
+                response.Id = -1;
+                response.Status = "An unexpected error occurred";
+                throw;
+            }
+            return response;
+        }
+        public ResponseDto ResetPassword(ForgotPasswordDto dto)
+        {
+            var response = new ResponseDto();
+            try
+            {
+                var repository = unitOfWork.GetRepository<User>();
+                var entity = repository.FirstOrDefault(e=>e.Email == dto.Email);
+                if (entity == null)
+                {
+                    response.Id = -1;
+                    response.Status = "Email does not exist in our system.";
+                }
+                else
+                {
+                    var newSalt = _hashManager.GenerateSalt();
+                    entity.PasswordHash = _hashManager.HashPassword(dto.NewPassword, newSalt);
+                    entity.PasswordSalt = newSalt;
+                    entity.ModifiedById = entity.Id;
+                    entity.ModifiedOn = DateTime.Now;
+                    repository.Update(entity);
+                    repository.Save();
+                    response.Id = entity.Id;
+                    response.Status = "Password reset successfully , Login with new password.";
+                }
+
+            }
+            catch {
                 response.Id = -1;
                 response.Status = "An unexpected error occurred";
                 throw;

@@ -2,7 +2,7 @@
 
 namespace CLIMFinders.Domain.Entities
 {
-    public class Searches
+    public class Searches: BaseEntity
     {
         public int Id { get; set; }
         public int UserId { get; set; }

@@ -12,7 +12,7 @@ namespace CLIMFinders.Application.Interfaces
         T GetByInclude(Func<T, bool> where, params Expression<Func<T, object>>[] navigationProperties);
         IList<T> GetAllInclude(params Expression<Func<T, object>>[] navigationProperties);
         T GetById(object id);
-        T FirstOrDefaultAsync(Expression<Func<T, bool>> expression);
+        T FirstOrDefault(Expression<Func<T, bool>> expression);
         T Insert(T obj);
         List<T> InsertRange(List<T> obj);
         T Update(T obj);

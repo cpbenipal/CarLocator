@@ -28,7 +28,7 @@ namespace CLIMFinders.Repositories
             var a = table.Where(expression).ToList();
             return a;
         }
-        public T FirstOrDefaultAsync(Expression<Func<T, bool>> expression)
+        public T FirstOrDefault(Expression<Func<T, bool>> expression)
         {
             return table.FirstOrDefault(expression);
         }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CLIMFinders.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CLIMFinders.Domain.Entities
@@ -18,7 +19,7 @@ namespace CLIMFinders.Domain.Entities
         public byte[]? Photo { get; set; }
         [ForeignKey("RoleId")]
         public Roles Roles { get; set; }
-        public Businesses? Businesses { get; set; }
+        public UserAddress? Businesses { get; set; }
 
     }
 }

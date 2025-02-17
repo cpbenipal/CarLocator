@@ -11,5 +11,6 @@ namespace CLIMFinders.Application.Interfaces
     {
         LoginResponseDto UserLogin(LoginDto loginDto);
         ResponseDto ChangePassword(ChangePasswordDto dto);
+        ResponseDto ResetPassword(ForgotPasswordDto dto);
     }
 }
