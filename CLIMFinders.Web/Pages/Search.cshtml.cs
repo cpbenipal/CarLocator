@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CLIMFinders.Web.Areas.Business.Pages
+namespace CLIMFinders.Web.Pages
 {
-    public class EditProfileModel : PageModel
+    public class SearchModel : PageModel
     {
         public void OnGet()
         {

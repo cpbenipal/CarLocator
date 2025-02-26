@@ -16,7 +16,7 @@ namespace CLIMFinders.Web.Pages
         private readonly IRegisterService registerService = registerService;
 
         [BindProperty]
-        public BusinessDto Input { get; set; }
+        public AddressDto Input { get; set; }
 
         public void OnGet()
         {

@@ -19,13 +19,31 @@ namespace CLIMFinders.Infrastructure.Repositories
             try
             {
                 var repository = unitOfWork.GetRepository<Vehicles>();
-                var response = repository.GetAllInclude(v => v.VehicleMake, v => v.VehicleModel, v => v.VehicleColor)
-                    .Where(e=>e.BusinessId == _userService.GetBusinessId())
-                    .ToList();
+                var response = GetAllVehicles()
+                    .Where(e=>e.BusinessId == _userService.GetBusinessId());
                 var lstVehicles = mapper.Map<List<VehicleListDto>>(response);
                 lstVehicles.ForEach(v =>
                 {
                     v.BoundStatus = StatusOptions().FirstOrDefault(e => e.Value == v.Status.ToString()).Text;
+                });
+
+                return lstVehicles;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public List<VehicleListDto> GetAllVehicles()
+        {
+            try
+            {
+                var repository = unitOfWork.GetRepository<Vehicles>();
+                var response = repository.GetAllInclude(v => v.VehicleMake, v => v.VehicleModel, v => v.VehicleColor, v=>v.Businesses.User);
+                var lstVehicles = mapper.Map<List<VehicleListDto>>(response);
+                lstVehicles.ForEach(v =>
+                {
+                    v.BoundStatus = StatusOptions().FirstOrDefault(e => e.Value == v.Status.ToString()).Text;                    
                 });
 
                 return lstVehicles;

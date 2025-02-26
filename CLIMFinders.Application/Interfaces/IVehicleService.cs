@@ -10,6 +10,7 @@ namespace CLIMFinders.Application.Interfaces
 {
     public interface IVehicleService
     {
+        List<VehicleListDto> GetAllVehicles();
         List<SelectListItem> GetVehicleColors();
         List<SelectListItem> GetVehicleMakes();
         List<SelectListItem> GetVehicleModel(int Id);

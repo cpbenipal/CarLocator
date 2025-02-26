@@ -17,6 +17,9 @@ namespace CLIMFinders.Web.ServiceExtension
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IStaticSelectOptionService, StaticSelectOptionService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
         }
     }
 }

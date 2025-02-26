@@ -7,10 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CLIMFinders.Web.Pages
 { 
-    public class RegisterModel(IRegisterService registerService, IJwtTokenService jwtTokenService, IStaticSelectOptionService staticSelectOptionService) : PageModel
+    public class RegisterModel(IRegisterService registerService, IStaticSelectOptionService staticSelectOptionService) : PageModel
     {
-        private readonly IRegisterService registerService = registerService;
-        private readonly IJwtTokenService _jwtTokenService = jwtTokenService;
+        private readonly IRegisterService registerService = registerService; 
         private readonly IStaticSelectOptionService _staticSelectOptionService = staticSelectOptionService;
         public List<SelectListItem> Roles { get; set; }
 
@@ -21,11 +20,7 @@ namespace CLIMFinders.Web.Pages
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values
-                                   .SelectMany(v => v.Errors)
-                                   .Select(e => e.ErrorMessage)
-                                   .ToList();
+            { 
                 Roles = _staticSelectOptionService.RoleOptions();
                 return Page();
             }
@@ -37,24 +32,7 @@ namespace CLIMFinders.Web.Pages
                 Roles = _staticSelectOptionService.RoleOptions();
                 ModelState.AddModelError(string.Empty, result?.Status ?? "User registration failed.");
                 return Page();
-            }
-
-            //// Generate JWT token
-            //var (token, expiration) = _jwtTokenService.GenerateToken(new LoginResponseDto
-            //{
-            //    Email = result.Email,
-            //    FullName = result.Name,
-            //    RoleId = result.RoleId
-            //});
-
-            //// Set token in HttpOnly cookie with expiration
-            //Response.Cookies.Append("AuthToken", token, new CookieOptions
-            //{
-            //    HttpOnly = true,
-            //    Secure = true,  // Ensures token is only sent over HTTPS
-            //    SameSite = SameSiteMode.Strict,
-            //    Expires = expiration  // Sync cookie expiration with token expiration
-            //});
+            } 
 
             return RedirectToPage("/Login");
         }

@@ -6,6 +6,7 @@
     --hover-color: #000002; /* Deep Blue */
     --light-bg: #FFFFFF; /* White */
     --text-color: #FFFFFF;
+    --tbl-hover-color: #F4372C; /* Deep Blue */
 }
 
 /* Navbar */
@@ -34,7 +35,7 @@
     }
 
     .table tbody tr:hover {
-        background-color: var(--hover-color);
+        background-color: var(--tbl-hover-color);
         color: var(--text-color);
     }
 

@@ -1,0 +1,25 @@
+﻿using CLIMFinders.Application.DTOs;
+using CLIMFinders.Application.Interfaces;
+using Microsoft.AspNetCore.Http;
+
+namespace CLIMFinders.Infrastructure.Repositories
+{
+    public class SearchService(IHttpContextAccessor httpContextAccessor, IPaymentService paymentService, IVehicleService vehicleService)  : ISearchService
+    {
+        private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+        private readonly IPaymentService _paymentService = paymentService;
+        private readonly IVehicleService _vehicleService = vehicleService;
+
+        public List<VehicleListDto> GetSearchResult(string VIN)
+        {
+            try
+            {
+                var search = _vehicleService.GetAllVehicles().Where(e=>e.VIN == VIN);
+                return search.ToList();
+            }
+            catch {
+                throw;
+            }
+        }         
+    }
+} 

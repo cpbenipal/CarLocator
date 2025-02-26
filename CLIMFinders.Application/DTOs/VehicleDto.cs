@@ -47,6 +47,7 @@ namespace CLIMFinders.Application.DTOs
         public string Color { get; set; }
         public int Status { get; set; }
         public int BusinessId { get; set; }
+        public string? CompanyName { get; set; }
         public string BoundStatus { get; set; }
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]

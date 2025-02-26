@@ -16,12 +16,13 @@ namespace CLIMFinders.Infrastructure.Data
         public virtual DbSet<Notifications> Notifications { get; set; }
         public virtual DbSet<Payments> Payments { get; set; }
         public virtual DbSet<Searches> Searches { get; set; }
-        public virtual DbSet<SubscriptionPlans> SubscriptionPlans { get; set; }
         public virtual DbSet<Subscriptions> Subscriptions { get; set; }
         public virtual DbSet<Vehicles> Vehicles { get; set; }
         public virtual DbSet<VehicleMake> VehicleMakes { get; set; }
         public virtual DbSet<VehicleModel> VehicleModels { get; set; }
         public virtual DbSet<VehicleColor> VehicleColors { get; set; }
+        public virtual DbSet<SubscriptionPlans> SubscriptionPlans { get; set; }
+        public virtual DbSet<PlanServices> PlanServices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,10 +32,18 @@ namespace CLIMFinders.Infrastructure.Data
                 new Roles { Id = 3, RoleNanme = "Tow" },
                 new Roles { Id = 4, RoleNanme = "Impound" }
             );
-
             modelBuilder.Entity<SubscriptionPlans>().HasData(
-                new SubscriptionPlans { Id = 1, Tier = "User Tier", Amount = 10, Duration = 1 },
-                new SubscriptionPlans { Id = 2, Tier = "Business Tier", Amount = 10, Duration = 1 }
+           new SubscriptionPlans { Id = 1, Tier = "User Registration (Car Owners)", Amount = 10, Duration = 1 },
+           new SubscriptionPlans { Id = 2, Tier = "Tow or Impound Business Registration", Amount = 10, Duration = 1 }
+           );
+
+            modelBuilder.Entity<PlanServices>().HasData(
+                new PlanServices { Id = 1, Name = "User Registration.", PlanId = 1 },
+                new PlanServices { Id = 2, Name = "Vehicle Search by VIN.", PlanId = 1 },
+                new PlanServices { Id = 3, Name = "Access the search results.", PlanId = 1 },
+                new PlanServices { Id = 4, Name = "Business registration", PlanId = 2 },
+                new PlanServices { Id = 5, Name = "Vehicle Management", PlanId = 2 },
+                new PlanServices { Id = 6, Name = "Notification System", PlanId = 2 }
                 );
 
             string[] hash = new string[2];
@@ -264,6 +273,8 @@ namespace CLIMFinders.Infrastructure.Data
             new VehicleModel { Id = 60, Name = "XC90", MakeId = 47 },
             new VehicleModel { Id = 61, Name = "S60", MakeId = 47 }
             );
+
+
 
         }
     }

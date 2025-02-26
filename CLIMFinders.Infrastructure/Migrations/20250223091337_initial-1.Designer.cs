@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CLIMFinders.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250217120650_rename businesses table")]
-    partial class renamebusinessestable
+    [Migration("20250223091337_initial-1")]
+    partial class initial1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -160,6 +160,67 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.ToTable("Payments");
                 });
 
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.PlanServices", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlanId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanId")
+                        .IsUnique();
+
+                    b.ToTable("PlanServices");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "User Registration.",
+                            PlanId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Vehicle Search by VIN.",
+                            PlanId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Access the search results.",
+                            PlanId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Business registration",
+                            PlanId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Vehicle Management",
+                            PlanId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Notification System",
+                            PlanId = 2
+                        });
+                });
+
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Roles", b =>
                 {
                     b.Property<int>("Id")
@@ -250,26 +311,11 @@ namespace CLIMFinders.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Duration")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ModifiedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Tier")
                         .IsRequired()
@@ -283,26 +329,16 @@ namespace CLIMFinders.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 17, 17, 36, 50, 100, DateTimeKind.Local).AddTicks(5617),
                             Amount = 10m,
                             Duration = 1,
-                            IsDeleted = false,
-                            ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 17, 17, 36, 50, 100, DateTimeKind.Local).AddTicks(5631),
-                            Tier = "User Tier"
+                            Tier = "User Registration (Car Owners)"
                         },
                         new
                         {
                             Id = 2,
-                            AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 17, 17, 36, 50, 100, DateTimeKind.Local).AddTicks(5638),
                             Amount = 10m,
                             Duration = 1,
-                            IsDeleted = false,
-                            ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 17, 17, 36, 50, 100, DateTimeKind.Local).AddTicks(5639),
-                            Tier = "Business Tier"
+                            Tier = "Tow or Impound Business Registration"
                         });
                 });
 
@@ -416,16 +452,16 @@ namespace CLIMFinders.Infrastructure.Migrations
                         {
                             Id = 1,
                             AddedById = 1,
-                            AddedOn = new DateTime(2025, 2, 17, 17, 36, 50, 100, DateTimeKind.Local).AddTicks(6728),
-                            ConfirmedOn = new DateTime(2025, 2, 17, 17, 36, 50, 100, DateTimeKind.Local).AddTicks(6732),
+                            AddedOn = new DateTime(2025, 2, 23, 14, 43, 36, 863, DateTimeKind.Local).AddTicks(8827),
+                            ConfirmedOn = new DateTime(2025, 2, 23, 14, 43, 36, 863, DateTimeKind.Local).AddTicks(8845),
                             Email = "admin@admin.com",
                             FullName = "Super Admin",
                             IsConfirmed = true,
                             IsDeleted = false,
                             ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 17, 17, 36, 50, 100, DateTimeKind.Local).AddTicks(6730),
-                            PasswordHash = "sfLBRvxo4RsHW+9+4Egq4jdgOFQZa2J6Mw++7yGj/wM=",
-                            PasswordSalt = "+wHOn2amuARAdRaRH0/+yg==",
+                            ModifiedOn = new DateTime(2025, 2, 23, 14, 43, 36, 863, DateTimeKind.Local).AddTicks(8843),
+                            PasswordHash = "9rNVqL3IWS5CYurjW3O1zCRkCTEeTOMnxX7zFRFi2Pg=",
+                            PasswordSalt = "GuKNn9orPyO7RtKexztBnA==",
                             RoleId = 1
                         });
                 });
@@ -1334,6 +1370,17 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.PlanServices", b =>
+                {
+                    b.HasOne("CLIMFinders.Domain.Entities.SubscriptionPlans", "SubscriptionPlans")
+                        .WithOne("PlanServices")
+                        .HasForeignKey("CLIMFinders.Domain.Entities.PlanServices", "PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SubscriptionPlans");
+                });
+
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Searches", b =>
                 {
                     b.HasOne("CLIMFinders.Domain.Entities.User", "User")
@@ -1430,6 +1477,12 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Navigation("VehicleMake");
 
                     b.Navigation("VehicleModel");
+                });
+
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.SubscriptionPlans", b =>
+                {
+                    b.Navigation("PlanServices")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.User", b =>

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CLIMFinders.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250216090928_initial")]
+    [Migration("20250223090255_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CLIMFinders.Domain.Entities.Businesses", b =>
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.Matches", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,61 +39,16 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Property<DateTime>("AddedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactPerson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("MatchedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedById")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Businesses");
-                });
-
-            modelBuilder.Entity("CLIMFinders.Domain.Entities.Matches", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("MatchedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("Notified")
@@ -122,9 +77,24 @@ namespace CLIMFinders.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AddedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModifiedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("SentAt")
                         .HasColumnType("datetime2");
@@ -147,8 +117,23 @@ namespace CLIMFinders.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AddedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ModifiedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
@@ -173,6 +158,66 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.PlanServices", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlanId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanId");
+
+                    b.ToTable("PlanServices");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "User Registration.",
+                            PlanId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Vehicle Search by VIN.",
+                            PlanId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Access the search results.",
+                            PlanId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Business registration",
+                            PlanId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Vehicle Management",
+                            PlanId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Notification System",
+                            PlanId = 2
+                        });
                 });
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Roles", b =>
@@ -222,6 +267,21 @@ namespace CLIMFinders.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AddedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ModifiedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("Paid")
                         .HasColumnType("bit");
 
@@ -250,26 +310,11 @@ namespace CLIMFinders.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Duration")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ModifiedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Tier")
                         .IsRequired()
@@ -283,26 +328,16 @@ namespace CLIMFinders.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(798),
-                            Amount = 0m,
-                            Duration = 0,
-                            IsDeleted = false,
-                            ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(815),
-                            Tier = "Free Tier"
+                            Amount = 10m,
+                            Duration = 1,
+                            Tier = "User Registration (Car Owners)"
                         },
                         new
                         {
                             Id = 2,
-                            AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(818),
                             Amount = 10m,
                             Duration = 1,
-                            IsDeleted = false,
-                            ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(819),
-                            Tier = "Paid Tier"
+                            Tier = "Tow or Impound Business Registration"
                         });
                 });
 
@@ -415,19 +450,79 @@ namespace CLIMFinders.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            AddedById = 0,
-                            AddedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(1816),
-                            ConfirmedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(1819),
+                            AddedById = 1,
+                            AddedOn = new DateTime(2025, 2, 23, 14, 32, 54, 864, DateTimeKind.Local).AddTicks(8816),
+                            ConfirmedOn = new DateTime(2025, 2, 23, 14, 32, 54, 864, DateTimeKind.Local).AddTicks(8831),
                             Email = "admin@admin.com",
                             FullName = "Super Admin",
                             IsConfirmed = true,
                             IsDeleted = false,
                             ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 2, 16, 14, 39, 28, 239, DateTimeKind.Local).AddTicks(1818),
-                            PasswordHash = "n3doZiu1rEik5By9L1dXD5HXKYGmNmeqvruwjL3twQU=",
-                            PasswordSalt = "zN5ZA8ngQHJ4EIUEw0xydw==",
+                            ModifiedOn = new DateTime(2025, 2, 23, 14, 32, 54, 864, DateTimeKind.Local).AddTicks(8829),
+                            PasswordHash = "bofp2QzZMM9ose8amsxQru0pnpgrUvyxVgQ/vqMjDSw=",
+                            PasswordSalt = "ftZ0EK4ya4aflR56c6rCNA==",
                             RoleId = 1
                         });
+                });
+
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.UserAddress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AddedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactPerson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ModifiedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserAddress", "dbo");
                 });
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.VehicleColor", b =>
@@ -1233,17 +1328,6 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.ToTable("Vehicles");
                 });
 
-            modelBuilder.Entity("CLIMFinders.Domain.Entities.Businesses", b =>
-                {
-                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
-                        .WithOne("Businesses")
-                        .HasForeignKey("CLIMFinders.Domain.Entities.Businesses", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Matches", b =>
                 {
                     b.HasOne("CLIMFinders.Domain.Entities.User", "User")
@@ -1285,6 +1369,17 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.PlanServices", b =>
+                {
+                    b.HasOne("CLIMFinders.Domain.Entities.SubscriptionPlans", "SubscriptionPlans")
+                        .WithMany()
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SubscriptionPlans");
+                });
+
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Searches", b =>
                 {
                     b.HasOne("CLIMFinders.Domain.Entities.User", "User")
@@ -1298,13 +1393,13 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Subscriptions", b =>
                 {
-                    b.HasOne("CLIMFinders.Domain.Entities.Businesses", "Businesses")
+                    b.HasOne("CLIMFinders.Domain.Entities.UserAddress", "Businesses")
                         .WithMany()
                         .HasForeignKey("BusinessId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CLIMFinders.Domain.Entities.Businesses", "SubscriptionPlans")
+                    b.HasOne("CLIMFinders.Domain.Entities.UserAddress", "SubscriptionPlans")
                         .WithMany()
                         .HasForeignKey("TierId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1326,6 +1421,17 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Navigation("Roles");
                 });
 
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.UserAddress", b =>
+                {
+                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
+                        .WithOne("Businesses")
+                        .HasForeignKey("CLIMFinders.Domain.Entities.UserAddress", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CLIMFinders.Domain.Entities.VehicleModel", b =>
                 {
                     b.HasOne("CLIMFinders.Domain.Entities.VehicleMake", "VehicleMake")
@@ -1339,7 +1445,7 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.Vehicles", b =>
                 {
-                    b.HasOne("CLIMFinders.Domain.Entities.Businesses", "Businesses")
+                    b.HasOne("CLIMFinders.Domain.Entities.UserAddress", "Businesses")
                         .WithMany()
                         .HasForeignKey("BusinessId")
                         .OnDelete(DeleteBehavior.Cascade)

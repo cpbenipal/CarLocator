@@ -1,4 +1,3 @@
-using CLIMFinders.Application.DTOs;
 using CLIMFinders.Infrastructure.Data;
 using CLIMFinders.Web.ServiceExtension;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

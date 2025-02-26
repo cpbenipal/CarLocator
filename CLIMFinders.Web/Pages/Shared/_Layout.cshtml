@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Impound Car Finders</title>
+    <title>Impound Finders - @ViewData["Title"]</title>
 
     <!-- SEO Meta Tags -->
     <meta name="description" content="Find impounded cars quickly and easily." />
     <meta name="keywords" content="impound, car finder, vehicle search" />
     <meta name="format-detection" content="telephone=no" />
-    <meta name="HandheldFriendly" content="true" />    
+    <meta name="HandheldFriendly" content="true" />
     <link href="@Url.Content("~/css/master.css")" rel="stylesheet" />
 
     <style>
@@ -29,7 +29,7 @@
         .footer {
             width: 100%;
             text-align: center;
-            padding: 10px 0; 
+            padding: 10px 0;
         }
     </style>
 </head>
@@ -49,6 +49,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/ContactUs">Contact Us</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -79,20 +82,20 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Login">Login</a>
                             </li>
-                        }                        
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
     <partial name="_ValidationScriptsPartial" />
-   <main class="container my-4">
+    <main class="container my-4">
         @RenderBody()
     </main>
-    
+
     <footer class="footer mt-auto">
         <div class="container">
-            <p>&copy; @DateTime.Now.Year Impound Car Finders. All rights reserved.</p>
+            <p>&copy; @DateTime.Now.Year Impound Finders. All rights reserved.</p>
         </div>
     </footer>
     <!-- Include validation scripts -->

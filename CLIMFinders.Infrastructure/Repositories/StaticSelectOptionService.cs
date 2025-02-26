@@ -16,7 +16,7 @@ namespace CLIMFinders.Infrastructure.Repositories
             var options = new List<SelectListItem>
             {
                 new() { Value = "1", Text = "Impounded" },
-                new() { Value = "2", Text = "Tow" },
+                new() { Value = "2", Text = "Towed" },
                 new() { Value = "3", Text = "Released" }
             };
             return options;

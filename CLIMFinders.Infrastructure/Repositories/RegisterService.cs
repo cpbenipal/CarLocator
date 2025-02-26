@@ -1,8 +1,9 @@
-﻿using AutoMapper; 
+﻿using AutoMapper;
 using CLIMFinders.Application.DTOs;
 using CLIMFinders.Application.Interfaces;
 using CLIMFinders.Domain.Entities;
 using CLIMFinders.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CLIMFinders.Infrastructure.Repositories
 {
@@ -25,7 +26,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                 }
                 else
                 {
-                    string password = dto.NewPassword; 
+                    string password = dto.NewPassword;
                     var Salt = _hashManager.GenerateSalt();
                     var hashedPassword = _hashManager.HashPassword(dto.NewPassword, Salt);
                     var mappedRequest = new User()
@@ -37,32 +38,12 @@ namespace CLIMFinders.Infrastructure.Repositories
                         IsConfirmed = true,
                         IsDeleted = false,
                         PasswordHash = hashedPassword,
-                        PasswordSalt = Salt, 
+                        PasswordSalt = Salt,
                     };
                     var login = unitOfWork.GetRepository<User>();
-                    var repository = unitOfWork.GetRepository<UserAddress>();
-
                     var newuser = login.Insert(mappedRequest);
                     login.Save();
-                    UserAddress businesses = new()
-                    {
-                        UserId = newuser.Id,
-                        AddedById = newuser.Id,
-                        ModifiedById = newuser.Id,
-                        AddedOn = DateTime.Now,
-                        Address = dto.Address,
-                        City = dto.City,
-                        ContactPerson = dto.ContactPerson,
-                        Description = dto.Description,
-                        Id = dto.Id,
-                        IsDeleted = false,
-                        ModifiedOn = DateTime.Now,
-                        Phone = dto.Phone,
-                        State = dto.State,
-                        ZipCode = dto.ZipCode
-                    };
-                    repository.Insert(businesses);
-                    repository.Save();
+                    SaveUserAddress(dto, newuser.Id);
                     response.Status = "Business account register successfully";
                     response.Name = dto.Name;
                     response.Id = newuser.Id;
@@ -78,14 +59,39 @@ namespace CLIMFinders.Infrastructure.Repositories
             return response;
         }
 
-        public BusinessDto GetMyProfile()
+        private void SaveUserAddress(BusinessCreditDto dto, int UserId)
+        {
+            var repository = unitOfWork.GetRepository<UserAddress>();
+
+            UserAddress businesses = new()
+            {
+                UserId = UserId,
+                AddedById = UserId,
+                ModifiedById = UserId,
+                AddedOn = DateTime.Now,
+                Address = dto.Address,
+                City = dto.City,
+                ContactPerson = dto.ContactPerson,
+                Description = dto.Description,
+                Id = dto.Id,
+                IsDeleted = false,
+                ModifiedOn = DateTime.Now,
+                Phone = dto.Phone,
+                State = dto.State,
+                ZipCode = dto.ZipCode
+            };
+            repository.Insert(businesses);
+            repository.Save();
+        }
+
+        public AddressDto GetMyProfile()
         {
             var userid = _userService.GetUserId();
             var repository = unitOfWork.GetRepository<User>();
             var entity = repository.GetByInclude(u => u.Id == userid, u => u.Businesses);
-            BusinessDto business = new();
+            AddressDto business = new();
 
-            business = _mapper.Map<BusinessDto>(entity);
+            business = _mapper.Map<AddressDto>(entity);
 
             return business;
         }
@@ -94,7 +100,7 @@ namespace CLIMFinders.Infrastructure.Repositories
             var repository = unitOfWork.GetRepository<User>();
             return repository != null && repository.GetAll().Any(x => (Id == 0 || x.Id != Id) && x.Email == email);
         }
-        public ResponseDto UpdateBusiness(BusinessDto business)
+        public ResponseDto UpdateBusiness(AddressDto business)
         {
             var response = new ResponseDto();
 
@@ -108,6 +114,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                 else
                 {
                     var repository = unitOfWork.GetRepository<User>();
+
                     var entity = repository.GetById(business.UserId);
                     entity.Email = business.Email;
                     entity.FullName = business.Name;
@@ -117,12 +124,20 @@ namespace CLIMFinders.Infrastructure.Repositories
                     repository.Save();
 
                     var bizrepository = unitOfWork.GetRepository<UserAddress>();
-                    var businesssDetail = bizrepository.GetById(business.Id);
-                    var mapbusiness = _mapper.Map(business, businesssDetail);
-                    mapbusiness.ModifiedById = business.UserId;
-                    mapbusiness.ModifiedOn = DateTime.Now;
-                    bizrepository.Update(mapbusiness);
-                    bizrepository.Save();
+                    var address = bizrepository.GetById(business.Id);
+
+                    if (address != null)
+                    {
+                        var mappedaddress = _mapper.Map(business, address);
+
+                        bizrepository.Update(mappedaddress);
+                        bizrepository.Save();
+                    }
+                    else
+                    {
+                        var mappedaddress = _mapper.Map<BusinessCreditDto>(business);
+                        SaveUserAddress(mappedaddress, business.UserId);
+                    }
 
                     response.Id = 1;
                     response.Status = "Business information updated successfully";
@@ -134,6 +149,6 @@ namespace CLIMFinders.Infrastructure.Repositories
                 throw;
             }
             return response;
-        }     
+        }
     }
 }

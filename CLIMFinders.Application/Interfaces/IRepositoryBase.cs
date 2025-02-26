@@ -16,6 +16,7 @@ namespace CLIMFinders.Application.Interfaces
         T Insert(T obj);
         List<T> InsertRange(List<T> obj);
         T Update(T obj);
+        T UpdateRelated(T obj);
         List<T> UpdateRange(List<T> obj);
         void Delete(object id);
         void Save();

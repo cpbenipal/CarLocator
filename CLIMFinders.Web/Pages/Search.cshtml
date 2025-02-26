@@ -1,0 +1,126 @@
+﻿@page
+@model SearchModel
+@{
+    ViewData["Title"] = "Vehicle Search";
+}
+
+<h2 class="text-center my-4">Search for Your Vehicle</h2>
+
+<div class="container">
+    <div class="card p-4 shadow">
+        <div class="row">
+            <div class="col-md-10">
+                <input type="text" id="vinInput" class="form-control" placeholder="Enter VIN (e.g., 1HGCM82633A123456)" required>
+            </div>
+            <div class="col-md-2">
+                <button id="searchButton" class="btn btn-primary w-100">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 alert alert-danger" id="errorMessage" style="display: none;"></div>
+    <div class="table-responsive">
+        <div class="mt-4">
+            <h4>Search Results</h4>
+            <table class="table" id="resultTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>VIN</th>
+                        <th>Make</th>
+                        <th>Model</th>
+                        <th>Color</th>
+                        <th>Year</th>
+                        <th>Impound Lot</th>
+                        <th>Facility</th>
+                        <th>Date Impounded</th>
+                    </tr>
+                </thead>
+                <tbody id="resultBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+
+    @*  <div class="mt-4">
+        <h4>Search History</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>VIN</th>
+                    <th>Search Date</th>
+                </tr>
+            </thead>
+            <tbody id="searchHistory"></tbody>
+        </table>
+    </div> *@
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $("#searchButton").click(function () {
+            let vin = $("#vinInput").val();
+            $("#errorMessage").hide();
+            $("#searchResult").hide();
+            $("#resultBody").empty();
+
+            if (vin === "") {
+                $("#errorMessage").text("Please enter a VIN").show();
+                return;
+            }
+
+            $.ajax({
+                url: `/api/search/searchvin/${vin}`,
+                type: "GET",
+                success: function (data) {
+                     if (data.length === 0) {
+                        $("#errorMessage").text("No record found for this VIN.").show();
+                        return;
+                    }
+
+                    $.each(data, function (index, vehicle) {
+                        $("#resultBody").append(`
+                            <tr>
+                                <td>${vehicle.vin}</td>
+                                <td>${vehicle.make}</td>
+                                <td>${vehicle.model}</td>
+                                <td>${vehicle.color}</td>
+                                <td>${vehicle.year}</td>
+                                <td>${vehicle.boundStatus}</td>
+                                <td>${vehicle.companyName}</td>
+                                <td>${new Date(vehicle.pickedOn).toLocaleDateString()}</td>
+                            </tr>
+                        `);
+                    });
+
+                    $("#resultTable").show();
+                   // saveSearchHistory(vin);
+                },
+                error: function (xhr) {
+                    let errorMessage = xhr.responseJSON ? xhr.responseJSON.message : "An error occurred.";
+                    $("#errorMessage").text(errorMessage).show();
+                }
+            });
+        });
+
+        // function saveSearchHistory(vin) {
+        //     let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
+        //     searchHistory.push({ vin: vin, date: new Date().toLocaleString() });
+        //     localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+
+        //     loadSearchHistory();
+        // }
+
+        // function loadSearchHistory() {
+        //     let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
+        //     let tableBody = $("#searchHistory");
+        //     tableBody.empty();
+
+        //     history.forEach(entry => {
+        //         let row = `<tr><td>${entry.vin}</td><td>${entry.date}</td></tr>`;
+        //         tableBody.append(row);
+        //     });
+        // }
+    });
+</script>

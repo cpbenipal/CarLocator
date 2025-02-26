@@ -18,7 +18,7 @@ namespace CLIMFinders.Application.DTOs
         public string PremiumPriceId { get; set; }
     }
 
-    public class BusinessDto : PersonInfoDto
+    public class AddressDto : PersonInfoDto
     {
         public int Id { get; set; }
         public int UserId { get; set; }
@@ -41,7 +41,7 @@ namespace CLIMFinders.Application.DTOs
         public int RoleId { get; set; }
     }
 
-    public class BusinessCreditDto : BusinessDto
+    public class BusinessCreditDto : AddressDto
     {
         public int Id { get; set; }
         [DisplayName("New Password")]

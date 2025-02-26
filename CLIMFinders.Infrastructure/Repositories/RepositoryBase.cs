@@ -86,6 +86,12 @@ namespace CLIMFinders.Repositories
             _context.Entry(obj).State = EntityState.Modified;
             return obj;
         }
+        public T UpdateRelated(T obj)
+        {
+            table.Attach(obj);
+            _context.Entry(obj).State = EntityState.Detached;
+            return obj;
+        }
         public List<T> UpdateRange(List<T> obj)
         {
             obj.ToList().ForEach(e =>

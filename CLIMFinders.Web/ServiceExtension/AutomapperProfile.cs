@@ -16,15 +16,17 @@ namespace CLIMFinders.Web.ServiceExtension
                 .ReverseMap();
 
             CreateMap<Vehicles, VehicleDto>().ReverseMap();
+            CreateMap<Payments, PaymentRequestDto>().ReverseMap();
 
             CreateMap<Vehicles, VehicleListDto>()
             .ForMember(dest => dest.Make, opt => opt.MapFrom(src => src.VehicleMake.Name))
             .ForMember(dest => dest.Model, opt => opt.MapFrom(src => src.VehicleModel.Name))
-            .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.VehicleColor.Name))
+            .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.VehicleColor.Name)) 
+            .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.Businesses != null ? src.Businesses.User.FullName : null))
             .ReverseMap();
              
             // Map from User and Businesses to BusinessDto
-            CreateMap<User, BusinessDto>()
+            CreateMap<User, AddressDto>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FullName))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
@@ -36,7 +38,12 @@ namespace CLIMFinders.Web.ServiceExtension
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Businesses != null ? src.Businesses.City : null))
                 .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.Businesses != null ? src.Businesses.State : null))
                 .ForMember(dest => dest.ZipCode, opt => opt.MapFrom(src => src.Businesses != null ? src.Businesses.ZipCode : null))
-                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Businesses != null ? src.Businesses.Description : null)).ReverseMap();             
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Businesses != null ? src.Businesses.Description : null)).ReverseMap();
+
+            CreateMap<BusinessCreditDto, AddressDto>().ReverseMap();
+            CreateMap<UserAddress, AddressDto>().ReverseMap();
+            CreateMap<PlanServices, PlanServicesDto>().ReverseMap();
+            CreateMap<SubscriptionPlans, SubscriptionPlansDto>().ReverseMap();
 
         }
     }

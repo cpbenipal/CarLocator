@@ -8,26 +8,27 @@
     <h2 class="text-center mb-4">Choose Your Subscription Plan</h2>
 
     <div class="row justify-content-center">
-        <!-- Standard Plan -->
-        <div class="col-md-5">
-            <div class="card text-center border-success shadow-lg">
-                <div class="card-header bg-success text-white">
-                    <h4>User Registration (Car Owners)</h4>
-                </div>
-                <div class="card-body">
-                    <h3 class="text-success">$19.99 <small class="text-muted">/month</small></h3>
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li>✅ User Registration.</li>
-                        <li>✅ Vehicle Search by VIN.</li>
-                        <li>✅ Access the search results.</li>
-                    </ul>
-                    <button class="btn btn-success w-100" id="standardPlan">Select Plan</button>
+        @foreach (var plan in Model.Input)
+        {
+            string cssaa = (plan.Id % 2 == 0) ? "success" : "warning";
+            <div class="col-md-5">
+                <div class="card text-center border-@cssaa shadow-lg">
+                    <div class="card-header bg-@cssaa text-white">
+                        <h4>@plan.Tier</h4>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="text-success"> @($"{plan.Amount:C}") <small class="text-muted">/month</small></h3>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            @foreach(var service in plan.PlanServicesDto){
+                                <li>✅ @service.Name.</li>
+                            }
+                        </ul>
+                        <button class="btn btn-@cssaa w-100" id="@("ExecutePlan")@plan.Id">Select Plan</button>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Premium Plan -->
-        <div class="col-md-5">
+        }
+        @* <div class="col-md-5">
             <div class="card text-center border-warning shadow-sm">
                 <div class="card-header bg-warning text-white">
                     <h4>Tow or Impound Business Registration</h4>
@@ -37,22 +38,22 @@
                     <ul class="list-unstyled mt-3 mb-4">
                         <li>✅ Business registration</li>
                         <li>✅ Vehicle Management</li>
-                        <li>✅ Notification System</li> 
+                        <li>✅ Notification System</li>
                     </ul>
                     <button class="btn btn-warning w-100" id="premiumPlan">Select Plan</button>
                 </div>
             </div>
-        </div>
+        </div> *@
     </div>
 </div>
 
 <script>
     var stripe = Stripe("pk_test_5104HR54ZriKXbh6h0S1vNDz3fKVbQIaI1ZmD5C5eVVvfp0LYdV5Y9tg2WMmPZrYfcPgHEOa0d9uHgmmWDFiaWcKX00K39qkg6J"); // Replace with your Stripe Publishable Key
 
-    document.getElementById("standardPlan").addEventListener("click", function () {
+    document.getElementById("ExecutePlan1").addEventListener("click", function () {
       ProcessPayment('user');
     });
-    document.getElementById("premiumPlan").addEventListener("click", function () {
+    document.getElementById("ExecutePlan2").addEventListener("click", function () {
      ProcessPayment('business');
     });
 

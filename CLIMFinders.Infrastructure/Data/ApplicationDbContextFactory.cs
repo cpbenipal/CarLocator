@@ -13,7 +13,7 @@ namespace CLIMFinders.Infrastructure.Data
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(basePath + "/CLIMFinders.Web") // Change to your startup project folder
                 .AddEnvironmentVariables()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true)
                 .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
