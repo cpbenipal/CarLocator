@@ -2,19 +2,21 @@
 using CLIMFinders.Application.DTOs;
 using CLIMFinders.Application.Interfaces;
 using CLIMFinders.Domain.Entities;
-using CLIMFinders.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace CLIMFinders.Infrastructure.Repositories
 {
-    public class RegisterService(IUnitOfWork unitOfWork, IHashManager hashManager, IMapper mapper, IUserService userService) : IRegisterService
+    public class RegisterService(IUnitOfWork unitOfWork, IHashManager hashManager, IMapper mapper, IUserService userService, IEmailService emailService, IEmailHelperUtils emailHelper, IConfiguration config) : IRegisterService
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
         private readonly IHashManager _hashManager = hashManager;
         private readonly IMapper _mapper = mapper;
         private readonly IUserService _userService = userService;
+        private readonly IEmailService _emailService = emailService;
+        private readonly IEmailHelperUtils _emailHelper = emailHelper;
+        private readonly IConfiguration _config = config;
 
-        public ResponseDto CreateUser(BusinessCreditDto dto)
+        public ResponseDto CreateUser(PersonInfoDto dto, int RoleID)
         {
             var response = new ResponseDto();
             try
@@ -26,29 +28,39 @@ namespace CLIMFinders.Infrastructure.Repositories
                 }
                 else
                 {
-                    string password = dto.NewPassword;
+                    string password = _userService.GeneratePassword(8);
+                    string ConfirmationCode = Guid.NewGuid().ToString();
                     var Salt = _hashManager.GenerateSalt();
-                    var hashedPassword = _hashManager.HashPassword(dto.NewPassword, Salt);
+                    var hashedPassword = _hashManager.HashPassword(password, Salt);
                     var mappedRequest = new User()
                     {
                         Email = dto.Email,
                         FullName = dto.Name,
-                        RoleId = dto.RoleId,
-                        ConfirmedOn = DateTime.Now,
-                        IsConfirmed = true,
-                        IsDeleted = false,
+                        RoleId = RoleID,
                         PasswordHash = hashedPassword,
                         PasswordSalt = Salt,
+                        ConfirmationCode = ConfirmationCode
                     };
                     var login = unitOfWork.GetRepository<User>();
                     var newuser = login.Insert(mappedRequest);
                     login.Save();
-                    SaveUserAddress(dto, newuser.Id);
-                    response.Status = "Business account register successfully";
+                    //int BusinessId = SaveUserAddress(dto, newuser.Id);
+                    response.Status = "Your account verification is pending. Please check your email and click the verification link to activate your account.\r\n\r\nIf you don’t see the email, check your spam folder or request a new verification email.";
                     response.Name = dto.Name;
                     response.Id = newuser.Id;
                     response.Email = dto.Email;
-                    response.RoleId = dto.RoleId;
+                    response.RoleId = RoleID;
+
+                    EmailContent emailContent = new()
+                    {
+                        Name = dto.Name,
+                        Email = dto.Email,
+                        ActivationLink = _config["JwtSettings:Issuer"]+"/ActivateAccount?code="+ ConfirmationCode,
+                        CopyRightYear = DateTime.Now.Year.ToString(),
+                        LogoLink = dto.Email,
+                    };
+                    var ContentToFill = _emailHelper.FillEmailContents(emailContent, "verify_email", dto.Name);
+                    _emailService.SendEmail(dto.Email, "Account Verification Required", ContentToFill);
                 }
             }
             catch
@@ -59,7 +71,7 @@ namespace CLIMFinders.Infrastructure.Repositories
             return response;
         }
 
-        private void SaveUserAddress(BusinessCreditDto dto, int UserId)
+        private int SaveUserAddress(BusinessCreditDto dto, int UserId)
         {
             var repository = unitOfWork.GetRepository<UserAddress>();
 
@@ -80,8 +92,9 @@ namespace CLIMFinders.Infrastructure.Repositories
                 State = dto.State,
                 ZipCode = dto.ZipCode
             };
-            repository.Insert(businesses);
+            var response = repository.Insert(businesses);
             repository.Save();
+            return response.Id;
         }
 
         public AddressDto GetMyProfile()
@@ -95,7 +108,7 @@ namespace CLIMFinders.Infrastructure.Repositories
 
             return business;
         }
-        private bool IsUserExists(string email, int Id = 0)
+        public bool IsUserExists(string email, int Id = 0)
         {
             var repository = unitOfWork.GetRepository<User>();
             return repository != null && repository.GetAll().Any(x => (Id == 0 || x.Id != Id) && x.Email == email);
@@ -149,6 +162,22 @@ namespace CLIMFinders.Infrastructure.Repositories
                 throw;
             }
             return response;
+        }
+        public bool ActivateAccount(string code)
+        {
+            var repository = unitOfWork.GetRepository<User>();
+            var response = repository.FirstOrDefault(x => x.ConfirmationCode == code);
+            if (response != null)
+            {
+                response.ConfirmationCode = string.Empty;
+                response.ConfirmedOn = response.ModifiedOn = DateTime.Now;
+                response.AddedById = response.ModifiedById = response.Id;
+                response.IsConfirmed = true;
+                repository.Update(response);
+                repository.Save();
+                return true;
+            }
+            return false;
         }
     }
 }

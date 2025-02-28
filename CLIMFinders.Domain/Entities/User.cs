@@ -20,6 +20,8 @@ namespace CLIMFinders.Domain.Entities
         [ForeignKey("RoleId")]
         public Roles Roles { get; set; }
         public UserAddress? Businesses { get; set; }
-
+        public Subscriptions? Subscriptions { get; set; }
+        public Payments? Payments { get; set; }
+        public string ConfirmationCode { get; set; } = string.Empty;
     }
 }

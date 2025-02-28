@@ -26,13 +26,14 @@ namespace CLIMFinders.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Roles>().HasData(
-                new Roles { Id = 1, RoleNanme = "SuperAdmin" },
-                new Roles { Id = 2, RoleNanme = "Users" },
-                new Roles { Id = 3, RoleNanme = "Tow" },
-                new Roles { Id = 4, RoleNanme = "Impound" }
+            modelBuilder.Entity<Roles>().HasData(              
+                new Roles { Id = 1, RoleNanme = "Users" },
+                new Roles { Id = 2, RoleNanme = "Tow" },
+                new Roles { Id = 3, RoleNanme = "Impound" },
+                 new Roles { Id = 4, RoleNanme = "SuperAdmin" }
             );
-            modelBuilder.Entity<SubscriptionPlans>().HasData(
+
+           modelBuilder.Entity<SubscriptionPlans>().HasData(
            new SubscriptionPlans { Id = 1, Tier = "User Registration (Car Owners)", Amount = 10, Duration = 1 },
            new SubscriptionPlans { Id = 2, Tier = "Tow or Impound Business Registration", Amount = 10, Duration = 1 }
            );

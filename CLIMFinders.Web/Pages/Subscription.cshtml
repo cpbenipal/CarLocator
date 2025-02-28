@@ -4,6 +4,27 @@
     ViewData["Title"] = "Choose Subscription";
 }
 <script src="https://js.stripe.com/v3/"></script>
+<style>
+    .card {
+        max-width: 100%;
+        margin: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-buy {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+        width: 10%;
+        text-align: center;
+    }
+
+        .btn-buy:hover {
+            background-color: #0056b3;
+        }
+         
+</style>
 <div class="container py-5">
     <h2 class="text-center mb-4">Choose Your Subscription Plan</h2>
 
@@ -11,6 +32,7 @@
         @foreach (var plan in Model.Input)
         {
             string cssaa = (plan.Id % 2 == 0) ? "success" : "warning";
+
             <div class="col-md-5">
                 <div class="card text-center border-@cssaa shadow-lg">
                     <div class="card-header bg-@cssaa text-white">
@@ -19,72 +41,36 @@
                     <div class="card-body">
                         <h3 class="text-success"> @($"{plan.Amount:C}") <small class="text-muted">/month</small></h3>
                         <ul class="list-unstyled mt-3 mb-4">
-                            @foreach(var service in plan.PlanServicesDto){
+                            @foreach (var service in plan.PlanServicesDto)
+                            {
                                 <li>✅ @service.Name.</li>
                             }
                         </ul>
-                        <button class="btn btn-@cssaa w-100" id="@("ExecutePlan")@plan.Id">Select Plan</button>
+                        <button class="btn btn-@cssaa w-100 GoToPlan" data-plan='@Json.Serialize(plan)' id="@("GoToPlan"+@plan.Id)">Select Plan</button>
                     </div>
                 </div>
             </div>
         }
-        @* <div class="col-md-5">
-            <div class="card text-center border-warning shadow-sm">
-                <div class="card-header bg-warning text-white">
-                    <h4>Tow or Impound Business Registration</h4>
-                </div>
-                <div class="card-body">
-                    <h3 class="text-warning">$29.99 <small class="text-muted">/month</small></h3>
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li>✅ Business registration</li>
-                        <li>✅ Vehicle Management</li>
-                        <li>✅ Notification System</li>
-                    </ul>
-                    <button class="btn btn-warning w-100" id="premiumPlan">Select Plan</button>
+        <form id="validationForm">
+            <div class="container mt-5 col-md-10" id="dvSubscription">
+                <div class="card p-4">
+                    <h4 class="text-center">Proceed <span id="spanRole"></span> Subscription</h4>
+                    <input id="hdnRole" type="hidden" />
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" required /> 
+
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required />
+                          
+                    </div>
+                    <button type="submit" id="ExecutePlan" class="btn btn-buy">Buy Now</button>
                 </div>
             </div>
-        </div> *@
+        </form>
     </div>
 </div>
 
-<script>
-    var stripe = Stripe("pk_test_5104HR54ZriKXbh6h0S1vNDz3fKVbQIaI1ZmD5C5eVVvfp0LYdV5Y9tg2WMmPZrYfcPgHEOa0d9uHgmmWDFiaWcKX00K39qkg6J"); // Replace with your Stripe Publishable Key
-
-    document.getElementById("ExecutePlan1").addEventListener("click", function () {
-      ProcessPayment('user');
-    });
-    document.getElementById("ExecutePlan2").addEventListener("click", function () {
-     ProcessPayment('business');
-    });
-
-    function ProcessPayment(plan)
-    {
-         $.ajax({
-            url: '/api/SubscriptionPlan/PostSubscription',  // Replace with your actual endpoint
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ plan: plan }),  // Example request body
-            success: function (data) {
-                if (!data) {
-                    console.error("Empty response from server");
-                    return;
-                }
-
-                console.log("Subscription request successful:", data);
-
-                // Assuming the server returns the Stripe Checkout session URL
-                if (data.sessionUrl) {
-                    // Redirect to Stripe Checkout page
-                    window.location.href = data.sessionUrl;
-                } else {
-                    console.error("Stripe session URL not found in response.");
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX error:", error);
-            }
-        });
-    }
-
-
-</script>
+<script type="text/javascript" src="~/customJs/subscriptionscript.js"></script>

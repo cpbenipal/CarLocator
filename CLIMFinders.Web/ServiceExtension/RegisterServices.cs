@@ -20,6 +20,8 @@ namespace CLIMFinders.Web.ServiceExtension
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<IEmailService, SmtpEmailService>();
+            services.AddScoped<IEmailHelperUtils, EmailHelperUtils>();
         }
     }
 }

@@ -45,37 +45,37 @@
 }
 
     .form-control:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 5px var(--primary-color);
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 5px var(--primary-color) !important;
     }
 
 /* Buttons */
 .btn-primary {
-    background-color: var(--primary-color);
+    background-color: var(--primary-color) !important;
     border: none;
 }
 
     .btn-primary:hover {
-        background-color: var(--hover-color);
+        background-color: var(--hover-color) !important;
     }
 
 .btn-secondary {
-    background-color: var(--hover-color);
-    color: var(--text-color);
+    background-color: var(--hover-color) !important;
+    color: var(--text-color) !important;
 }
 
     .btn-secondary:hover {
-        background-color: var(--primary-color);
+        background-color: var(--primary-color) !important;
     }
 
 /* Header & Footer */
 .header, .footer {
-    background-color: var(--dark-bg);
-    color: var(--text-color);
-    text-align: center;
-    padding: 15px;
+    background-color: var(--dark-bg) !important;
+    color: var(--text-color) !important;
+    text-align: center !important;
+    padding: 15px !important;
 }
 
 .footer {
-    border-top: 3px solid var(--primary-color);
+    border-top: 3px solid var(--primary-color) !important;
 }

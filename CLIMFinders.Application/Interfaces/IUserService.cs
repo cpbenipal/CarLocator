@@ -4,5 +4,6 @@
     {
         int GetUserId();
         int GetBusinessId();
+        string GeneratePassword(int length);
     }
 }

@@ -9,10 +9,10 @@ using System.Security.Claims;
 
 namespace CLIMFinders.Infrastructure.Repositories
 {
-    public class SubscriptionService(IUnitOfWork unitOfWork, ILogger<PaymentService> logger, IMapper mapper, IUserService userService) : ISubscriptionService
+    public class SubscriptionService(IUnitOfWork unitOfWork, ILogger<SubscriptionService> logger, IMapper mapper, IUserService userService) : ISubscriptionService
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly ILogger<PaymentService> _logger = logger;
+        private readonly ILogger<SubscriptionService> _logger = logger;
         private readonly IMapper _mapper = mapper;
         private readonly IUserService _userService = userService;
 
@@ -25,10 +25,10 @@ namespace CLIMFinders.Infrastructure.Repositories
                 {
                     var mapped = _mapper.Map<Subscriptions>(requestDto);
                     var entity = repository.Insert(mapped);
-                    entity.BusinessId = entity.AddedById = entity.ModifiedById = _userService.GetUserId();
+                    entity.UserId = entity.AddedById = entity.ModifiedById = _userService.GetUserId();
                     entity.AddedOn = entity.ModifiedOn = DateTime.Now;
                     repository.Save();
-                    GenericResponse genericResponse = new(entity.Id, entity.BusinessId, "Subscription Confirmed untill" + entity.EndDate.ToString("MMM dd yyyy HH:mm"), entity, true);
+                    GenericResponse genericResponse = new(entity.Id, entity.UserId, "Subscription Confirmed untill" + entity.EndDate.ToString("MMM dd yyyy HH:mm"), entity, true);
                     return genericResponse;
 
                 }
@@ -36,11 +36,11 @@ namespace CLIMFinders.Infrastructure.Repositories
                 {
                     var payment = repository.GetById(requestDto.Id);
                     var mapped = _mapper.Map(requestDto, payment);
-                    mapped.BusinessId = mapped.ModifiedById = _userService.GetUserId();
+                    mapped.UserId = mapped.ModifiedById = _userService.GetUserId();
                     mapped.ModifiedOn = DateTime.Now;
                     repository.Update(mapped);
                     repository.Save();
-                    GenericResponse genericResponse = new(mapped.Id, mapped.BusinessId, "Subscription Renews untill " + mapped.EndDate.ToString("MMM dd yyyy HH:mm"), mapped, true);
+                    GenericResponse genericResponse = new(mapped.Id, mapped.UserId, "Subscription Renews untill " + mapped.EndDate.ToString("MMM dd yyyy HH:mm"), mapped, true);
                     return genericResponse;
                 }
             }

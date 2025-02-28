@@ -8,14 +8,17 @@ namespace CLIMFinders.Application.DTOs
     public class SubscriptionRequest
     {
         public string Plan { get; set; } = string.Empty;
-        public string UserRole { get; set; } = string.Empty;  
+        public string Email { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
     }
     public class StripeSettings
     {
-        public string SecretKey { get; set; }
-        public string PublishableKey { get; set; }
-        public string StandardPriceId { get; set; }
-        public string PremiumPriceId { get; set; }
+        public string SecretKey { get; set; } = string.Empty;
+        public string PublishableKey { get; set; } = string.Empty;
+        public string BusinessPriceId { get; set; } = string.Empty;
+        public string UserPriceId { get; set; } = string.Empty;
+        public string WebhookSecret { get; set; } = string.Empty;
+        public bool TestMode { get; set; } = true; 
     }
 
     public class AddressDto : PersonInfoDto
@@ -39,6 +42,7 @@ namespace CLIMFinders.Application.DTOs
         [Required]
         [DisplayName("Registered As:")]
         public int RoleId { get; set; }
+        public int HdnPlanId { get; set; } 
     }
 
     public class BusinessCreditDto : AddressDto
@@ -98,7 +102,14 @@ namespace CLIMFinders.Application.DTOs
         [DataType(DataType.Password)]
         [Required]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{10,}", ErrorMessage = "Password must be atleast 10 characters with one at least one lower case, one upper case, one number and one special character ")]
-        public string NewPassword { get; set; }
-         
+        public string NewPassword { get; set; }         
+    }
+    public class EmailContent
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string ActivationLink { get; set; }
+        public string CopyRightYear { get; set; } 
+        public string LogoLink { get; set; }
     }
 }

@@ -7,14 +7,14 @@ namespace CLIMFinders.Domain.Entities
     {
         [Key]
         public int Id { get; set; }
-        public int BusinessId { get; set; }        
+        public int UserId { get; set; }         
         public int TierId { get; set; } 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Status { get; set; }
-        [ForeignKey("BusinessId")]
-        public UserAddress Businesses { get; set; }
+        [ForeignKey("UserId")]
+        public User Users { get; set; }
         [ForeignKey("TierId")]
-        public UserAddress SubscriptionPlans { get; set; }
+        public SubscriptionPlans SubscriptionPlans { get; set; }
     }
 }

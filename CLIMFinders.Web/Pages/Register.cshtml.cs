@@ -25,7 +25,7 @@ namespace CLIMFinders.Web.Pages
                 return Page();
             }
             
-            var result = registerService.CreateUser(Input); 
+            var result = registerService.CreateUser(Input,1); 
 
             if (result == null || result.Id <= 0)
             {

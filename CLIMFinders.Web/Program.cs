@@ -1,3 +1,4 @@
+using CLIMFinders.Application.DTOs;
 using CLIMFinders.Infrastructure.Data;
 using CLIMFinders.Web.ServiceExtension;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -88,12 +89,13 @@ try
         return new StripeClient(stripeSecretKey);
     });
 
+    builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 
-  //  builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
-  //  StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+    //  builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+    //  StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
     var app = builder.Build();
-   
+    app.UseHttpsRedirection();
     app.UseCors("AllowAll");
     app.UseStaticFiles();
     // Configure Middleware Pipeline

@@ -4,6 +4,7 @@ using CLIMFinders.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CLIMFinders.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250228182302_change db struct")]
+    partial class changedbstruct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,6 +123,9 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Property<DateTime>("AddedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -139,9 +145,6 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("TransactionId")
                         .IsRequired()
@@ -354,6 +357,9 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Property<DateTime>("AddedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("BusinessId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
@@ -455,17 +461,17 @@ namespace CLIMFinders.Infrastructure.Migrations
                         {
                             Id = 1,
                             AddedById = 1,
-                            AddedOn = new DateTime(2025, 3, 1, 0, 4, 39, 596, DateTimeKind.Local).AddTicks(9087),
+                            AddedOn = new DateTime(2025, 2, 28, 23, 53, 1, 498, DateTimeKind.Local).AddTicks(7759),
                             ConfirmationCode = "",
-                            ConfirmedOn = new DateTime(2025, 3, 1, 0, 4, 39, 596, DateTimeKind.Local).AddTicks(9105),
+                            ConfirmedOn = new DateTime(2025, 2, 28, 23, 53, 1, 498, DateTimeKind.Local).AddTicks(7773),
                             Email = "admin@admin.com",
                             FullName = "Super Admin",
                             IsConfirmed = true,
                             IsDeleted = false,
                             ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 3, 1, 0, 4, 39, 596, DateTimeKind.Local).AddTicks(9100),
-                            PasswordHash = "/eRUx4u6bQaxuGKHUAq08tkr5ucg3DTd6zREQN4RHFw=",
-                            PasswordSalt = "566ToC/uzFC9Ft8XEL0jqg==",
+                            ModifiedOn = new DateTime(2025, 2, 28, 23, 53, 1, 498, DateTimeKind.Local).AddTicks(7771),
+                            PasswordHash = "EczldNH5CjZd7TEhQepM+1z1Cyc8BN2ov0O5I+GtJtU=",
+                            PasswordSalt = "zC8yfV5d5MBZLHSr533nRA==",
                             RoleId = 1
                         });
                 });
