@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CLIMFinders.Infrastructure"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CLIMFinders.Domain", "CLIMFinders.Domain\CLIMFinders.Domain.csproj", "{D68D86BF-4C05-4FE2-8348-8215F2427176}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CLIMFinders.StripeProcess", "CLIMFinders.StripeProcess\CLIMFinders.StripeProcess.csproj", "{89BD2B27-E7EE-4FBA-9129-19C28EEEAE13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{D68D86BF-4C05-4FE2-8348-8215F2427176}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D68D86BF-4C05-4FE2-8348-8215F2427176}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D68D86BF-4C05-4FE2-8348-8215F2427176}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89BD2B27-E7EE-4FBA-9129-19C28EEEAE13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89BD2B27-E7EE-4FBA-9129-19C28EEEAE13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89BD2B27-E7EE-4FBA-9129-19C28EEEAE13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89BD2B27-E7EE-4FBA-9129-19C28EEEAE13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

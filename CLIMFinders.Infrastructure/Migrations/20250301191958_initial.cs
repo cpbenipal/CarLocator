@@ -71,37 +71,6 @@ namespace CLIMFinders.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PasswordSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsConfirmed = table.Column<bool>(type: "bit", nullable: true),
-                    ConfirmedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    AddedById = table.Column<int>(type: "int", nullable: false),
-                    AddedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedById = table.Column<int>(type: "int", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PlanServices",
                 columns: table => new
                 {
@@ -119,6 +88,46 @@ namespace CLIMFinders.Infrastructure.Migrations
                         principalTable: "SubscriptionPlans",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    TierId = table.Column<int>(type: "int", nullable: true),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsConfirmed = table.Column<bool>(type: "bit", nullable: true),
+                    ConfirmedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    ConfirmationCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SubscriptionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SessionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AddedById = table.Column<int>(type: "int", nullable: false),
+                    AddedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedById = table.Column<int>(type: "int", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_SubscriptionPlans_TierId",
+                        column: x => x.TierId,
+                        principalTable: "SubscriptionPlans",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -161,35 +170,6 @@ namespace CLIMFinders.Infrastructure.Migrations
                     table.PrimaryKey("PK_Notifications", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Notifications_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Payments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TransactionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AddedById = table.Column<int>(type: "int", nullable: false),
-                    AddedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedById = table.Column<int>(type: "int", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Payments_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -253,42 +233,6 @@ namespace CLIMFinders.Infrastructure.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Subscriptions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BusinessId = table.Column<int>(type: "int", nullable: false),
-                    TierId = table.Column<int>(type: "int", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AddedById = table.Column<int>(type: "int", nullable: false),
-                    AddedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedById = table.Column<int>(type: "int", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Subscriptions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Subscriptions_UserAddress_BusinessId",
-                        column: x => x.BusinessId,
-                        principalSchema: "dbo",
-                        principalTable: "UserAddress",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Subscriptions_UserAddress_TierId",
-                        column: x => x.TierId,
-                        principalSchema: "dbo",
-                        principalTable: "UserAddress",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -380,10 +324,10 @@ namespace CLIMFinders.Infrastructure.Migrations
                 columns: new[] { "Id", "RoleNanme" },
                 values: new object[,]
                 {
-                    { 1, "SuperAdmin" },
-                    { 2, "Users" },
-                    { 3, "Tow" },
-                    { 4, "Impound" }
+                    { 1, "Users" },
+                    { 2, "Tow" },
+                    { 3, "Impound" },
+                    { 4, "SuperAdmin" }
                 });
 
             migrationBuilder.InsertData(
@@ -486,8 +430,8 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "AddedById", "AddedOn", "ConfirmedOn", "Email", "FullName", "IsConfirmed", "IsDeleted", "ModifiedById", "ModifiedOn", "PasswordHash", "PasswordSalt", "Photo", "RoleId" },
-                values: new object[] { 1, 1, new DateTime(2025, 2, 23, 14, 32, 54, 864, DateTimeKind.Local).AddTicks(8816), new DateTime(2025, 2, 23, 14, 32, 54, 864, DateTimeKind.Local).AddTicks(8831), "admin@admin.com", "Super Admin", true, false, 0, new DateTime(2025, 2, 23, 14, 32, 54, 864, DateTimeKind.Local).AddTicks(8829), "bofp2QzZMM9ose8amsxQru0pnpgrUvyxVgQ/vqMjDSw=", "ftZ0EK4ya4aflR56c6rCNA==", null, 1 });
+                columns: new[] { "Id", "AddedById", "AddedOn", "ConfirmationCode", "ConfirmedOn", "Email", "FullName", "IsConfirmed", "IsDeleted", "ModifiedById", "ModifiedOn", "PasswordHash", "PasswordSalt", "Photo", "RoleId", "SessionId", "SubscriptionId", "TierId" },
+                values: new object[] { 1, 1, new DateTime(2025, 3, 2, 0, 49, 57, 924, DateTimeKind.Local).AddTicks(2745), "", new DateTime(2025, 3, 2, 0, 49, 57, 924, DateTimeKind.Local).AddTicks(2761), "admin@admin.com", "Super Admin", true, false, 1, new DateTime(2025, 3, 2, 0, 49, 57, 924, DateTimeKind.Local).AddTicks(2759), "r9oMTcuZTtupaHySwuC01OKcphxZQdjdBGXcROEnPno=", "tHSnro8rhQjB4PGSuA0RPw==", null, 1, "", "", null });
 
             migrationBuilder.InsertData(
                 table: "VehicleModels",
@@ -573,29 +517,15 @@ namespace CLIMFinders.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_UserId",
-                table: "Payments",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PlanServices_PlanId",
                 table: "PlanServices",
-                column: "PlanId");
+                column: "PlanId",
+                unique: false);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Searches_UserId",
                 table: "Searches",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Subscriptions_BusinessId",
-                table: "Subscriptions",
-                column: "BusinessId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Subscriptions_TierId",
-                table: "Subscriptions",
-                column: "TierId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAddress_UserId",
@@ -608,6 +538,11 @@ namespace CLIMFinders.Infrastructure.Migrations
                 name: "IX_Users_RoleId",
                 table: "Users",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_TierId",
+                table: "Users",
+                column: "TierId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VehicleModels_MakeId",
@@ -645,22 +580,13 @@ namespace CLIMFinders.Infrastructure.Migrations
                 name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "Payments");
-
-            migrationBuilder.DropTable(
                 name: "PlanServices");
 
             migrationBuilder.DropTable(
                 name: "Searches");
 
             migrationBuilder.DropTable(
-                name: "Subscriptions");
-
-            migrationBuilder.DropTable(
                 name: "Vehicles");
-
-            migrationBuilder.DropTable(
-                name: "SubscriptionPlans");
 
             migrationBuilder.DropTable(
                 name: "UserAddress",
@@ -680,6 +606,9 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "SubscriptionPlans");
         }
     }
 }

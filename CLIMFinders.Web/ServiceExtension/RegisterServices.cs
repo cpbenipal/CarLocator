@@ -2,6 +2,8 @@
 using CLIMFinders.Application.Services;
 using CLIMFinders.Infrastructure.Repositories;
 using CLIMFinders.Repositories;
+using CLIMFinders.StripeProcess;
+using CLIMFinders.StripeProcess.Interfaces;
 
 namespace CLIMFinders.Web.ServiceExtension
 {
@@ -17,11 +19,12 @@ namespace CLIMFinders.Web.ServiceExtension
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IStaticSelectOptionService, StaticSelectOptionService>();
-            services.AddScoped<IPaymentService, PaymentService>();
+           // services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ISearchService, SearchService>();
-            services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<ISubscribeService, SubscribeService>();
             services.AddScoped<IEmailService, SmtpEmailService>();
             services.AddScoped<IEmailHelperUtils, EmailHelperUtils>();
+            services.AddScoped<ISubscriptionPlanServices, SubscriptionPlanServices>();
         }
     }
 }

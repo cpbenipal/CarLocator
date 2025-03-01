@@ -106,58 +106,6 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("CLIMFinders.Domain.Entities.Payments", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AddedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ModifiedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("TransactionId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Payments");
-                });
-
             modelBuilder.Entity("CLIMFinders.Domain.Entities.PlanServices", b =>
                 {
                     b.Property<int>("Id")
@@ -340,55 +288,6 @@ namespace CLIMFinders.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CLIMFinders.Domain.Entities.Subscriptions", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AddedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ModifiedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TierId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TierId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Subscriptions");
-                });
-
             modelBuilder.Entity("CLIMFinders.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -444,9 +343,22 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
+                    b.Property<string>("SessionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubscriptionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TierId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("TierId");
 
                     b.ToTable("Users");
 
@@ -455,18 +367,20 @@ namespace CLIMFinders.Infrastructure.Migrations
                         {
                             Id = 1,
                             AddedById = 1,
-                            AddedOn = new DateTime(2025, 3, 1, 0, 4, 39, 596, DateTimeKind.Local).AddTicks(9087),
+                            AddedOn = new DateTime(2025, 3, 2, 0, 49, 57, 924, DateTimeKind.Local).AddTicks(2745),
                             ConfirmationCode = "",
-                            ConfirmedOn = new DateTime(2025, 3, 1, 0, 4, 39, 596, DateTimeKind.Local).AddTicks(9105),
+                            ConfirmedOn = new DateTime(2025, 3, 2, 0, 49, 57, 924, DateTimeKind.Local).AddTicks(2761),
                             Email = "admin@admin.com",
                             FullName = "Super Admin",
                             IsConfirmed = true,
                             IsDeleted = false,
                             ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 3, 1, 0, 4, 39, 596, DateTimeKind.Local).AddTicks(9100),
-                            PasswordHash = "/eRUx4u6bQaxuGKHUAq08tkr5ucg3DTd6zREQN4RHFw=",
-                            PasswordSalt = "566ToC/uzFC9Ft8XEL0jqg==",
-                            RoleId = 1
+                            ModifiedOn = new DateTime(2025, 3, 2, 0, 49, 57, 924, DateTimeKind.Local).AddTicks(2759),
+                            PasswordHash = "r9oMTcuZTtupaHySwuC01OKcphxZQdjdBGXcROEnPno=",
+                            PasswordSalt = "tHSnro8rhQjB4PGSuA0RPw==",
+                            RoleId = 1,
+                            SessionId = "",
+                            SubscriptionId = ""
                         });
                 });
 
@@ -1363,17 +1277,6 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CLIMFinders.Domain.Entities.Payments", b =>
-                {
-                    b.HasOne("CLIMFinders.Domain.Entities.User", "User")
-                        .WithOne("Payments")
-                        .HasForeignKey("CLIMFinders.Domain.Entities.Payments", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("CLIMFinders.Domain.Entities.PlanServices", b =>
                 {
                     b.HasOne("CLIMFinders.Domain.Entities.SubscriptionPlans", "SubscriptionPlans")
@@ -1396,25 +1299,6 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CLIMFinders.Domain.Entities.Subscriptions", b =>
-                {
-                    b.HasOne("CLIMFinders.Domain.Entities.SubscriptionPlans", "SubscriptionPlans")
-                        .WithMany()
-                        .HasForeignKey("TierId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CLIMFinders.Domain.Entities.User", "Users")
-                        .WithOne("Subscriptions")
-                        .HasForeignKey("CLIMFinders.Domain.Entities.Subscriptions", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SubscriptionPlans");
-
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("CLIMFinders.Domain.Entities.User", b =>
                 {
                     b.HasOne("CLIMFinders.Domain.Entities.Roles", "Roles")
@@ -1423,7 +1307,13 @@ namespace CLIMFinders.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CLIMFinders.Domain.Entities.SubscriptionPlans", "SubscriptionPlans")
+                        .WithMany()
+                        .HasForeignKey("TierId");
+
                     b.Navigation("Roles");
+
+                    b.Navigation("SubscriptionPlans");
                 });
 
             modelBuilder.Entity("CLIMFinders.Domain.Entities.UserAddress", b =>
@@ -1492,10 +1382,6 @@ namespace CLIMFinders.Infrastructure.Migrations
             modelBuilder.Entity("CLIMFinders.Domain.Entities.User", b =>
                 {
                     b.Navigation("Businesses");
-
-                    b.Navigation("Payments");
-
-                    b.Navigation("Subscriptions");
                 });
 #pragma warning restore 612, 618
         }

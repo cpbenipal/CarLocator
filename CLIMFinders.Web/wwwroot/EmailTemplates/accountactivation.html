@@ -60,17 +60,18 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="@LogoLink" alt="Impound Finders">
+            <img src="@BaseUrl@LogoLink" alt="Impound Finders">
             <h2>Welcome to Impound Finders</h2>
         </div>
         <div class="content">
             <h3>Hello, @Name!</h3>
-            <p>Thank you for Subscribing. Your account has been successfully verified. Click the button below to:</p>
-            <a href="@ActivationLink" class="button">Login</a> 
+            <p>@OtherText</p>
+            <p>Your account has been successfully verified. Click the button below to:</p>
+            <a href="@BaseUrl@ClickLink" class="button">Login</a>
         </div>
         <div class="footer">
             <p>&copy; @CopyRightYear Impound Finders. All Rights Reserved.</p>
-            <p><a href="#">Privacy Policy</a> | <a href="#">Support</a></p>
+            <p><a href="@BaseUrl/Privacy">Privacy Policy</a> | <a href="@BaseUrl/ContactUs">Support</a></p>
         </div>
     </div>
 </body>

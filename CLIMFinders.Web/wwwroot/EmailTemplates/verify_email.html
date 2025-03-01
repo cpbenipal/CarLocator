@@ -60,18 +60,18 @@
 <body>
 	<div class="container">
 		<div class="header">
-			<img src="@LogoLink" alt="Impound Finders">
+			<img src="@BaseUrl@LogoLink" alt="Impound Finders">
 			<h2>You account on Impound Finders is pending</h2>
 		</div>
 		<div class="content">
 			<h3>Hello, @Name!</h3>
 			<p>Thank you for signing up. Please activate your account by clicking the button below:</p>
-			<a href="@ActivationLink" class="button">Activate Account</a>
+			<a href="@BaseUrl@ClickLink" class="button">Activate Account</a>
 			<p>If you didn’t request this, please ignore this email.</p>
 		</div>
 		<div class="footer">
 			<p>&copy; @CopyRightYear Impound Finders. All Rights Reserved.</p>
-			<p><a href="#">Privacy Policy</a> | <a href="#">Support</a></p>
+			<p><a href="@BaseUrl/Privacy">Privacy Policy</a> | <a href="@BaseUrl/ContactUs">Support</a></p>
 		</div>
 	</div>
 </body>

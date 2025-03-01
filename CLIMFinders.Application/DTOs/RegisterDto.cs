@@ -11,15 +11,6 @@ namespace CLIMFinders.Application.DTOs
         public string Email { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
     }
-    public class StripeSettings
-    {
-        public string SecretKey { get; set; } = string.Empty;
-        public string PublishableKey { get; set; } = string.Empty;
-        public string BusinessPriceId { get; set; } = string.Empty;
-        public string UserPriceId { get; set; } = string.Empty;
-        public string WebhookSecret { get; set; } = string.Empty;
-        public bool TestMode { get; set; } = true; 
-    }
 
     public class AddressDto : PersonInfoDto
     {
@@ -70,6 +61,12 @@ namespace CLIMFinders.Application.DTOs
         [DisplayName("Name")]
         public string Name { get; set; }
     }
+    public class SubscriptionDto 
+    {
+        public int? TierId { get; set; }
+        public string SubscriptionId { get; set; }
+        public string SessionId { get; set; } 
+    }
     public class ChangePasswordDto
     {
          
@@ -108,8 +105,10 @@ namespace CLIMFinders.Application.DTOs
     {
         public string Name { get; set; }
         public string Email { get; set; }
-        public string ActivationLink { get; set; }
+        public string ClickLink { get; set; }
         public string CopyRightYear { get; set; } 
         public string LogoLink { get; set; }
+        public string OtherText { get; set; } 
+        public string BaseUrl { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace CLIMFinders.Domain.Entities
         public string Email { get; set; }
        // public string Password { get; set; }
         public int RoleId { get; set; }
+        public int? TierId { get; set; }
         public string PasswordHash { get; set; }
         public string PasswordSalt { get; set; }
         public bool? IsConfirmed { get; set; } = false;
@@ -19,9 +20,11 @@ namespace CLIMFinders.Domain.Entities
         public byte[]? Photo { get; set; }
         [ForeignKey("RoleId")]
         public Roles Roles { get; set; }
-        public UserAddress? Businesses { get; set; }
-        public Subscriptions? Subscriptions { get; set; }
-        public Payments? Payments { get; set; }
+        public UserAddress? Businesses { get; set; }         
         public string ConfirmationCode { get; set; } = string.Empty;
+        public string SubscriptionId { get; set; } = string.Empty;
+        public string SessionId { get; set; } = string.Empty;
+        [ForeignKey("TierId")]
+        public SubscriptionPlans SubscriptionPlans { get; set; }
     }
 }

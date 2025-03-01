@@ -2,9 +2,9 @@
 
 namespace CLIMFinders.Application.Interfaces
 {
-    public interface ISubscriptionService
+    public interface ISubscribeService
     {
         List<SubscriptionPlansDto> GetSubscriptionPlans();
-        GenericResponse AddUpdateSubscription(SubscriptionDto requestDto);
+       // GenericResponse AddUpdateSubscription(SubscriptionDto requestDto);
     }
 }

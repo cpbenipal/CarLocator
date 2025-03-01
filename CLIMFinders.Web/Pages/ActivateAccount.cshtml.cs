@@ -1,3 +1,4 @@
+using CLIMFinders.Application.DTOs;
 using CLIMFinders.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,13 +13,9 @@ namespace CLIMFinders.Web.Pages
         public string code { get; set; }
         public void OnGet()
         {
-            if (!string.IsNullOrEmpty(code))
-            {
-                if (_registerService.ActivateAccount(code))
-                {
-
-                }
-            }
+            Message = !string.IsNullOrEmpty(code) && _registerService.ActivateAccount(code) ? "Account is successfully created!": "Invalid or expired token!";
         }
+        [BindProperty]
+        public string Message { get; set; }
     }
 }

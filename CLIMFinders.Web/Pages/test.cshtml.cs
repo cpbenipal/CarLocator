@@ -14,9 +14,10 @@ namespace CLIMFinders.Web.Pages
 
         private readonly ILogger<TestModel> _logger = logger;
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            _emailService.SendEmail("cpbenipal@gmail.com", "Test", "request.Body");
+            return RedirectToPage("/Login");
+            // _emailService.SendEmail("cpbenipal@gmail.com", "Test", "request.Body");
         }
     }
 }

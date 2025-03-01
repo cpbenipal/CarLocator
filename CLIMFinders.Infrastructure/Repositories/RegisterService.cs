@@ -16,7 +16,7 @@ namespace CLIMFinders.Infrastructure.Repositories
         private readonly IEmailHelperUtils _emailHelper = emailHelper;
         private readonly IConfiguration _config = config;
 
-        public ResponseDto CreateUser(PersonInfoDto dto, int RoleID)
+        public ResponseDto CreateUser(PersonInfoDto dto, int RoleID, SubscriptionDto? subscription = null)
         {
             var response = new ResponseDto();
             try
@@ -39,7 +39,10 @@ namespace CLIMFinders.Infrastructure.Repositories
                         RoleId = RoleID,
                         PasswordHash = hashedPassword,
                         PasswordSalt = Salt,
-                        ConfirmationCode = ConfirmationCode
+                        ConfirmationCode = ConfirmationCode,
+                        SessionId = subscription.SessionId,
+                        SubscriptionId = subscription.SubscriptionId,
+                        TierId = subscription.TierId
                     };
                     var login = unitOfWork.GetRepository<User>();
                     var newuser = login.Insert(mappedRequest);
@@ -53,11 +56,12 @@ namespace CLIMFinders.Infrastructure.Repositories
 
                     EmailContent emailContent = new()
                     {
+                        BaseUrl = _config["JwtSettings:Issuer"],
                         Name = dto.Name,
                         Email = dto.Email,
-                        ActivationLink = _config["JwtSettings:Issuer"]+"/ActivateAccount?code="+ ConfirmationCode,
+                        ClickLink = "/ActivateAccount?code="+ ConfirmationCode,
                         CopyRightYear = DateTime.Now.Year.ToString(),
-                        LogoLink = dto.Email,
+                        LogoLink = "/images/logo.png"
                     };
                     var ContentToFill = _emailHelper.FillEmailContents(emailContent, "verify_email", dto.Name);
                     _emailService.SendEmail(dto.Email, "Account Verification Required", ContentToFill);
@@ -167,6 +171,7 @@ namespace CLIMFinders.Infrastructure.Repositories
         {
             var repository = unitOfWork.GetRepository<User>();
             var response = repository.FirstOrDefault(x => x.ConfirmationCode == code);
+
             if (response != null)
             {
                 response.ConfirmationCode = string.Empty;
@@ -175,6 +180,20 @@ namespace CLIMFinders.Infrastructure.Repositories
                 response.IsConfirmed = true;
                 repository.Update(response);
                 repository.Save();
+
+                EmailContent emailContent = new()
+                {
+                    BaseUrl = _config["JwtSettings:Issuer"],
+                    Name = response.FullName,
+                    Email = response.Email,
+                    ClickLink = "/Login",
+                    CopyRightYear = DateTime.Now.Year.ToString(),
+                    LogoLink = "/images/logo.png",
+                   // OtherText = "Password : "+ 
+                };
+                var ContentToFill = _emailHelper.FillEmailContents(emailContent, "accountactivation", response.FullName);
+                _emailService.SendEmail(response.Email, "Account is successfully created!", ContentToFill);
+
                 return true;
             }
             return false;

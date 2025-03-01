@@ -14,9 +14,7 @@ namespace CLIMFinders.Infrastructure.Data
         public virtual DbSet<UserAddress> Businesses { get; set; }
         public virtual DbSet<Matches> Matches { get; set; }
         public virtual DbSet<Notifications> Notifications { get; set; }
-        public virtual DbSet<Payments> Payments { get; set; }
         public virtual DbSet<Searches> Searches { get; set; }
-        public virtual DbSet<Subscriptions> Subscriptions { get; set; }
         public virtual DbSet<Vehicles> Vehicles { get; set; }
         public virtual DbSet<VehicleMake> VehicleMakes { get; set; }
         public virtual DbSet<VehicleModel> VehicleModels { get; set; }
@@ -76,8 +74,9 @@ namespace CLIMFinders.Infrastructure.Data
                     IsConfirmed = true,
                     PasswordHash = hash[1],
                     PasswordSalt = hash[0],
-                    RoleId = 1,
-                    AddedById = 1
+                    RoleId = 4,
+                    AddedById = 1,
+                    ModifiedById = 1
                 });
 
             //modelBuilder.Entity<Businesses>().HasData(

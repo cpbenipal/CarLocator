@@ -24,7 +24,7 @@ function ProcessPayment(plan) {
             // Assuming the server returns the Stripe Checkout session URL
             if (data.sessionUrl) {
                 // Redirect to Stripe Checkout page
-                window.location.href = data.sessionUrl;
+                data.sessionUrl == "N" ? $(".text-danger").html("Email already exists") : window.location.href = data.sessionUrl;
             } else {
                 console.error("Stripe session URL not found in response.");
             }
