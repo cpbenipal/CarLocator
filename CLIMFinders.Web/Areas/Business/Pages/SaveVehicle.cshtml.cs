@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CLIMFinders.Web.Areas.Business.Pages
 {
-    [Authorize(Roles = "Tow,Impound")]
+    [Authorize(Roles = "Business")]
     public class SaveVehicleModel(IVehicleService vehicleService) : PageModel
     {
         private readonly IVehicleService vehicleService = vehicleService;

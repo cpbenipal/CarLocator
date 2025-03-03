@@ -192,16 +192,11 @@ namespace CLIMFinders.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            RoleNanme = "Tow"
+                            RoleNanme = "Business"
                         },
                         new
                         {
                             Id = 3,
-                            RoleNanme = "Impound"
-                        },
-                        new
-                        {
-                            Id = 4,
                             RoleNanme = "SuperAdmin"
                         });
                 });
@@ -249,6 +244,35 @@ namespace CLIMFinders.Infrastructure.Migrations
                     b.ToTable("Searches");
                 });
 
+            modelBuilder.Entity("CLIMFinders.Domain.Entities.SubRoles", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("RoleNanme")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            RoleNanme = "Tow"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            RoleNanme = "Impound"
+                        });
+                });
+
             modelBuilder.Entity("CLIMFinders.Domain.Entities.SubscriptionPlans", b =>
                 {
                     b.Property<int>("Id")
@@ -284,7 +308,7 @@ namespace CLIMFinders.Infrastructure.Migrations
                             Id = 2,
                             Amount = 10m,
                             Duration = 1,
-                            Tier = "Tow or Impound Business Registration"
+                            Tier = "Business Registration (Tow or Impound)"
                         });
                 });
 
@@ -347,6 +371,9 @@ namespace CLIMFinders.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("SubRoleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SubscriptionId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -358,6 +385,10 @@ namespace CLIMFinders.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
+                    b.HasIndex("SubRoleId")
+                        .IsUnique()
+                        .HasFilter("[SubRoleId] IS NOT NULL");
+
                     b.HasIndex("TierId");
 
                     b.ToTable("Users");
@@ -367,18 +398,18 @@ namespace CLIMFinders.Infrastructure.Migrations
                         {
                             Id = 1,
                             AddedById = 1,
-                            AddedOn = new DateTime(2025, 3, 2, 0, 49, 57, 924, DateTimeKind.Local).AddTicks(2745),
+                            AddedOn = new DateTime(2025, 3, 2, 14, 47, 21, 443, DateTimeKind.Local).AddTicks(3230),
                             ConfirmationCode = "",
-                            ConfirmedOn = new DateTime(2025, 3, 2, 0, 49, 57, 924, DateTimeKind.Local).AddTicks(2761),
+                            ConfirmedOn = new DateTime(2025, 3, 2, 14, 47, 21, 443, DateTimeKind.Local).AddTicks(3247),
                             Email = "admin@admin.com",
                             FullName = "Super Admin",
                             IsConfirmed = true,
                             IsDeleted = false,
-                            ModifiedById = 0,
-                            ModifiedOn = new DateTime(2025, 3, 2, 0, 49, 57, 924, DateTimeKind.Local).AddTicks(2759),
-                            PasswordHash = "r9oMTcuZTtupaHySwuC01OKcphxZQdjdBGXcROEnPno=",
-                            PasswordSalt = "tHSnro8rhQjB4PGSuA0RPw==",
-                            RoleId = 1,
+                            ModifiedById = 1,
+                            ModifiedOn = new DateTime(2025, 3, 2, 14, 47, 21, 443, DateTimeKind.Local).AddTicks(3245),
+                            PasswordHash = "fPkom/mVXggTnQneTrAyKFBcGZuUQIi4S1Fs+AriaUI=",
+                            PasswordSalt = "YHm6SCi7KwU2po6/CQBYnQ==",
+                            RoleId = 3,
                             SessionId = "",
                             SubscriptionId = ""
                         });
@@ -1307,11 +1338,18 @@ namespace CLIMFinders.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CLIMFinders.Domain.Entities.SubRoles", "SubRoles")
+                        .WithOne()
+                        .HasForeignKey("CLIMFinders.Domain.Entities.User", "SubRoleId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("CLIMFinders.Domain.Entities.SubscriptionPlans", "SubscriptionPlans")
                         .WithMany()
                         .HasForeignKey("TierId");
 
                     b.Navigation("Roles");
+
+                    b.Navigation("SubRoles");
 
                     b.Navigation("SubscriptionPlans");
                 });

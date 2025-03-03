@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CLIMFinders.Web.Areas.Business.Pages
 {
-    [Authorize(Roles = "Tow,Impound")] 
+    [Authorize(Roles = "Business")] 
     public class ManageVehiclesModel(IVehicleService vehicleService) : PageModel
     {
         private readonly IVehicleService vehicleService = vehicleService;

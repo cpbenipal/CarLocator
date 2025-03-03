@@ -10,6 +10,7 @@ namespace CLIMFinders.Application.DTOs
         public string Plan { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
+        public string SubRoleId { get; set; } = string.Empty;
     }
 
     public class AddressDto : PersonInfoDto
@@ -33,7 +34,7 @@ namespace CLIMFinders.Application.DTOs
         [Required]
         [DisplayName("Registered As:")]
         public int RoleId { get; set; }
-        public int HdnPlanId { get; set; } 
+        public int SubRoleId { get; set; }  
     }
 
     public class BusinessCreditDto : AddressDto

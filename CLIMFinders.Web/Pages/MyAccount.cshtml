@@ -1,6 +1,7 @@
 ﻿@page
 @using System.Reflection
 @using System.ComponentModel.DataAnnotations
+@using CLIMFinders.Application.Enums
 @model CLIMFinders.Web.Pages.MyAccountModel
 @{
     ViewData["Title"] = "Register";
@@ -13,7 +14,15 @@
         <input type="hidden" asp-for="Input.UserId" />
         <div class="row">
             <div class="col-md-3 border-right">
-                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"></div>
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                    <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><div>
+                        <strong>Role</strong> :
+                        @{
+                            var RoleName = Model.Input.RoleId == (int)RoleEnum.Business ? @Enum.GetName(typeof(SubRoleEnum), Model.Input.SubRoleId) : "";
+                        }
+                        @RoleName  @Enum.GetName(typeof(RoleEnum), Model.Input.RoleId)
+                    </div>
+                </div>
             </div>
             <div class="col-md-4 border-right">
 

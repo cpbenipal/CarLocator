@@ -25,9 +25,17 @@ namespace CLIMFinders.Infrastructure.Repositories
         {
             var options = new List<SelectListItem>
             {
-              //  new() { Text = RoleEnum.Users.ToString(), Value = ((int)RoleEnum.Users).ToString() },
-                new() { Text = RoleEnum.Tow.ToString(), Value = ((int)RoleEnum.Tow).ToString() },
-                new() { Text = RoleEnum.Impound.ToString(),Value = ((int)RoleEnum.Impound).ToString() }
+                new() { Text = RoleEnum.Users.ToString(), Value = ((int)RoleEnum.Users).ToString() },
+                new() { Text = RoleEnum.Business.ToString(), Value = ((int)RoleEnum.Business).ToString() },
+            };
+            return options;
+        }
+        public List<SelectListItem> SubRoleOptions() 
+        {
+            var options = new List<SelectListItem>
+            {
+                new() { Text = SubRoleEnum.Tow.ToString(), Value = ((int)SubRoleEnum.Tow).ToString() },
+                new() { Text = SubRoleEnum.Impound.ToString(), Value = ((int)SubRoleEnum.Impound).ToString() }
             };
             return options;
         }

@@ -6,11 +6,14 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <h2>Vehicle Listing</h2>
-            <div class="table-responsive">
+            <h2>Vehicle Listing
+
+                <a asp-page="SaveVehicle" class="btn btn-primary mb-3 float-end">Add New Vehicle</a>
+            </h2>
+            <div class="table-responsive w-100">
                 <!-- Vehicle Table -->
                 <div class="toolbar">
-                    <a asp-page="SaveVehicle" class="btn btn-primary mb-3">Add New Vehicle</a>
+                    
                 </div>
                 <table id="vehicleTable" class="table table-striped">
                     <thead>

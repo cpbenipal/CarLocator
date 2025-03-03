@@ -10,6 +10,7 @@ namespace CLIMFinders.Application.Interfaces
     public interface IStaticSelectOptionService
     {
         public List<SelectListItem> RoleOptions();
+        List<SelectListItem> SubRoleOptions();
         public List<SelectListItem> StatusOptions();
         List<SelectListItem> PopulateYear();
     }

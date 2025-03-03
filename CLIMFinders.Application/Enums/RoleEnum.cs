@@ -8,6 +8,10 @@ namespace CLIMFinders.Application.Enums
 {
     public enum RoleEnum
     {
-        None = 0, Users, Tow, Impound, SuperAdmin
+        None = 0, Users, Business, SuperAdmin
+    }
+    public enum SubRoleEnum  
+    {
+        None = 0,Tow, Impound
     }
 }

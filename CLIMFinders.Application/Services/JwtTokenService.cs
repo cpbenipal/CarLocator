@@ -26,6 +26,7 @@ namespace CLIMFinders.Application.Services
             if (!string.IsNullOrEmpty(user.BusinessId))
             {
                 claims.Add(new Claim(CustomClaimTypes.BusinessId, user.BusinessId));
+                claims.Add(new Claim(CustomClaimTypes.SubRoleId, Enum.GetName(typeof(SubRoleEnum), user.SubRoleId)));
             }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Secret"]));

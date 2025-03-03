@@ -65,7 +65,8 @@ namespace CLIMFinders.StripeProcess
                 ],
                 Metadata = new Dictionary<string, string>
                 {
-                    { "RoleId", plan.Plan.Equals("user", StringComparison.CurrentCultureIgnoreCase) ? "1": "2"  }
+                    { "RoleId", plan.Plan.Equals("user", StringComparison.CurrentCultureIgnoreCase) ? "1": "2"  }, 
+                    { "SubRoleId", plan.SubRoleId }
                 },
                 Mode = "subscription",
                 Customer = customerId,
@@ -105,13 +106,14 @@ namespace CLIMFinders.StripeProcess
                     };
                    
                     var RoleId = Convert.ToInt32(session.Metadata["RoleId"]);
+                    var SubRoleId = Convert.ToInt32(session.Metadata["SubRoleId"]);
                     SubscriptionDto subscription = new()
                     {
                         SessionId = sessionId,
                         SubscriptionId = session.SubscriptionId,
                         TierId = RoleId,
                     };
-                    var result = _registerService.CreateUser(personInfo, RoleId, subscription);
+                    var result = _registerService.CreateUser(personInfo, RoleId, SubRoleId, subscription);
 
                     //return invoice.HostedInvoiceUrl;
                     _emailService.SendEmail(result.Email, "Your Invoice - Payment Successful", $"<p>Thank you for your payment!</p><p>You can download your invoice here: <a href='{invoice.HostedInvoiceUrl}'>View Invoice</a></p>");

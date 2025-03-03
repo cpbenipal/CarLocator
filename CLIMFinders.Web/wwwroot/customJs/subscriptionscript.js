@@ -1,13 +1,9 @@
 ﻿var stripe = Stripe("pk_test_5104HR54ZriKXbh6h0S1vNDz3fKVbQIaI1ZmD5C5eVVvfp0LYdV5Y9tg2WMmPZrYfcPgHEOa0d9uHgmmWDFiaWcKX00K39qkg6J"); // Replace with your Stripe Publishable Key
-
-
-$(document).ready(function () {
-    $('#dvSubscription').hide();   
-});
-
-function ProcessPayment(plan) {
-    var request = JSON.stringify({ plan: plan, name: $('#fullName').val(), email: $('#email').val() });
+ 
+function ProcessPayment() {
+    var request = JSON.stringify({ plan: $('#hdnRole').val(), name: $('#fullName').val(), email: $('#email').val(), subRoleId: $("input[name='subRole']:checked").val() });
     console.log(request);
+     
     $.ajax({
         url: '/api/SubscriptionPlan/PostSubscription',
         type: 'POST',
@@ -32,21 +28,33 @@ function ProcessPayment(plan) {
         error: function (xhr, status, error) {
             console.error("AJAX error:", error);
         }
-    });
-}
+    }); 
+} 
  
-$(".GoToPlan").on("click", function (e) {
-    e.preventDefault();     
-    var plan = $(this).data("plan");
-    $('#dvSubscription').show();
-    //$('#hdnRole').val(plan.id);
-    $("#Input_HdnPlanId").val(plan.id);
-    $('#spanRole').html(plan.id == 1 ? "User" : "Business");     
-});
  
 $("#validationForm").on("submit", function (e) {
     e.preventDefault();     
-    ProcessPayment($('#spanRole').html());
+    ProcessPayment();
 });
-
- 
+$('#exampleModal').on('show.bs.modal', function (event) {
+    var label = $(event.relatedTarget);
+    var modal = $(this);
+    var plan = JSON.parse(label.attr("data-whatever"));  
+    console.log(plan);
+    $("#fullName").val("");
+    $("#email").val("");
+    if (plan.id == 1) {
+        $("#hdnRole").val("user");
+        modal.find('.modal-body #dvSubRole').hide();
+        modal.find('.modal-title').text('User Subscription');
+        $(".lblName").text("Full Name");
+        $("#fullName").prop("placeholder", "Enter Full Name");
+    }
+    else {
+        modal.find('.modal-body #hdnRole').val("business");
+        modal.find('.modal-body #dvSubRole').show();
+        modal.find('.modal-title').text('Business Subscription');
+        $(".lblName").text("Company Name");
+        $("#fullName").prop("placeholder", "Enter Company Name");
+    }  
+})

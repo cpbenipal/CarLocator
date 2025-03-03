@@ -1,4 +1,5 @@
-﻿using CLIMFinders.Domain.Entities;
+﻿using CLIMFinders.Application.Enums;
+using CLIMFinders.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
@@ -21,19 +22,22 @@ namespace CLIMFinders.Infrastructure.Data
         public virtual DbSet<VehicleColor> VehicleColors { get; set; }
         public virtual DbSet<SubscriptionPlans> SubscriptionPlans { get; set; }
         public virtual DbSet<PlanServices> PlanServices { get; set; }
+        public virtual DbSet<SubRoles> SubRoles { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Roles>().HasData(              
-                new Roles { Id = 1, RoleNanme = "Users" },
-                new Roles { Id = 2, RoleNanme = "Tow" },
-                new Roles { Id = 3, RoleNanme = "Impound" },
-                 new Roles { Id = 4, RoleNanme = "SuperAdmin" }
+                new Roles { Id = (int)RoleEnum.Users, RoleNanme = RoleEnum.Users.ToString() },
+                new Roles { Id = (int)RoleEnum.Business, RoleNanme = RoleEnum.Business.ToString() },
+                new Roles { Id = (int)RoleEnum.SuperAdmin, RoleNanme = RoleEnum.SuperAdmin.ToString() }
             );
-
-           modelBuilder.Entity<SubscriptionPlans>().HasData(
+            modelBuilder.Entity<SubRoles>().HasData(
+               new SubRoles { Id = (int)SubRoleEnum.Tow, RoleNanme = SubRoleEnum.Tow.ToString() },
+               new SubRoles { Id = (int)SubRoleEnum.Impound, RoleNanme = SubRoleEnum.Impound.ToString() } 
+           );
+            modelBuilder.Entity<SubscriptionPlans>().HasData(
            new SubscriptionPlans { Id = 1, Tier = "User Registration (Car Owners)", Amount = 10, Duration = 1 },
-           new SubscriptionPlans { Id = 2, Tier = "Tow or Impound Business Registration", Amount = 10, Duration = 1 }
+           new SubscriptionPlans { Id = 2, Tier = "Business Registration (Tow or Impound)", Amount = 10, Duration = 1 }
            );
 
             modelBuilder.Entity<PlanServices>().HasData(
@@ -62,6 +66,12 @@ namespace CLIMFinders.Infrastructure.Data
                 byte[] hashBytes = sha256.ComputeHash(saltedPassword);
                 hash[1] = Convert.ToBase64String(hashBytes);
             }
+            // 1:1 Relationship between User and SubRole
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.SubRoles)
+                .WithOne()
+                .HasForeignKey<User>(u => u.SubRoleId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevents cascading delete issues
 
             modelBuilder.Entity<User>().HasData(
                 new User
@@ -74,23 +84,12 @@ namespace CLIMFinders.Infrastructure.Data
                     IsConfirmed = true,
                     PasswordHash = hash[1],
                     PasswordSalt = hash[0],
-                    RoleId = 4,
+                    RoleId = (int)RoleEnum.SuperAdmin,
+                    SubRoleId = null,
                     AddedById = 1,
                     ModifiedById = 1
                 });
-
-            //modelBuilder.Entity<Businesses>().HasData(
-            //    new Businesses
-            //    {
-            //        Id = 1,
-            //        ContactPerson = "Admin",
-            //        Description = "This is Super Admin",
-            //        AddedById = 1,
-            //        AddedOn = DateTime.Now,
-            //        ModifiedById = 1,
-            //        ModifiedOn = DateTime.Now,
-            //        UserId = 1
-            //    });
+             
 
             modelBuilder.Entity<VehicleColor>().HasData(
             new VehicleColor { Id = 1, Name = "Black" },

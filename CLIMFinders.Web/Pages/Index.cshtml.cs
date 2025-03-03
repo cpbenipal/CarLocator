@@ -1,11 +1,19 @@
+using CLIMFinders.Application.DTOs;
+using CLIMFinders.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CLIMFinders.Web.Pages
 {
-    public class IndexModel() : PageModel
+    public class IndexModel(ISubscribeService service) : PageModel
     {
+        private readonly ISubscribeService _service = service;
+
         public void OnGet()
         {
+            Input = _service.GetSubscriptionPlans();
         }
+        [BindProperty]
+        public List<SubscriptionPlansDto> Input { get; set; } = [];
     }
 }

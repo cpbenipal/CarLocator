@@ -19,8 +19,8 @@ namespace CLIMFinders.Web.Controllers
          
         [HttpPost("PostSubscription")]
         public async Task<IActionResult> Subscriptionqweqw([FromBody] SubscriptionRequest plan)
-        {  
-            var sessionUrl = _services.SubscripePlan(plan);            
+        {
+            string sessionUrl = _services.SubscripePlan(plan);            
             // Return the session URL for the redirect
             return new JsonResult(new { sessionUrl });
         }

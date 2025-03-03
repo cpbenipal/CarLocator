@@ -31,6 +31,7 @@ namespace CLIMFinders.Web.ServiceExtension
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FullName))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
+                .ForMember(dest => dest.SubRoleId, opt => opt.MapFrom(src => src.SubRoleId))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Businesses != null ? src.Businesses.Id : 0))
                 .ForMember(dest => dest.ContactPerson, opt => opt.MapFrom(src => src.Businesses != null ? src.Businesses.ContactPerson : null))
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Businesses != null ? src.Businesses.Phone : null))

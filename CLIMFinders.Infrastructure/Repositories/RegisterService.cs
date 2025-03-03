@@ -16,7 +16,7 @@ namespace CLIMFinders.Infrastructure.Repositories
         private readonly IEmailHelperUtils _emailHelper = emailHelper;
         private readonly IConfiguration _config = config;
 
-        public ResponseDto CreateUser(PersonInfoDto dto, int RoleID, SubscriptionDto? subscription = null)
+        public ResponseDto CreateUser(PersonInfoDto dto, int RoleID, int? SubRoleId = null, SubscriptionDto? subscription = null)
         {
             var response = new ResponseDto();
             try
@@ -37,6 +37,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                         Email = dto.Email,
                         FullName = dto.Name,
                         RoleId = RoleID,
+                        SubRoleId = SubRoleId,
                         PasswordHash = hashedPassword,
                         PasswordSalt = Salt,
                         ConfirmationCode = ConfirmationCode,
@@ -61,7 +62,8 @@ namespace CLIMFinders.Infrastructure.Repositories
                         Email = dto.Email,
                         ClickLink = "/ActivateAccount?code="+ ConfirmationCode,
                         CopyRightYear = DateTime.Now.Year.ToString(),
-                        LogoLink = "/images/logo.png"
+                        LogoLink = "/images/logo.png",
+                        OtherText = password
                     };
                     var ContentToFill = _emailHelper.FillEmailContents(emailContent, "verify_email", dto.Name);
                     _emailService.SendEmail(dto.Email, "Account Verification Required", ContentToFill);
@@ -105,7 +107,7 @@ namespace CLIMFinders.Infrastructure.Repositories
         {
             var userid = _userService.GetUserId();
             var repository = unitOfWork.GetRepository<User>();
-            var entity = repository.GetByInclude(u => u.Id == userid, u => u.Businesses);
+            var entity = repository.GetByInclude(u => u.Id == userid, u => u.Businesses, u=>u.Roles, u=>u.SubRoles);
             AddressDto business = new();
 
             business = _mapper.Map<AddressDto>(entity);

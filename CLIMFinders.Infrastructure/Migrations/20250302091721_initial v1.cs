@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CLIMFinders.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class initialv1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,6 +27,19 @@ namespace CLIMFinders.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleNanme = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubRoles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -99,6 +112,7 @@ namespace CLIMFinders.Infrastructure.Migrations
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false),
+                    SubRoleId = table.Column<int>(type: "int", nullable: true),
                     TierId = table.Column<int>(type: "int", nullable: true),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -123,6 +137,12 @@ namespace CLIMFinders.Infrastructure.Migrations
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_SubRoles_SubRoleId",
+                        column: x => x.SubRoleId,
+                        principalTable: "SubRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Users_SubscriptionPlans_TierId",
                         column: x => x.TierId,
@@ -325,9 +345,17 @@ namespace CLIMFinders.Infrastructure.Migrations
                 values: new object[,]
                 {
                     { 1, "Users" },
-                    { 2, "Tow" },
-                    { 3, "Impound" },
-                    { 4, "SuperAdmin" }
+                    { 2, "Business" },
+                    { 3, "SuperAdmin" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SubRoles",
+                columns: new[] { "Id", "RoleNanme" },
+                values: new object[,]
+                {
+                    { 1, "Tow" },
+                    { 2, "Impound" }
                 });
 
             migrationBuilder.InsertData(
@@ -336,7 +364,7 @@ namespace CLIMFinders.Infrastructure.Migrations
                 values: new object[,]
                 {
                     { 1, 10m, 1, "User Registration (Car Owners)" },
-                    { 2, 10m, 1, "Tow or Impound Business Registration" }
+                    { 2, 10m, 1, "Business Registration (Tow or Impound)" }
                 });
 
             migrationBuilder.InsertData(
@@ -430,8 +458,8 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "AddedById", "AddedOn", "ConfirmationCode", "ConfirmedOn", "Email", "FullName", "IsConfirmed", "IsDeleted", "ModifiedById", "ModifiedOn", "PasswordHash", "PasswordSalt", "Photo", "RoleId", "SessionId", "SubscriptionId", "TierId" },
-                values: new object[] { 1, 1, new DateTime(2025, 3, 2, 0, 49, 57, 924, DateTimeKind.Local).AddTicks(2745), "", new DateTime(2025, 3, 2, 0, 49, 57, 924, DateTimeKind.Local).AddTicks(2761), "admin@admin.com", "Super Admin", true, false, 1, new DateTime(2025, 3, 2, 0, 49, 57, 924, DateTimeKind.Local).AddTicks(2759), "r9oMTcuZTtupaHySwuC01OKcphxZQdjdBGXcROEnPno=", "tHSnro8rhQjB4PGSuA0RPw==", null, 1, "", "", null });
+                columns: new[] { "Id", "AddedById", "AddedOn", "ConfirmationCode", "ConfirmedOn", "Email", "FullName", "IsConfirmed", "IsDeleted", "ModifiedById", "ModifiedOn", "PasswordHash", "PasswordSalt", "Photo", "RoleId", "SessionId", "SubRoleId", "SubscriptionId", "TierId" },
+                values: new object[] { 1, 1, new DateTime(2025, 3, 2, 14, 47, 21, 443, DateTimeKind.Local).AddTicks(3230), "", new DateTime(2025, 3, 2, 14, 47, 21, 443, DateTimeKind.Local).AddTicks(3247), "admin@admin.com", "Super Admin", true, false, 1, new DateTime(2025, 3, 2, 14, 47, 21, 443, DateTimeKind.Local).AddTicks(3245), "fPkom/mVXggTnQneTrAyKFBcGZuUQIi4S1Fs+AriaUI=", "YHm6SCi7KwU2po6/CQBYnQ==", null, 3, "", null, "", null });
 
             migrationBuilder.InsertData(
                 table: "VehicleModels",
@@ -540,6 +568,13 @@ namespace CLIMFinders.Infrastructure.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_SubRoleId",
+                table: "Users",
+                column: "SubRoleId",
+                unique: true,
+                filter: "[SubRoleId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_TierId",
                 table: "Users",
                 column: "TierId");
@@ -606,6 +641,9 @@ namespace CLIMFinders.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "SubRoles");
 
             migrationBuilder.DropTable(
                 name: "SubscriptionPlans");
