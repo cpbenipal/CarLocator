@@ -54,6 +54,7 @@ namespace CLIMFinders.Web.Areas.Business.Pages
             {
                 BindDropdowns();
                 ModelState.AddModelError(string.Empty, result.Status);
+                return Page();
             }
             return RedirectToPage("/ManageVehicles", new { area = "Business" });
 

@@ -22,7 +22,7 @@ namespace CLIMFinders.Web.ServiceExtension
             .ForMember(dest => dest.Make, opt => opt.MapFrom(src => src.VehicleMake.Name))
             .ForMember(dest => dest.Model, opt => opt.MapFrom(src => src.VehicleModel.Name))
             .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.VehicleColor.Name)) 
-            .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.Businesses != null ? src.Businesses.User.FullName : null))
+            .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.Users != null ? src.Users.FullName : null))
             .ReverseMap();
              
             // Map from User and Businesses to BusinessDto

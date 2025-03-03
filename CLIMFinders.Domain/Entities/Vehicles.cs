@@ -15,9 +15,9 @@ namespace CLIMFinders.Domain.Entities
         public int Status { get; set; }
         public string Note { get; set; }
         public DateTime PickedOn { get;set;} = DateTime.Now;
-        public int BusinessId { get; set; }
-        [ForeignKey("BusinessId")]
-        public UserAddress Businesses { get; set; }
+        public int UserId { get; set; } 
+        [ForeignKey("UserId")]
+        public User Users { get; set; }
         [ForeignKey("MakeId")]
         public VehicleMake VehicleMake { get; set; } 
         [ForeignKey("ModelId")]

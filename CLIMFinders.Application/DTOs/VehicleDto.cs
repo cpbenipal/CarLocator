@@ -46,7 +46,7 @@ namespace CLIMFinders.Application.DTOs
         public int ColorId { get; set; }
         public string Color { get; set; }
         public int Status { get; set; }
-        public int BusinessId { get; set; }
+        public int UserId { get; set; }
         public string? CompanyName { get; set; }
         public string BoundStatus { get; set; }
         [DataType(DataType.DateTime)]

@@ -19,7 +19,7 @@ namespace CLIMFinders.Infrastructure.Repositories
             {
                 var repository = unitOfWork.GetRepository<Vehicles>();
                 var response = GetAllVehicles()
-                    .Where(e=>e.BusinessId == _userService.GetBusinessId());
+                    .Where(e=>e.UserId == _userService.GetUserId());
                 var lstVehicles = mapper.Map<List<VehicleListDto>>(response);
                 lstVehicles.ForEach(v =>
                 {
@@ -38,7 +38,7 @@ namespace CLIMFinders.Infrastructure.Repositories
             try
             {
                 var repository = unitOfWork.GetRepository<Vehicles>();
-                var response = repository.GetAllInclude(v => v.VehicleMake, v => v.VehicleModel, v => v.VehicleColor, v=>v.Businesses.User);
+                var response = repository.GetAllInclude(v => v.VehicleMake, v => v.VehicleModel, v => v.VehicleColor, v=>v.Users);
                 var lstVehicles = mapper.Map<List<VehicleListDto>>(response);
                 lstVehicles.ForEach(v =>
                 {
@@ -129,7 +129,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                 if (model.Id == 0)
                 {
                     var mappedObj = mapper.Map<Vehicles>(model);
-                    mappedObj.BusinessId = _userService.GetBusinessId();
+                    mappedObj.UserId = _userService.GetUserId();
                     mappedObj.AddedById = mappedObj.ModifiedById = _userService.GetUserId();
                     var entity = repository.Insert(mappedObj);
                     response.Id = entity.Id;
@@ -139,7 +139,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                 else
                 {
                     var detail = repository.GetById(model.Id);
-                    detail.BusinessId = _userService.GetBusinessId();
+                    detail.UserId = _userService.GetUserId();
                     detail.Status = model.Status;
                     detail.VIN = model.VIN;
                     detail.ColorId = model.ColorId;
