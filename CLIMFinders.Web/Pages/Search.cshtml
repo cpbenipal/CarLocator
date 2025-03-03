@@ -22,10 +22,11 @@
     <div class="table-responsive">
         <div class="mt-4">
             <h4>Search Results</h4>
-           
-            <table class="table" id="resultTable" style="display: none;">
+
+            <table class="table table-striped" id="vehiclesTable">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>VIN</th>
                         <th>Make</th>
                         <th>Model</th>
@@ -36,92 +37,18 @@
                         <th>Date Impounded</th>
                     </tr>
                 </thead>
-                <tbody id="resultBody"></tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
 
-
-    @*  <div class="mt-4">
-        <h4>Search History</h4>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>VIN</th>
-                    <th>Search Date</th>
-                </tr>
-            </thead>
-            <tbody id="searchHistory"></tbody>
-        </table>
-    </div> *@
 </div>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-
-        $("#searchButton").click(function () {
-            let vin = $("#vinInput").val();
-            $("#errorMessage").hide();
-            $("#searchResult").hide();
-            $("#resultBody").empty();
-
-            if (vin === "") {
-                $("#errorMessage").text("Please enter a VIN").show();
-                return;
-            }
-
-            $.ajax({
-                url: `/api/search/searchvin/${vin}`,
-                type: "GET",
-                success: function (data) {
-                     if (data.length === 0) {
-                        $("#errorMessage").text("No record found for this VIN.").show();
-                        return;
-                    }
-
-                    $.each(data, function (index, vehicle) {
-                        $("#resultBody").append(`
-                            <tr>
-                                <td>${vehicle.vin}</td>
-                                <td>${vehicle.make}</td>
-                                <td>${vehicle.model}</td>
-                                <td>${vehicle.color}</td>
-                                <td>${vehicle.year}</td>
-                                <td>${vehicle.boundStatus}</td>
-                                <td>${vehicle.companyName}</td>
-                                <td>${new Date(vehicle.pickedOn).toLocaleDateString()}</td>
-                            </tr>
-                        `);
-                    });
-
-                    $("#resultTable").show();
-                   // saveSearchHistory(vin);
-                },
-                error: function (xhr) {
-                    let errorMessage = xhr.responseJSON ? xhr.responseJSON.message : "An error occurred.";
-                    $("#errorMessage").text(errorMessage).show();
-                }
-            });
-        });
-
-        // function saveSearchHistory(vin) {
-        //     let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
-        //     searchHistory.push({ vin: vin, date: new Date().toLocaleString() });
-        //     localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-
-        //     loadSearchHistory();
-        // }
-
-        // function loadSearchHistory() {
-        //     let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
-        //     let tableBody = $("#searchHistory");
-        //     tableBody.empty();
-
-        //     history.forEach(entry => {
-        //         let row = `<tr><td>${entry.vin}</td><td>${entry.date}</td></tr>`;
-        //         tableBody.append(row);
-        //     });
-        // }
-    });
-</script>
+ 
+<script type="text/javascript" src="~/customJs/searchvehicle.js"></script>

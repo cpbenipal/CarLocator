@@ -12,8 +12,7 @@ namespace CLIMFinders.Infrastructure.Repositories
         private readonly IMapper mapper = mapper;
         private readonly IUserService _userService = userService;
         private readonly IStaticSelectOptionService _staticSelectOptionService = staticSelectOptionService;
-
-
+         
         public List<VehicleListDto> GetVehicles()
         {
             try

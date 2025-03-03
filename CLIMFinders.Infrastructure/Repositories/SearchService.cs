@@ -12,7 +12,7 @@ namespace CLIMFinders.Infrastructure.Repositories
         {
             try
             {
-                var search = _vehicleService.GetAllVehicles().Where(e=>e.VIN == VIN);
+                var search = _vehicleService.GetAllVehicles().Where(e=>e.VIN.Contains(VIN));
                 return search.ToList();
             }
             catch {
