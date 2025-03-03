@@ -3,86 +3,12 @@
 @{
     ViewData["Title"] = "Register";
 }
+
+
 <div class="container rounded bg-white mt-5 mb-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h2 class="text-center mb-4">Business Registration</h2>
-            <form asp-action="Register" method="post">
-                <div class="row">
-                    <!-- Left Column -->
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label asp-for="Input.RoleId"></label>
-                            <select asp-for="Input.RoleId" asp-items="Model.Roles" class="form-control">
-                                <option value="">-- Choose One--</option>
-                            </select>
-                            <span asp-validation-for="Input.RoleId" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Input.Email"></label>
-                            <input type="email" asp-for="Input.Email" class="form-control" />
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Input.NewPassword">Password</label>
-                            <input type="password" asp-for="Input.NewPassword" class="form-control" />
-                            <span asp-validation-for="Input.NewPassword" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Input.ConfirmPassword"></label>
-                            <input type="password" asp-for="Input.ConfirmPassword" class="form-control" />
-                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Input.Name"></label>
-                            <input type="text" asp-for="Input.Name" class="form-control" />
-                            <span asp-validation-for="Input.Name" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Input.ContactPerson"></label>
-                            <input type="text" asp-for="Input.ContactPerson" class="form-control" />
-                            <span asp-validation-for="Input.ContactPerson" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <!-- Right Column -->
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label asp-for="Input.Phone">Phone</label>
-                            <input type="tel" asp-for="Input.Phone" class="form-control" />
-                            <span asp-validation-for="Input.Phone" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Input.Address">Address</label>
-                            <input type="text" asp-for="Input.Address" class="form-control" />
-                            <span asp-validation-for="Input.Address" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Input.City">City</label>
-                            <input type="text" asp-for="Input.City" class="form-control" />
-                            <span asp-validation-for="Input.City" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Input.State">State</label>
-                            <input type="text" asp-for="Input.State" class="form-control" />
-                            <span asp-validation-for="Input.State" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Input.ZipCode">Zip Code</label>
-                            <input type="text" asp-for="Input.ZipCode" class="form-control" />
-                            <span asp-validation-for="Input.ZipCode" class="text-danger"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Description" class="form-label">Description</label>
-                    <textarea asp-for="Input.Description" class="form-control" rows="3"></textarea>
-                    <span asp-validation-for="Input.Description" class="text-danger"></span>
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-lg mt-3">Register</button>
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            </form>
-        </div>
+    <div class="row justify-content-center">         
+            <partial name="_SubscriptionPartial" model="Model.InputPlans" />        
     </div>
 </div>
+<script src="https://js.stripe.com/v3/"></script>
+<script type="text/javascript" src="~/customJs/subscriptionscript.js"></script>

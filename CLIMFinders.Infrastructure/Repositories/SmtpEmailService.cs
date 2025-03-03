@@ -10,14 +10,20 @@ namespace CLIMFinders.Infrastructure.Repositories
     public class SmtpEmailService(IOptions<SmtpSettings> smtpSettings) : IEmailService
     {
         private readonly SmtpSettings _smtpSettings = smtpSettings.Value;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="emailAddress"></param>
+        /// <param name="subject"></param>
+        /// <param name="message"></param>
+        /// <param name="Isadmin">True if copy all emails back to Sender's Email</param>
         public void SendEmail(
             string emailAddress,
             string subject,
             string message, bool Isadmin = false
         )
         {
-            Execute(subject, message, emailAddress, Isadmin);
+            Execute(subject, message, emailAddress, Isadmin);            
         }
         private void Execute(
            string subject,
@@ -33,7 +39,10 @@ namespace CLIMFinders.Infrastructure.Repositories
             string EmailAddress = Isadmin ? _smtpSettings.NoreplyFrom : emailAddress;
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress("", sender));
-
+            if (!Isadmin)
+            {
+                emailMessage.Bcc.Add(new MailboxAddress("", _smtpSettings.AdminEmail));
+            }
             emailMessage.To.Add(new MailboxAddress("", EmailAddress));
             emailMessage.Subject = subject;
 

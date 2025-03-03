@@ -7,37 +7,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CLIMFinders.Web.Pages
 { 
-    public class RegisterModel(IRegisterService registerService, IStaticSelectOptionService staticSelectOptionService) : PageModel
+    public class RegisterModel(ISubscribeService service) : PageModel
     {
-        private readonly IRegisterService registerService = registerService; 
-        private readonly IStaticSelectOptionService _staticSelectOptionService = staticSelectOptionService;
-        public List<SelectListItem> Roles { get; set; }
+        private readonly ISubscribeService _service = service;
 
         public void OnGet()
         {
-            Roles = _staticSelectOptionService.RoleOptions();
+            InputPlans = _service.GetSubscriptionPlans();
         }
-        public IActionResult OnPost()
-        {
-            if (!ModelState.IsValid)
-            { 
-                Roles = _staticSelectOptionService.RoleOptions();
-                return Page();
-            }
-            
-            var result = registerService.CreateUser(Input,1); 
-
-            if (result == null || result.Id <= 0)
-            {
-                Roles = _staticSelectOptionService.RoleOptions();
-                ModelState.AddModelError(string.Empty, result?.Status ?? "User registration failed.");
-                return Page();
-            } 
-
-            return RedirectToPage("/Login");
-        }
-
-        [BindProperty]
-        public BusinessCreditDto Input { get; set; } 
+        public List<SubscriptionPlansDto> InputPlans { get; set; } = [];
     }
 }

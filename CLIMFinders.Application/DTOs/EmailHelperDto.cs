@@ -15,5 +15,6 @@ namespace CLIMFinders.Application.DTOs
         public bool EnableSSL { get; set; } = true;
         public string NoreplyFrom { get; set; }
         public string SupportFrom { get; set; } 
+        public string AdminEmail { get; set; } 
     }
 }

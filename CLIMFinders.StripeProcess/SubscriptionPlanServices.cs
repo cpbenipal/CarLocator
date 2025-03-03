@@ -30,17 +30,22 @@ namespace CLIMFinders.StripeProcess
             // Check if customer already exists (to prevent duplicates)
             var customers = customerService.List(new CustomerListOptions { Email = plan.Email });
             string? customerId = customers.Data.Count > 0 ? customers.Data[0].Id : null;
-
+             
             if (customerId == null)
             {
-                // Create a new customer in Stripe with name & email
                 var customer = customerService.Create(new CustomerCreateOptions
                 {
                     Email = plan.Email,
                     Name = plan.Name,
                 });
-
-                _ = customer.Id;
+                customerId = customer.Id;
+            }
+            else {
+                customerService.Update(customerId , new CustomerUpdateOptions
+                {
+                    Email = plan.Email,
+                    Name = plan.Name,
+                }); 
             }
 
             // Get the corresponding Price ID from appsettings.json
@@ -55,26 +60,30 @@ namespace CLIMFinders.StripeProcess
 
             var options = new SessionCreateOptions
             {
-                PaymentMethodTypes = ["card"],
-                LineItems =
-                [
-                    new() {
-                        Price = priceId,
-                        Quantity = 1
-                    }
-                ],
-                Metadata = new Dictionary<string, string>
+                PaymentMethodTypes = new List<string> { "card" },
+                LineItems = new List<SessionLineItemOptions>
                 {
-                    { "RoleId", plan.Plan.Equals("user", StringComparison.CurrentCultureIgnoreCase) ? "1": "2"  }, 
-                    { "SubRoleId", plan.SubRoleId }
+                new SessionLineItemOptions
+                {Price = priceId,Quantity = 1}
                 },
                 Mode = "subscription",
-                Customer = customerId,
+                Customer = customerId, 
+                CustomerUpdate = new SessionCustomerUpdateOptions
+                {
+                    Name = "auto"
+                },
                 SuccessUrl = $"{domain}/SubscriptionSuccess?session_id={{CHECKOUT_SESSION_ID}}",
-                CancelUrl = $"{domain}/SubscriptionCancel"
+                CancelUrl = $"{domain}/SubscriptionCancel",
+                Metadata = new Dictionary<string, string>
+                {
+                { "RoleId", plan.Plan.Equals("user", StringComparison.CurrentCultureIgnoreCase) ? "1": "2"  },
+                { "SubRoleId", plan.SubRoleId }
+                }
             };
+
             var sessionService = new SessionService(stripeClient);
             var session = sessionService.Create(options);
+
 
             return session.Url;
         }
@@ -104,7 +113,7 @@ namespace CLIMFinders.StripeProcess
                         Email = invoice.CustomerEmail,
                         Name = invoice.CustomerName
                     };
-                   
+
                     var RoleId = Convert.ToInt32(session.Metadata["RoleId"]);
                     var SubRoleId = Convert.ToInt32(session.Metadata["SubRoleId"]);
                     SubscriptionDto subscription = new()

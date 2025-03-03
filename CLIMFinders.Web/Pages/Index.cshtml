@@ -1,11 +1,10 @@
 ﻿@page
-@using CLIMFinders.Application.Enums
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
-<script src="https://js.stripe.com/v3/"></script>
-@* about us section starts *@
+
+
 <div class="about-us col-md-12">
     <div class="row m-0">
         <div class="col-md-4  p-0">
@@ -21,7 +20,7 @@
                     <div class="row row-cols-1 row-cols-md-2 g-4">
                         <div class="col">
                             <div class="card p-3">
-                                @* <img src="~/images/banner-image.jpg" class="card-img-top"  style="" alt="..."> *@
+                                 <img src="~/images/banner-image.jpg" class="card-img-top"  style="" alt="...">  
                                 <div class="card-body ">
                                     <h5 class="card-title mb-3 text-uppercase font-weight-bold">Impound Finders</h5>
                                     <p class="card-text">
@@ -32,6 +31,7 @@
                         </div>
                         <div class="col">
                             <div class="card p-3">
+                                <img src="~/images/banner-image.jpg" class="card-img-top" style="" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title">Business Owners</h5>
                                     <p class="card-text">
@@ -44,98 +44,13 @@
                 </div>
             </div>
         </div>
+
+        <partial name="_SubscriptionPartial" model="Model.InputPlans" />
     </div>
 </div>
-@* about us section finish *@
 
-@* subscription plan section starts *@
-<div class="business-plans-impound">
-    <div class="business-header">
-        <h2 class="header__title">Subscription plans & features</h2>
-        @*  <p class="header__text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laboriosam nihil, aspernatur odit quaerat obcaecati oper</p> *@
-    </div>
-
-    <div class="subscription-container">
-        @foreach (var plan in Model.Input)
-        {
-            string cssaa = "personal";
-            string icon = "fa-car";
-            if (plan.Id == 2)
-            {
-                cssaa = "business";
-                icon = "fa-users";
-            }
-
-            var planData = $"{Json.Serialize(plan)}";
-
-            <input type="radio" name="radio" id="@("option"+@plan.Id)">
-            string databstarget = "data-bs-target=#exampleModal data-bs-toggle=modal ";
-            if(User.Identity.IsAuthenticated)
-            {
-                databstarget = "";
-                planData = "";
-            }
-            <label for="@("option"+@plan.Id)" class="subscription__button" @databstarget data-whatever="@planData">
-                <h3 class="subscription__title subscription__title--@cssaa">
-                    @plan.Tier
-                    <i class="subscription__icon fas @icon"></i>
-                </h3>
-                <span class="subscription__price">@($"{plan.Amount:C}") <span class="subscription__price-month">/ mo</span> </span>
-                <ul class="subscription__list">
-                    @foreach (var service in plan.PlanServicesDto)
-                    {
-                        <li class="subscription__item">
-                            <i class="icon-subscription fas fa-check"></i>
-                            <span>
-                                @service.Name
-                            </span>
-                        </li>
-                    }
-                </ul>
-            </label>
-        }
-    </div>
-
-</div>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <form id="validationForm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="container mt-5 col-md-10">
-                        <div class="card p-4">
-                            <input id="hdnRole" type="hidden" /> 
-                            <div class="mb-3" id="dvSubRole">
-                                <input type="radio" class="form-check-input" name="subRole" checked="checked" id="option_@SubRoleEnum.Tow" required value="@($"{(int)SubRoleEnum.Tow}")" />
-                                <label for="option_@SubRoleEnum.Tow" class="form-check-label">@SubRoleEnum.Tow</label>
-                                <input type="radio" class="form-check-input" name="subRole" id="option_@SubRoleEnum.Impound" required value="@($"{(int)SubRoleEnum.Impound}")" />
-                                <label for="option_@SubRoleEnum.Impound" class="form-check-label">@SubRoleEnum.Impound</label>
-                            </div>
-                            <div class="mb-3">
-                                <label for="fullName" class="form-label lblName"></label>
-                                <input type="text" class="form-control" id="fullName" placeholder="Enter name" required />
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" placeholder="Enter your email" required />
-                            </div> 
-                            <span class="text-danger"></span>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" id="ExecutePlan">Subscribe Now</button>                     
-                </div>
-            </div>
-        </form>
-    </div>
-</div>  
+<script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript" src="~/customJs/subscriptionscript.js"></script>
+
+
+

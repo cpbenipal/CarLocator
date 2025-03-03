@@ -1,19 +1,14 @@
-﻿@using CLIMFinders.Application.Enums
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-@* subscription plan section starts *@
+﻿@using CLIMFinders.Application.Enums;
+@model List<CLIMFinders.Application.DTOs.SubscriptionPlansDto>;
+ 
 <div class="business-plans-impound">
     <div class="business-header">
         <h2 class="header__title">Subscription plans & features</h2>
-        @*  <p class="header__text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laboriosam nihil, aspernatur odit quaerat obcaecati oper</p> *@
+         <p class="header__text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laboriosam nihil, aspernatur odit quaerat obcaecati oper</p>
     </div>
 
     <div class="subscription-container">
-        @foreach (var plan in Model.Input)
+        @foreach (var plan in Model)
         {
             string cssaa = "personal";
             string icon = "fa-car";
@@ -95,4 +90,3 @@
         </form>
     </div>
 </div>
-<script type="text/javascript" src="~/customJs/subscriptionscript.js"></script>

@@ -11,9 +11,8 @@ namespace CLIMFinders.Web.Pages
 
         public void OnGet()
         {
-            Input = _service.GetSubscriptionPlans();
-        }
-        [BindProperty]
-        public List<SubscriptionPlansDto> Input { get; set; } = [];
+            InputPlans = _service.GetSubscriptionPlans();
+        } 
+        public List<SubscriptionPlansDto> InputPlans { get; set; } = [];
     }
 }
