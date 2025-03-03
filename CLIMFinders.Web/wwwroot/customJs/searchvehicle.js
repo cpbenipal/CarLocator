@@ -5,7 +5,7 @@ $jq(document).ready(function () {
         "processing": true,
         "serverSide": false,         
         "columns": [
-            { "data": "id", "orderable": false },
+            { "data": "id", "orderable": false, "visible": false },
             { "data": "vin" },
             { "data": "make" },
             { "data": "model" },

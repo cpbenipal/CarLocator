@@ -38,7 +38,7 @@ namespace CLIMFinders.Infrastructure.Repositories
             try
             {
                 var repository = unitOfWork.GetRepository<Vehicles>();
-                var response = repository.GetAllInclude(v => v.VehicleMake, v => v.VehicleModel, v => v.VehicleColor, v=>v.Users);
+                var response = repository.GetAllInclude(v => v.VehicleMake, v => v.VehicleModel, v => v.VehicleColor, v => v.Users, v=>v.Users.Businesses);
                 var lstVehicles = mapper.Map<List<VehicleListDto>>(response);
                 lstVehicles.ForEach(v =>
                 {
