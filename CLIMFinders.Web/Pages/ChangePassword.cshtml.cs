@@ -25,11 +25,11 @@ namespace CLIMFinders.Web.Pages
                 return Page();
             }
             var result = authService.ChangePassword(Input);
-            //if (result == null)
-            //{
-            //    ModelState.AddModelError(string.Empty, result.Status);
-            //    return Page();
-            //}
+            if (result == null)
+            {
+                ModelState.AddModelError(string.Empty, result.Status);
+                return Page();
+            }
             ModelState.AddModelError(string.Empty, result.Status);
 
             return Page();

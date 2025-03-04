@@ -3,15 +3,19 @@ using Azure;
 using CLIMFinders.Application.DTOs;
 using CLIMFinders.Application.Interfaces;
 using CLIMFinders.Domain.Entities;
+using Microsoft.Extensions.Configuration;
 
 namespace CLIMFinders.Infrastructure.Repositories
 {
-    public class AuthService(IUnitOfWork unitOfWork, IHashManager hashManager, IMapper mapper, IUserService userService) : IAuthService
+    public class AuthService(IUnitOfWork unitOfWork, IHashManager hashManager, IMapper mapper, IUserService userService, IEmailService emailService, IEmailHelperUtils emailHelper, IConfiguration config) : IAuthService
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
         private readonly IHashManager _hashManager = hashManager;
         private readonly IUserService _userService = userService;
         private readonly IMapper _mapper = mapper;
+        private readonly IEmailService _emailService = emailService;
+        private readonly IEmailHelperUtils _emailHelper = emailHelper;
+        private readonly IConfiguration _config = config;
 
         public LoginResponseDto UserLogin(LoginDto loginDto)
         {
@@ -66,6 +70,8 @@ namespace CLIMFinders.Infrastructure.Repositories
                     response.Email = entity.Email;
                     response.Name = entity.FullName;
                     response.Status = "Your password has been changed successfully.";
+
+                    SendEmailNotification(dto.NewPassword, entity);
                 }
             }
             catch
@@ -76,6 +82,9 @@ namespace CLIMFinders.Infrastructure.Repositories
             }
             return response;
         }
+
+       
+
         public ResponseDto ResetPassword(ForgotPasswordDto dto)
         {
             var response = new ResponseDto();
@@ -98,7 +107,9 @@ namespace CLIMFinders.Infrastructure.Repositories
                     repository.Update(entity);
                     repository.Save();
                     response.Id = entity.Id;
-                    response.Status = "Password reset successfully , Login with new password.";
+                    response.Status = "Password reset successfully.";
+
+                    SendEmailNotification(dto.NewPassword, entity);
                 }
 
             }
@@ -108,6 +119,21 @@ namespace CLIMFinders.Infrastructure.Repositories
                 throw;
             }
             return response;
+        }
+        private void SendEmailNotification(string NewPassword, User entity)
+        {
+            EmailContent emailContent = new()
+            {
+                BaseUrl = _config["JwtSettings:Issuer"],
+                Name = entity.FullName,
+                Email = entity.Email,
+                ClickLink = "/Login",
+                CopyRightYear = DateTime.Now.Year.ToString(),
+                LogoLink = "/images/logo.png",
+                OtherText = NewPassword
+            };
+            var ContentToFill = _emailHelper.FillEmailContents(emailContent, "resetpassword", entity.FullName);
+            _emailService.SendEmail(entity.Email, "Password reset successfully", ContentToFill);
         }
     }
 }

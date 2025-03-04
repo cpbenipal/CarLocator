@@ -1,7 +1,5 @@
-﻿var $jq = jQuery.noConflict();
-$jq(document).ready(function () { 
-
-    var table = $jq('#vehiclesTable').DataTable({
+﻿$(() => { 
+    var table = $('#vehiclesTable').DataTable({
         "processing": true,
         "serverSide": false,         
         "columns": [
@@ -33,17 +31,17 @@ $jq(document).ready(function () {
         "lengthMenu": [10, 25, 50, 100] // Number of records per page
     });
 
-    $jq("#searchButton").on("click", function (e) {
-        let vin = $jq("#vinInput").val();
-        $jq("#errorMessage").hide(); 
+    $("#searchButton").on("click", function (e) {
+        let vin = $("#vinInput").val();
+        $("#errorMessage").hide();
 
         if (vin === "") {
-            $jq("#errorMessage").text("Please enter a VIN").show();
+            $("#errorMessage").text("Please enter a VIN").show();
             return;
         }
         else {
             $.ajax({
-                url: `/api/search/searchbyvin?vin=${vin}`,
+                url: '/api/search/searchbyvin?vin=' + vin,
                 type: "GET",
                 success: function (response) {
                     table.clear().rows.add(response.data).draw(); // Clear and reload data
