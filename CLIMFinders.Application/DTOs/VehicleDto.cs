@@ -22,7 +22,7 @@ namespace CLIMFinders.Application.DTOs
         [DisplayName("Color")]
         public int ColorId { get; set; }
         public int Status { get; set; }
-        public string Note { get; set; }        
+        public string Note { get; set; }
         [DisplayName("Vehicle Pickup Date & Time")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
@@ -30,10 +30,16 @@ namespace CLIMFinders.Application.DTOs
         public int BusinessId { get; set; }
     }
     public class VehicleTypeDto
-    { 
+    {
         public int Id { get; set; }
         public string Name { get; set; }
     }
+    public class SearchResultDto
+    {
+        public List<VehicleListDto> Result { get; set; } = [];
+        public string Status { get; set; } = string.Empty;
+    }
+
     public class VehicleListDto
     {
         public int Id { get; set; }

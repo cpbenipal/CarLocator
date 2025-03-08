@@ -2,11 +2,14 @@
 using CLIMFinders.Application.DTOs;
 using CLIMFinders.Application.Interfaces;
 using CLIMFinders.Domain.Entities;
+using CLIMFinders.StripeProcess.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Stripe;
 
 namespace CLIMFinders.Infrastructure.Repositories
 {
-    public class RegisterService(IUnitOfWork unitOfWork, IHashManager hashManager, IMapper mapper, IUserService userService, IEmailService emailService, IEmailHelperUtils emailHelper, IConfiguration config) : IRegisterService
+    public class RegisterService(IUnitOfWork unitOfWork, IHashManager hashManager, IMapper mapper, IUserService userService,
+        IEmailService emailService, IEmailHelperUtils emailHelper, IConfiguration config, Lazy<ISubscriptionPlanServices> subscription) : IRegisterService
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
         private readonly IHashManager _hashManager = hashManager;
@@ -15,6 +18,7 @@ namespace CLIMFinders.Infrastructure.Repositories
         private readonly IEmailService _emailService = emailService;
         private readonly IEmailHelperUtils _emailHelper = emailHelper;
         private readonly IConfiguration _config = config;
+        private readonly Lazy<ISubscriptionPlanServices> _subscription = subscription;
 
         public ResponseDto CreateUser(PersonInfoDto dto, int RoleID, int? SubRoleId = null, SubscriptionDto? subscription = null)
         {
@@ -60,7 +64,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                         BaseUrl = _config["JwtSettings:Issuer"],
                         Name = dto.Name,
                         Email = dto.Email,
-                        ClickLink = "/ActivateAccount?code="+ ConfirmationCode,
+                        ClickLink = "/ActivateAccount?code=" + ConfirmationCode,
                         CopyRightYear = DateTime.Now.Year.ToString(),
                         LogoLink = "/images/logo.png",
                         OtherText = password
@@ -107,11 +111,15 @@ namespace CLIMFinders.Infrastructure.Repositories
         {
             var userid = _userService.GetUserId();
             var repository = unitOfWork.GetRepository<User>();
-            var entity = repository.GetByInclude(u => u.Id == userid, u => u.Businesses, u=>u.Roles, u=>u.SubRoles);
+            var entity = repository.GetByInclude(u => u.Id == userid, u => u.Businesses, u => u.Roles, u => u.SubRoles);
             AddressDto business = new();
 
             business = _mapper.Map<AddressDto>(entity);
-
+            var subscription = _subscription.Value.GetSubscriptionById(entity.SubscriptionId);
+            if (subscription != null)
+            {
+                business.subscriptionDetail = subscription; 
+            }
             return business;
         }
         public bool IsUserExists(string email, int Id = 0)
@@ -191,7 +199,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                     ClickLink = "/Login",
                     CopyRightYear = DateTime.Now.Year.ToString(),
                     LogoLink = "/images/logo.png",
-                   // OtherText = "Password : "+ 
+                    // OtherText = "Password : "+ 
                 };
                 var ContentToFill = _emailHelper.FillEmailContents(emailContent, "accountactivation", response.FullName);
                 _emailService.SendEmail(response.Email, "Account is successfully created!", ContentToFill);

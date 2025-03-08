@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CLIMFinders.Web.Pages
 {
-    [CustomAuthorize("Users")]
+    [Authorize(Roles = "Users")]
     public class SearchModel : PageModel
     {
         public void OnGet()

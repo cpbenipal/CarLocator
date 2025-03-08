@@ -1,4 +1,6 @@
-﻿using CLIMFinders.Application.Interfaces;
+﻿using Azure;
+using CLIMFinders.Application.DTOs;
+using CLIMFinders.Application.Interfaces;
 using CLIMFinders.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,8 +18,19 @@ namespace CLIMFinders.Web.Controllers
         [HttpGet("searchbyvin")]
         public IActionResult SearchByVin(string vin) 
         {
-            var response = _searchService.GetSearchResult(vin);
-            return Ok(new { data = response });
+            SearchResultDto resultDto = new();
+            var subscriptionClaim = User.FindFirst(CustomClaimTypes.ActiveSubscription);
+            if (subscriptionClaim == null || subscriptionClaim.Value != "True")
+            {
+                resultDto.Status = "403";
+            }
+            else
+            {
+                var response = _searchService.GetSearchResult(vin);
+                resultDto.Result = response; 
+                // Check Subscription Status
+            }
+            return Ok(new { data = resultDto });
         }
     }
 }

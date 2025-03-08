@@ -15,13 +15,15 @@
         <div class="row">
             <div class="col-md-3 border-right">
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                    <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><div>
+                    <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+                    <div>
                         <strong>Role</strong> :
                         @{
                             var RoleName = Model.Input.RoleId == (int)RoleEnum.Business ? @Enum.GetName(typeof(SubRoleEnum), Model.Input.SubRoleId) : "";
                         }
                         @RoleName  @Enum.GetName(typeof(RoleEnum), Model.Input.RoleId)
                     </div>
+                   
                 </div>
             </div>
             <div class="col-md-4 border-right">
@@ -53,6 +55,16 @@
                                 <label asp-for="Input.ContactPerson" class="form-label"></label>
                                 <input type="text" class="form-control" asp-for="Input.ContactPerson" />
                             </div>
+                        </div>
+                    }
+                    @if (Model.Input.subscriptionDetail != null)
+                    {
+                        <div class="row mt-2">
+                            <strong>Subscription Details</strong>
+                            <p><strong>Status:</strong> @Model.Input.subscriptionDetail.Status</p>
+                            <p><strong>Plan:</strong> @Model.Input.subscriptionDetail.Plan</p>
+                            <p><strong>Next Payment Date:</strong> @Model.Input.subscriptionDetail.NextPaymentDate</p>
+                            <p><strong>Amount:</strong> @($"{Model.Input.subscriptionDetail.Amount:C}")</p>
                         </div>
                     }
                 </div>

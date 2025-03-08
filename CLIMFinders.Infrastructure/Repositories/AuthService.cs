@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Azure;
 using CLIMFinders.Application.DTOs;
 using CLIMFinders.Application.Enums;
 using CLIMFinders.Application.Interfaces;
@@ -9,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace CLIMFinders.Infrastructure.Repositories
 {
-    public class AuthService(IUnitOfWork unitOfWork, IHashManager hashManager, IMapper mapper, IUserService userService, 
+    public class AuthService(IUnitOfWork unitOfWork, IHashManager hashManager, IMapper mapper, IUserService userService,
         IEmailService emailService, IEmailHelperUtils emailHelper, IConfiguration config, ISubscriptionPlanServices subscription) : IAuthService
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
@@ -88,7 +87,7 @@ namespace CLIMFinders.Infrastructure.Repositories
             return response;
         }
 
-       
+
 
         public ResponseDto ResetPassword(ForgotPasswordDto dto)
         {
@@ -96,7 +95,7 @@ namespace CLIMFinders.Infrastructure.Repositories
             try
             {
                 var repository = unitOfWork.GetRepository<User>();
-                var entity = repository.FirstOrDefault(e=>e.Email == dto.Email);
+                var entity = repository.FirstOrDefault(e => e.Email == dto.Email);
                 if (entity == null)
                 {
                     response.Id = -1;
@@ -118,7 +117,8 @@ namespace CLIMFinders.Infrastructure.Repositories
                 }
 
             }
-            catch {
+            catch
+            {
                 response.Id = -1;
                 response.Status = "An unexpected error occurred";
                 throw;

@@ -12,7 +12,13 @@ namespace CLIMFinders.Application.DTOs
         public string Name { get; set; } = string.Empty;
         public string SubRoleId { get; set; } = string.Empty;
     }
-
+    public class SubscriptionDetail
+    { 
+        public string Status { get; set; } = string.Empty;
+        public string Plan { get; set; } = string.Empty;
+        public string NextPaymentDate { get; set; }
+        public long? Amount { get; set; } 
+    }
     public class AddressDto : PersonInfoDto
     {
         public int Id { get; set; }
@@ -34,7 +40,8 @@ namespace CLIMFinders.Application.DTOs
         [Required]
         [DisplayName("Registered As:")]
         public int RoleId { get; set; }
-        public int SubRoleId { get; set; }  
+        public int SubRoleId { get; set; } 
+        public SubscriptionDetail subscriptionDetail { get; set; }
     }
 
     public class BusinessCreditDto : AddressDto

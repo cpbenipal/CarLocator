@@ -150,5 +150,49 @@ namespace CLIMFinders.StripeProcess
             //    subscription.Status == "past_due" ||
             //    subscription.Status == "incomplete");  
         }
+        public Subscription GetSubscriptionBySessionId(string sessionId)
+        {
+            var sessionService = new SessionService();
+            var session = sessionService.Get(sessionId);
+
+            // Now fetch the subscription associated with the customer ID from the session
+            var subscriptionService = new SubscriptionService();
+            var subscriptions = subscriptionService.List(new SubscriptionListOptions
+            {
+                Customer = session.CustomerId,  // Get the customer ID from the session
+                Limit = 1 // Fetch the most recent subscription
+            });
+
+            return subscriptions.FirstOrDefault(); // Return the most recent subscription
+        }
+        public SubscriptionDetail GetSubscriptionById(string subscriptionId)
+        {
+            StripeConfiguration.ApiKey = stripeClient.ApiKey;
+
+            var service = new SubscriptionService();
+            var subscription = service.Get(subscriptionId);
+             
+            SubscriptionDetail detail = new()
+            {
+                Amount = subscription.Items.Data[0].Plan.Amount / 100,
+                NextPaymentDate = subscription.CurrentPeriodEnd.ToString("MMMM dd, yyyy"),
+                Plan = subscription.Items.Data[0].Plan.Nickname,
+                Status = subscription.Status
+            };
+
+            return detail;
+        }
+        public Subscription GetSubscriptionByCustomerId(string customerId)
+        {
+            var options = new SubscriptionListOptions
+            {
+                Customer = customerId,
+                Limit = 1 // Fetch the most recent subscription
+            };
+
+            var service = new SubscriptionService();
+            var subscriptions = service.List(options);
+            return subscriptions.FirstOrDefault();
+        }
     }
 }

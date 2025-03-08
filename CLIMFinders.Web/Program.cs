@@ -127,8 +127,11 @@ try
         {
             var user = context.User;
             var subscriptionClaim = user.FindFirst(CustomClaimTypes.ActiveSubscription);
-
-            if (subscriptionClaim == null || subscriptionClaim.Value != "True")
+            if(context.Request.Path.StartsWithSegments("/api/"))
+            {
+                context.Response.ContentType = "application/json";
+            }
+            else if (subscriptionClaim == null || subscriptionClaim.Value != "True")
             {
                 context.Response.Redirect("/SubscriptionRenew");
             }
