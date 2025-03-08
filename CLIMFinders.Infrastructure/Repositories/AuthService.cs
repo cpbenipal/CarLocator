@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 using Azure;
 using CLIMFinders.Application.DTOs;
+using CLIMFinders.Application.Enums;
 using CLIMFinders.Application.Interfaces;
 using CLIMFinders.Domain.Entities;
+using CLIMFinders.StripeProcess.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace CLIMFinders.Infrastructure.Repositories
 {
-    public class AuthService(IUnitOfWork unitOfWork, IHashManager hashManager, IMapper mapper, IUserService userService, IEmailService emailService, IEmailHelperUtils emailHelper, IConfiguration config) : IAuthService
+    public class AuthService(IUnitOfWork unitOfWork, IHashManager hashManager, IMapper mapper, IUserService userService, 
+        IEmailService emailService, IEmailHelperUtils emailHelper, IConfiguration config, ISubscriptionPlanServices subscription) : IAuthService
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
         private readonly IHashManager _hashManager = hashManager;
@@ -16,6 +19,7 @@ namespace CLIMFinders.Infrastructure.Repositories
         private readonly IEmailService _emailService = emailService;
         private readonly IEmailHelperUtils _emailHelper = emailHelper;
         private readonly IConfiguration _config = config;
+        private readonly ISubscriptionPlanServices _subscription = subscription;
 
         public LoginResponseDto UserLogin(LoginDto loginDto)
         {
@@ -33,6 +37,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                 else
                 {
                     response = _mapper.Map<LoginResponseDto>(entity);
+                    response.IsActiveSubscription = entity.RoleId == (int)RoleEnum.SuperAdmin ? true : _subscription.IsSubscriptionActive(entity.SubscriptionId);
                 }
                 return response;
             }

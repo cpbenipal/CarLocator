@@ -20,7 +20,10 @@ namespace CLIMFinders.Application.Services
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Name, user.FullName),
                 new(ClaimTypes.Email, user.Email),
-                new(ClaimTypes.Role, Enum.GetName(typeof(RoleEnum), user.RoleId))
+                new(ClaimTypes.Role, Enum.GetName(typeof(RoleEnum), user.RoleId)),
+                new(CustomClaimTypes.SubscriptionId, user.SubscriptionId),
+                new(CustomClaimTypes.SessionId, user.SessionId),
+                new(CustomClaimTypes.ActiveSubscription, user.IsActiveSubscription.ToString())
             };
 
             if (!string.IsNullOrEmpty(user.BusinessId))

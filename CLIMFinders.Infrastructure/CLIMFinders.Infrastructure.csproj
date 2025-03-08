@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Repositories\ActiveSubscriptionHandler.cs" />
     <Compile Remove="Repositories\PaymentService.cs" />
   </ItemGroup>
 
@@ -35,6 +36,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CLIMFinders.Application\CLIMFinders.Application.csproj" />
     <ProjectReference Include="..\CLIMFinders.Domain\CLIMFinders.Domain.csproj" />
+    <ProjectReference Include="..\CLIMFinders.StripeProcess\CLIMFinders.StripeProcess.csproj" />
   </ItemGroup>
 
 </Project>

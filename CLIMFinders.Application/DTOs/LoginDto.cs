@@ -26,5 +26,8 @@ namespace CLIMFinders.Application.DTOs
         public int RoleId { get; set; }
         public int? SubRoleId { get; set; }
         public string? BusinessId { get; set; }
+        public string SubscriptionId { get; set; } = string.Empty;
+        public string SessionId { get; set; } = string.Empty;
+        public bool IsActiveSubscription { get; set; } = true;
     }
 }

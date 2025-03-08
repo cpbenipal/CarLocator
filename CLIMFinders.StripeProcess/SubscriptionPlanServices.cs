@@ -137,5 +137,18 @@ namespace CLIMFinders.StripeProcess
                 throw new Exception("No invoice found for this subscription.");
             }
         }
+        public bool IsSubscriptionActive(string subscriptionId)
+        {
+            StripeConfiguration.ApiKey = stripeClient.ApiKey;
+            var service = new SubscriptionService();
+            var subscription = service.Get(subscriptionId);
+            return (subscription.Status == "active");
+            //return (subscription.Status == "canceled" || 
+            //    subscription.Status == "incomplete_expired" || 
+            //    subscription.Status == "canceled" ||
+            //    subscription.Status == "unpaid" ||
+            //    subscription.Status == "past_due" ||
+            //    subscription.Status == "incomplete");  
+        }
     }
 }

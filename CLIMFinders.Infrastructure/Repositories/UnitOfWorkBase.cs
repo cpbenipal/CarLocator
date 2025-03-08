@@ -4,15 +4,10 @@ using CLIMFinders.Infrastructure.Data;
 
 namespace CLIMFinders.Repositories
 {
-    public class UnitOfWorkBase : IUnitOfWork
+    public class UnitOfWorkBase(ApplicationDbContext applicationDbContext) : IUnitOfWork
     {
-        private readonly ApplicationDbContext applicationDbContext;
+        private readonly ApplicationDbContext applicationDbContext = applicationDbContext;
         private Dictionary<Type, object> _repos;
-     
-        public UnitOfWorkBase(ApplicationDbContext applicationDbContext)
-        {
-            this.applicationDbContext = applicationDbContext;
-        } 
         #region Repository Manager
         public IRepositoryBase<T> GetRepository<T>() where T : class
         {

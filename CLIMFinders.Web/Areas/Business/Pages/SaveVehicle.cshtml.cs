@@ -1,17 +1,14 @@
-using AutoMapper;
 using CLIMFinders.Application.DTOs;
 using CLIMFinders.Application.Interfaces;
-using CLIMFinders.Application.Services;
-using CLIMFinders.Domain.Entities;
-using CLIMFinders.Infrastructure.Repositories;
+using CLIMFinders.Web.ServiceExtension;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CLIMFinders.Web.Areas.Business.Pages
-{
-    [Authorize(Roles = "Business")]
+{ 
+    [CustomAuthorize("Business", "SuperAdmin")]
     public class SaveVehicleModel(IVehicleService vehicleService) : PageModel
     {
         private readonly IVehicleService vehicleService = vehicleService;

@@ -1,7 +1,10 @@
 using CLIMFinders.Application.DTOs;
+using CLIMFinders.Application.Enums;
+using CLIMFinders.Domain.Entities;
 using CLIMFinders.Infrastructure.Data;
 using CLIMFinders.Web.ServiceExtension;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
@@ -70,14 +73,22 @@ try
                 ValidAudience = jwtSettings["Audience"],
                 IssuerSigningKey = new SymmetricSecurityKey(secretKey)
             };
-        }); 
+        });
+
     // Configure Authorization Policies
     builder.Services.AddAuthorizationBuilder()
-        .AddPolicy("SuperAdminPolicy", policy => policy.RequireRole("SuperAdmin"))
-        .AddPolicy("UsersPolicy", policy => policy.RequireRole("Users"))
-        .AddPolicy("TowPolicy", policy => policy.RequireRole("Tow"))
-        .AddPolicy("ImpoundPolicy", policy => policy.RequireRole("Impound"))
-        .AddPolicy("IMCAndTowPolicy", policy => policy.RequireRole("Impound", "Tow"));
+            .AddPolicy("SuperAdminPolicy", policy => policy.RequireRole(RoleEnum.SuperAdmin.ToString()))
+            .AddPolicy("UsersPolicy", policy => policy.RequireRole(RoleEnum.Users.ToString()))
+            .AddPolicy("BusinessPolicy", policy => policy.RequireRole(RoleEnum.Business.ToString()))
+            .AddPolicy("ActiveSubscription", policy =>
+            {
+                policy.RequireAssertion(context =>
+                {
+                    var subscriptionClaim = context.User.FindFirst(CustomClaimTypes.ActiveSubscription);
+                    return subscriptionClaim != null && subscriptionClaim.Value == "true";
+                });
+            });
+
 
     // Register AutoMapper
     builder.Services.AddAutoMapper(typeof(GenericMappingProfile));
@@ -91,9 +102,6 @@ try
 
     builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 
-    //  builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
-    //  StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
-
     var app = builder.Build();
     app.UseHttpsRedirection();
     app.UseCors("AllowAll");
@@ -104,40 +112,43 @@ try
         app.UseExceptionHandler("/Error");
         app.UseHsts();
     }
-
-
     app.UseMiddleware<JwtCookieMiddleware>(); // Custom Middleware to Extract JWT from Cookies
-
+   
     app.UseRouting();
-
     app.UseAuthentication();
 
-    // Redirect Unauthorized Requests
-    app.UseStatusCodePages(async context =>
+    app.UseAuthorization();
+    // Middleware to handle Unauthorized & Subscription Redirects
+    app.Use(async (context, next) =>
     {
-        if (context.HttpContext.Response.StatusCode == 403 && !context.HttpContext.Response.HasStarted) // Forbidden
-        {
-            context.HttpContext.Response.Redirect("/Unauthorized");
+        await next();
 
-        }
-        else if (context.HttpContext.Response.StatusCode == 401) 
+        if (context.Response.StatusCode == StatusCodes.Status403Forbidden)
         {
-            context.HttpContext.Response.Redirect("/Login");
+            var user = context.User;
+            var subscriptionClaim = user.FindFirst(CustomClaimTypes.ActiveSubscription);
+
+            if (subscriptionClaim == null || subscriptionClaim.Value != "True")
+            {
+                context.Response.Redirect("/SubscriptionRenew");
+            }
+            else
+            {
+                context.Response.Redirect("/Unauthorized");
+            }
         }
-        else if (context.HttpContext.Response.StatusCode == 404 && !context.HttpContext.Response.HasStarted)
+        else if (context.Response.StatusCode == StatusCodes.Status401Unauthorized)
         {
-            context.HttpContext.Response.Redirect("/NotFound");
+            context.Response.Redirect("/Login");
         }
     });
-
-    app.UseAuthorization();
-
-
+   // app.UseMiddleware<AuthorizationRedirectMiddleware>();
+    app.UseStatusCodePagesWithReExecute("/Error/{0}");
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapControllers();
         endpoints.MapRazorPages();
-    }); 
+    });
 
     app.Run();
 }

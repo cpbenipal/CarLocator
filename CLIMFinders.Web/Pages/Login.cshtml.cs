@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CLIMFinders.Web.Pages
-{
-    [AllowAnonymous]
+{ 
     public class LoginModel(IJwtTokenService jwtTokenService, IAuthService authService) : PageModel
     {
         private readonly IAuthService authService = authService;
