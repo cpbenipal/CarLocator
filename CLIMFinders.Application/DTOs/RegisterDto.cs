@@ -5,19 +5,32 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CLIMFinders.Application.DTOs
 {
+    public class CancelRequest
+    {
+        public string SubscriptionId { get; set; }  
+    }
+    public class RenewRequest
+    {
+        public string SessionId { get; set; }
+        public string PriceId { get; set; }
+    }
     public class SubscriptionRequest
     {
+        public int Id { get; set; } = 0;
         public string Plan { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string SubRoleId { get; set; } = string.Empty;
     }
     public class SubscriptionDetail
-    { 
+    {
+        public string SessionId { get; set; } = string.Empty;
+        public string SubscriptionId { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public string Plan { get; set; } = string.Empty;
-        public string NextPaymentDate { get; set; }
-        public long? Amount { get; set; } 
+        public string NextPaymentDate { get; set; } = string.Empty;
+        public long? Amount { get; set; } = 0;
+        public string? PriceModel { get; set; } = string.Empty;
     }
     public class AddressDto : PersonInfoDto
     {
@@ -40,8 +53,8 @@ namespace CLIMFinders.Application.DTOs
         [Required]
         [DisplayName("Registered As:")]
         public int RoleId { get; set; }
-        public int SubRoleId { get; set; } 
-        public SubscriptionDetail subscriptionDetail { get; set; }
+        public int SubRoleId { get; set; }
+        public SubscriptionDetail subscriptionDetail { get; set; } = new();
     }
 
     public class BusinessCreditDto : AddressDto
@@ -63,6 +76,7 @@ namespace CLIMFinders.Application.DTOs
     }
     public class PersonInfoDto
     {
+        public int Id { get; set; } = 0;
         [Required, EmailAddress]
         public string Email { get; set; }
         [Required]
@@ -117,6 +131,6 @@ namespace CLIMFinders.Application.DTOs
         public string CopyRightYear { get; set; } 
         public string LogoLink { get; set; }
         public string OtherText { get; set; } 
-        public string BaseUrl { get; set; }
+        public string BaseUrl { get; set; } 
     }
 }

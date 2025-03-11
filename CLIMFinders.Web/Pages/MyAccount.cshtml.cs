@@ -13,13 +13,12 @@ namespace CLIMFinders.Web.Pages
     [Authorize]
     public class MyAccountModel(IRegisterService registerService) : PageModel
     {
-        private readonly IRegisterService registerService = registerService;
-
+        private readonly IRegisterService registerService = registerService; 
         [BindProperty]
         public AddressDto Input { get; set; }
-
+        
         public void OnGet()
-        {
+        { 
             Input = registerService.GetMyProfile();
         }
 

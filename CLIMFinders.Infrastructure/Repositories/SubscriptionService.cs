@@ -6,10 +6,11 @@ using Microsoft.Extensions.Logging;
 
 namespace CLIMFinders.Infrastructure.Repositories
 {
-    public class SubscribeService(IUnitOfWork unitOfWork, IMapper mapper) : ISubscribeService
+    public class SubscribeService(IUnitOfWork unitOfWork, IMapper mapper, IUserService userService) : ISubscribeService
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork; 
-        private readonly IMapper _mapper = mapper; 
+        private readonly IMapper _mapper = mapper;
+        private readonly IUserService _userService = userService;
 
         //public GenericResponse AddUpdateSubscription(SubscriptionDto requestDto)
         //{
@@ -56,7 +57,7 @@ namespace CLIMFinders.Infrastructure.Repositories
 
             foreach (var pl in mappedPlan)
             {
-                var services = enPs.Where(e => e.PlanId == pl.Id);
+                var services = enPs.Where(e => e.PlanId == pl.Id); 
                 pl.PlanServicesDto = services != null ? _mapper.Map<List<PlanServicesDto>>(services) : [];
             }
             return mappedPlan;

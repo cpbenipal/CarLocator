@@ -37,6 +37,7 @@ $("#validationForm").on("submit", function (e) {
     ProcessPayment();
 });
 
+
 $(() => {
     $('#exampleModal').on('show.bs.modal', function (event) {
         var label = $(event.relatedTarget); // Button that triggered the modal

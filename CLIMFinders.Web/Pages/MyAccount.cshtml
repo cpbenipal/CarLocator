@@ -23,7 +23,7 @@
                         }
                         @RoleName  @Enum.GetName(typeof(RoleEnum), Model.Input.RoleId)
                     </div>
-                   
+
                 </div>
             </div>
             <div class="col-md-4 border-right">
@@ -58,13 +58,32 @@
                         </div>
                     }
                     @if (Model.Input.subscriptionDetail != null)
-                    {
-                        <div class="row mt-2">
+                    { 
+                        var planData = @Model.Input.subscriptionDetail;
+
+                       
+                     
+                        <div class="row mt-5">
                             <strong>Subscription Details</strong>
-                            <p><strong>Status:</strong> @Model.Input.subscriptionDetail.Status</p>
-                            <p><strong>Plan:</strong> @Model.Input.subscriptionDetail.Plan</p>
-                            <p><strong>Next Payment Date:</strong> @Model.Input.subscriptionDetail.NextPaymentDate</p>
-                            <p><strong>Amount:</strong> @($"{Model.Input.subscriptionDetail.Amount:C}")</p>
+                            <p><strong>Plan:</strong> @planData.Plan</p>
+                            <p><strong>Next Payment Date:</strong> @planData.NextPaymentDate</p>
+                            <p><strong>Amount:</strong> @($"{planData.Amount:C}")</p>
+                            <p>
+                                <strong>Status:</strong> @planData.Status
+                                @if (planData.Status == "active")
+                                {
+                                    <button type="button" data-datac="@planData.SubscriptionId" class="btn btn-link" id="acancel">Cancel</button>
+                                }
+                                else
+                                {
+                                    var jsonData = System.Text.Json.JsonSerializer.Serialize(new
+                                    {
+                                        SessionId = @planData.SessionId,
+                                        PriceId = @planData.PriceModel
+                                    });
+                                    <button type="button" data-datac="@jsonData" class="btn btn-link" id="aRenew">Renew</button>
+                                }
+                            </p>
                         </div>
                     }
                 </div>
@@ -115,3 +134,5 @@
         </div>
     </form>
 </div> 
+
+<script type="text/javascript" src="~/customJs/myaccountScript.js"></script>

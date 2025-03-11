@@ -13,5 +13,4 @@ namespace CLIMFinders.Web.Pages
         {
         }
     }
-
 }

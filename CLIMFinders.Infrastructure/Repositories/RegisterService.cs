@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Azure;
 using CLIMFinders.Application.DTOs;
+using CLIMFinders.Application.Enums;
 using CLIMFinders.Application.Interfaces;
 using CLIMFinders.Domain.Entities;
 using CLIMFinders.StripeProcess.Interfaces;
@@ -20,7 +22,7 @@ namespace CLIMFinders.Infrastructure.Repositories
         private readonly IConfiguration _config = config;
         private readonly Lazy<ISubscriptionPlanServices> _subscription = subscription;
 
-        public ResponseDto CreateUser(PersonInfoDto dto, int RoleID, int? SubRoleId = null, SubscriptionDto? subscription = null)
+        public ResponseDto SaveUser(PersonInfoDto dto, int RoleID, int? SubRoleId = null, SubscriptionDto? subscription = null)
         {
             var response = new ResponseDto();
             try
@@ -115,10 +117,14 @@ namespace CLIMFinders.Infrastructure.Repositories
             AddressDto business = new();
 
             business = _mapper.Map<AddressDto>(entity);
-            var subscription = _subscription.Value.GetSubscriptionById(entity.SubscriptionId);
-            if (subscription != null)
+            if (entity.RoleId == (int)RoleEnum.Users || entity.RoleId== (int)RoleEnum.Business)
             {
-                business.subscriptionDetail = subscription; 
+                var subscription = _subscription.Value.GetSubscriptionById(entity.SubscriptionId);
+                if (subscription != null)
+                {
+                    business.subscriptionDetail = subscription;
+                    business.subscriptionDetail.SessionId = entity.SessionId;
+                }
             }
             return business;
         }
@@ -207,6 +213,20 @@ namespace CLIMFinders.Infrastructure.Repositories
                 return true;
             }
             return false;
+        }
+        public void UpdateSubscription(string SessionId)
+        {
+            var UserId = _userService.GetUserId();
+            var repository = unitOfWork.GetRepository<User>();
+            var entity = repository.GetById(UserId);
+            var subscription = _subscription.Value.GetSubscriptionBySessionId(SessionId);
+            entity.SubscriptionId = subscription.Id;
+            entity.SessionId = SessionId;
+            entity.ModifiedById = UserId;
+            entity.ModifiedOn = DateTime.Now;
+            repository.Update(entity);
+            repository.Save();
+            _subscription.Value.SendInvoiceOnSubscriptionSuccess(SessionId, true);
         }
     }
 }

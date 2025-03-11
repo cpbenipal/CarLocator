@@ -9,31 +9,36 @@ namespace CLIMFinders.Web.ServiceExtension
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class CustomAuthorizeAttribute(params string[] roles) : Attribute, IAuthorizationFilter
     {
+        private readonly string[] _roles = roles;
+
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var user = context.HttpContext.User;
 
-            // If user is not authenticated, return 401 Unauthorized
+            // If user is not authenticated, redirect to Login
             if (!user.Identity?.IsAuthenticated ?? true)
             {
-                context.Result = new RedirectToPageResult("/Login");
+                context.HttpContext.Response.Redirect("/Login");
                 return;
             }
 
-            // Check for Active Subscription
+            // If roles are specified, enforce role-based access control
+            if (_roles.Length > 0 && !_roles.Any(role => user.IsInRole(role)))
+            {
+                context.HttpContext.Response.Redirect("/Unauthorized");
+                return;
+            }
+
+            // Check for Active Subscription Claim (only if required)
             var subscriptionClaim = user.FindFirst(CustomClaimTypes.ActiveSubscription);
             if (subscriptionClaim == null || subscriptionClaim.Value != "True")
             {
-                context.Result = new RedirectToPageResult("/SubscriptionRenew");
+                context.HttpContext.Response.Redirect("/SubscriptionRenew");
                 return;
             }
 
-            // Check for required roles
-            if (roles.Any() && !roles.Any(role => user.IsInRole(role)))
-            {
-                context.Result = new RedirectToPageResult("/Unauthorized");
-                return;
-            }
+            // If no roles are specified, allow all authenticated users
+            // This means every authenticated user can access unless restricted by subscription status.
         }
     }
 }

@@ -12,8 +12,8 @@ namespace CLIMFinders.Web.Pages
         public string Session_Id { get; set; }
 
         public void OnGet()
-        {
-            _services.SendInvoiceOnSubscriptionSuccess(Session_Id);
+        { 
+            _services.SendInvoiceOnSubscriptionSuccess(Session_Id, User.Identity?.IsAuthenticated);
         } 
     }
 }

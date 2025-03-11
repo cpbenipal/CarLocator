@@ -1,12 +1,8 @@
 ﻿using CLIMFinders.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Stripe.Checkout;
-using Stripe;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Options;
-using CLIMFinders.Application.Interfaces;
-using CLIMFinders.Application.Enums;
 using CLIMFinders.StripeProcess.Interfaces;
+using Stripe;
 
 namespace CLIMFinders.Web.Controllers
 {
@@ -15,14 +11,28 @@ namespace CLIMFinders.Web.Controllers
     [ApiController]
     public class SubscriptionPlanController(ISubscriptionPlanServices services) : ControllerBase
     {
-        private readonly ISubscriptionPlanServices _services = services; 
-         
+        private readonly ISubscriptionPlanServices _services = services;
+
         [HttpPost("PostSubscription")]
-        public async Task<IActionResult> Subscriptionqweqw([FromBody] SubscriptionRequest plan)
+        public IActionResult PostSub([FromBody] SubscriptionRequest plan)
         {
-            string sessionUrl = _services.SubscripePlan(plan);            
+            string sessionUrl = _services.SubscripePlan(plan);
+            // Return the session URL for the redirect 
+            return new JsonResult(new { sessionUrl });
+        }
+        [HttpPost("RenewSubscription")]
+        public IActionResult RenewSubscription([FromBody] RenewRequest renew) 
+        {
+            string sessionUrl = _services.CreateRenewalCheckoutSession(renew.SessionId, renew.PriceId);
             // Return the session URL for the redirect
             return new JsonResult(new { sessionUrl });
+        }
+        [HttpPost("CancelSubscription")]
+        public IActionResult CancelSubscription([FromBody] CancelRequest renew)
+        {
+            var response = _services.CancelSubscription(renew.SubscriptionId);
+            // Return the session URL for the redirect
+            return new JsonResult(new { response }); 
         }
     }
 }

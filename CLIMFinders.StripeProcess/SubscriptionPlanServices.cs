@@ -9,7 +9,8 @@ using Stripe.Checkout;
 
 namespace CLIMFinders.StripeProcess
 {
-    public class SubscriptionPlanServices(IConfiguration configuration, IStripeClient _stripeClient, IEmailService emailService, IRegisterService registerService) : ISubscriptionPlanServices
+    public class SubscriptionPlanServices(IConfiguration configuration, IStripeClient _stripeClient, IEmailService emailService,
+        IRegisterService registerService) : ISubscriptionPlanServices
     {
         private readonly IConfiguration _configuration = configuration;
         private readonly IStripeClient stripeClient = _stripeClient;
@@ -19,7 +20,7 @@ namespace CLIMFinders.StripeProcess
 
         public string SubscripePlan(SubscriptionRequest plan)
         {
-            if (_registerService.IsUserExists(plan.Email))
+            if (_registerService.IsUserExists(plan.Email, plan.Id))
             {
                 return "N";
             }
@@ -30,7 +31,7 @@ namespace CLIMFinders.StripeProcess
             // Check if customer already exists (to prevent duplicates)
             var customers = customerService.List(new CustomerListOptions { Email = plan.Email });
             string? customerId = customers.Data.Count > 0 ? customers.Data[0].Id : null;
-             
+
             if (customerId == null)
             {
                 var customer = customerService.Create(new CustomerCreateOptions
@@ -40,12 +41,13 @@ namespace CLIMFinders.StripeProcess
                 });
                 customerId = customer.Id;
             }
-            else {
-                customerService.Update(customerId , new CustomerUpdateOptions
+            else
+            {
+                customerService.Update(customerId, new CustomerUpdateOptions
                 {
                     Email = plan.Email,
                     Name = plan.Name,
-                }); 
+                });
             }
 
             // Get the corresponding Price ID from appsettings.json
@@ -63,11 +65,10 @@ namespace CLIMFinders.StripeProcess
                 PaymentMethodTypes = new List<string> { "card" },
                 LineItems = new List<SessionLineItemOptions>
                 {
-                new SessionLineItemOptions
-                {Price = priceId,Quantity = 1}
+                new() {Price = priceId,Quantity = 1}
                 },
                 Mode = "subscription",
-                Customer = customerId, 
+                Customer = customerId,
                 CustomerUpdate = new SessionCustomerUpdateOptions
                 {
                     Name = "auto"
@@ -83,13 +84,10 @@ namespace CLIMFinders.StripeProcess
 
             var sessionService = new SessionService(stripeClient);
             var session = sessionService.Create(options);
-
-
             return session.Url;
         }
-        public void SendInvoiceOnSubscriptionSuccess(string sessionId)
+        public void SendInvoiceOnSubscriptionSuccess(string sessionId, bool? IsUpdate)
         {
-
             var sessionService = new SessionService();
             var session = sessionService.Get(sessionId);
             var invoiceService = new InvoiceService();
@@ -122,10 +120,10 @@ namespace CLIMFinders.StripeProcess
                         SubscriptionId = session.SubscriptionId,
                         TierId = RoleId,
                     };
-                    var result = _registerService.CreateUser(personInfo, RoleId, SubRoleId, subscription);
+                    _registerService.SaveUser(personInfo, RoleId, SubRoleId, subscription);
 
                     //return invoice.HostedInvoiceUrl;
-                    _emailService.SendEmail(result.Email, "Your Invoice - Payment Successful", $"<p>Thank you for your payment!</p><p>You can download your invoice here: <a href='{invoice.HostedInvoiceUrl}'>View Invoice</a></p>");
+                    _emailService.SendEmail(personInfo.Email, "Your Invoice - Payment Successful", $"<p>Thank you for your payment!</p><p>You can download your invoice here: <a href='{invoice.HostedInvoiceUrl}'>View Invoice</a></p>");
                 }
                 else
                 {
@@ -168,19 +166,79 @@ namespace CLIMFinders.StripeProcess
         public SubscriptionDetail GetSubscriptionById(string subscriptionId)
         {
             StripeConfiguration.ApiKey = stripeClient.ApiKey;
-
             var service = new SubscriptionService();
             var subscription = service.Get(subscriptionId);
-             
+
             SubscriptionDetail detail = new()
             {
                 Amount = subscription.Items.Data[0].Plan.Amount / 100,
                 NextPaymentDate = subscription.CurrentPeriodEnd.ToString("MMMM dd, yyyy"),
-                Plan = subscription.Items.Data[0].Plan.Nickname,
+                SubscriptionId = subscriptionId,
+                PriceModel = subscription.Items.Data[0].Plan.Id,
                 Status = subscription.Status
             };
 
+            if (subscription != null && subscription.Items.Data.Count != 0)
+            {
+                string productId = subscription.Items.Data[0].Plan.ProductId;
+                string productName = GetProductName(productId);
+                detail.Plan = productName;
+                subscription.Metadata["ProductName"] = productName;
+            }
             return detail;
+        }
+        // Generate a checkout session link for renewing a subscription
+        public string CreateRenewalCheckoutSession(string sessionId, string plan)
+        {
+            var sessionService = new SessionService();
+            var session = sessionService.Get(sessionId);
+
+            var domain = _configuration["JwtSettings:Issuer"];
+
+            Dictionary<string, string> metadata = session.Metadata;
+
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = ["card"],
+                Mode = "subscription",
+                Customer = session.CustomerId, // Attach the existing customer
+                LineItems =
+            [
+                new() {
+                    Price = plan, // The price ID for the subscription plan
+                    Quantity = 1,
+                },
+            ],
+                SuccessUrl = $"{domain}/SubscriptionSuccess?session_id={{CHECKOUT_SESSION_ID}}",
+                CancelUrl = $"{domain}/SubscriptionCancel",
+                Metadata = metadata
+            };
+
+            var sessionrenew = sessionService.Create(options);
+
+            return sessionrenew.Url; // Return the checkout session link
+        }
+
+        public bool CancelSubscription(string subscriptionId)
+        {
+            try
+            {
+                StripeConfiguration.ApiKey = stripeClient.ApiKey;
+
+                var service = new SubscriptionService();
+                var subscription = service.Cancel(subscriptionId);
+                return subscription.Status == "canceled";
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        string GetProductName(string productId)
+        {
+            var productService = new ProductService();
+            var product = productService.Get(productId);
+            return product?.Name ?? "Unknown Product";
         }
         public Subscription GetSubscriptionByCustomerId(string customerId)
         {
