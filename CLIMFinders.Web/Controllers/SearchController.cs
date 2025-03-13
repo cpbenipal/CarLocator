@@ -7,15 +7,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CLIMFinders.Web.Controllers
-{ 
+{
     [Route("api/[controller]")]
     [ApiController]
     public class SearchController(ISearchService searchService) : ControllerBase
     {
-        private readonly ISearchService _searchService = searchService;  
+        private readonly ISearchService _searchService = searchService;
 
         [HttpGet("searchbyvin")]
-        public IActionResult SearchByVin(string vin) 
+        public IActionResult SearchByVin(string vin)
         {
             SearchResultDto resultDto = new();
             var subscriptionClaim = User.FindFirst(CustomClaimTypes.ActiveSubscription);
@@ -26,7 +26,7 @@ namespace CLIMFinders.Web.Controllers
             else
             {
                 var response = _searchService.GetSearchResult(vin);
-                resultDto.Result = response; 
+                resultDto.Result = response;
                 // Check Subscription Status
             }
             return Ok(new { data = resultDto });

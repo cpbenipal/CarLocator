@@ -1,6 +1,9 @@
 ﻿$(() => {
     $('.sssss').hide();
     var table = $('#vehiclesTable').DataTable({
+        "language": {
+            "emptyTable": "No VIN found. However, we have your records in our system. You will receive a notification once your vehicle is found."
+        },
         "processing": true,
         "serverSide": false,
         "columns": [
@@ -50,6 +53,7 @@
                         else {
                             $('.sssss').show();
                             var data = response.data.result;
+                             
                             table.clear().rows.add(data).draw();
                         }
                     }

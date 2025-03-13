@@ -29,11 +29,11 @@ namespace CLIMFinders.Infrastructure.Repositories
                 var search = _vehicleService.GetAllVehicles().Where(e => e.VIN.Contains(VIN));
                 if (search == null || !search.Any())
                 {
-                    SaveSearchHistory(VIN);
+                  //  SaveSearchHistory(VIN);
                 }
                 else
                 {
-                    SaveMatched(search.FirstOrDefault());
+                   // SaveMatched(search.FirstOrDefault());
                 }
                 return (search == null || !search.Any()) ? [] : search;
             }
