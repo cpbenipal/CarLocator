@@ -214,9 +214,8 @@ namespace CLIMFinders.Infrastructure.Repositories
             }
             return false;
         }
-        public void UpdateSubscription(string SessionId)
+        public void UpdateSubscription(string SessionId, int UserId)
         {
-            var UserId = _userService.GetUserId();
             var repository = unitOfWork.GetRepository<User>();
             var entity = repository.GetById(UserId);
             var subscription = _subscription.Value.GetSubscriptionBySessionId(SessionId);
@@ -226,7 +225,6 @@ namespace CLIMFinders.Infrastructure.Repositories
             entity.ModifiedOn = DateTime.Now;
             repository.Update(entity);
             repository.Save();
-            _subscription.Value.SendInvoiceOnSubscriptionSuccess(SessionId, true);
         }
     }
 }

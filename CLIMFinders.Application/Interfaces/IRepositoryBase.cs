@@ -18,6 +18,7 @@ namespace CLIMFinders.Application.Interfaces
         T Update(T obj);
         T UpdateRelated(T obj);
         List<T> UpdateRange(List<T> obj);
+        T AddOrUpdate(Expression<Func<T, bool>> predicate, T entity);
         void Delete(object id);
         void Save();
         void DeleteRange(Expression<Func<T, bool>> expression);

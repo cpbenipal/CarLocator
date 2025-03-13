@@ -11,9 +11,11 @@ namespace CLIMFinders.Application.DTOs
     }
     public class RenewRequest
     {
+        public int UserId { get; set; }
         public string SessionId { get; set; }
         public string PriceId { get; set; }
     }
+
     public class SubscriptionRequest
     {
         public int Id { get; set; } = 0;

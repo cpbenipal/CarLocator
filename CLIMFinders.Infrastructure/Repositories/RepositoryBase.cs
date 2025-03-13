@@ -2,6 +2,7 @@
 using CLIMFinders.Application.Interfaces;
 using CLIMFinders.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1;
 using System.Linq.Expressions; 
 
 namespace CLIMFinders.Repositories
@@ -99,6 +100,26 @@ namespace CLIMFinders.Repositories
                 _context.Entry(e).State = EntityState.Modified;
             });
             return obj;
+        } 
+        public T AddOrUpdate(Expression<Func<T, bool>> predicate, T entity)
+        {
+            var existingEntity = table.FirstOrDefault(predicate);
+
+            if (existingEntity == null)
+            {
+                // New entity -> Add
+                table.Add(entity);
+                Save();
+                return entity;
+            }
+            else
+            {
+                _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+                // Ensure Primary Key is NOT modified
+                _context.Entry(existingEntity).Property("Id").IsModified = false;
+                Save();
+                return table.FirstOrDefault(predicate);   
+            }     
         }
         public void Delete(object id)
         { 

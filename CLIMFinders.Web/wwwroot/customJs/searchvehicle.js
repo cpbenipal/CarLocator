@@ -1,5 +1,5 @@
 ﻿$(() => {
-    $(".table-responsive").hide();
+    $('.sssss').hide();
     var table = $('#vehiclesTable').DataTable({
         "processing": true,
         "serverSide": false,
@@ -31,75 +31,45 @@
         "order": [[1, "asc"]], // Default sorting by VIN
         "lengthMenu": [10, 25, 50, 100] // Number of records per page
     });
-
-    //$("#searchButton").on("click", function (e) {
-    //    let vin = $("#vinInput").val();
-    //    $("#errorMessage").hide();
-
-    //    if (vin === "") {
-    //        $("#errorMessage").text("Please enter a VIN").show();
-    //        return;
-    //    }
-    //    else {
-    //        $.ajax({
-    //            url: '/api/search/searchbyvin?vin=' + vin,
-    //            type: "GET",
-    //            success: function (response) {
-    //                table.clear().rows.add(response.data).draw(); // Clear and reload data
-    //            },
-    //            error: function (xhr) {
-    //                alert(xhr.responseJSON?.message || "No vehicle found.");
-    //                table.clear().draw(); // Clear table if no data found
-    //            }
-    //        });
-    //    }
-    //});
-
-    $("#searchButton").on("click", function (e) {
+     
+    $("#searchForm").on("submit", function (e) {
         e.preventDefault(); // Prevent form submission if inside a form
-
-        let vin = $("#vinInput").val().trim();
-        $("#errorMessage").hide();
-        
-
-        if (!vin) {
-            $("#errorMessage").text("Please enter a VIN").show();
-            return;
-        }
-        $.ajax({
-            url: '/api/search/searchbyvin?vin=' + vin,
-            type: "GET",
-            contentType: 'application/json',
-            success: function (response) { 
-                table.clear().draw();
-                 
-                if (response && response.data) {                   
-                    var status = response.data.status;
-                    if (status == "403") {
-                        window.location.href = "/SubscriptionRenew";
+        let vin = $("#Input_vinInput");
+            $.ajax({
+                url: '/api/search/searchbyvin?vin=' + vin.val().trim(),
+                type: "GET",
+                contentType: 'application/json',
+                success: function (response) {
+                    console.log(response);
+                    // table.clear().draw();  
+                    if (response && response.data) {
+                        var status = response.data.status;
+                        if (status == "403") {
+                            window.location.href = "/SubscriptionRenew";
+                        }
+                        else {
+                            $('.sssss').show();
+                            var data = response.data.result;
+                            table.clear().rows.add(data).draw();
+                        }
                     }
-                    else {
-                        $(".table-responsive").show();
-                        var data = response.data.result;
-                        table.clear().rows.add(data).draw();  
-                    }
-                }  
-            },
-            error: function (xhr) {
-                console.log(JSON.stringify(xhr));
-                let errorMessage = "No vehicle found.";
+                },
+                error: function (xhr) {
+                    console.log(JSON.stringify(xhr));
+                    let errorMessage = "No vehicle found.";
 
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMessage = xhr.responseJSON.message;
-                } else if (xhr.status === 403) {
-                    errorMessage = "Access denied. Please renew your subscription.";
-                } else if (xhr.status === 500) {
-                    errorMessage = "Server error. Please try again later.";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.status === 403) {
+                        errorMessage = "Access denied. Please renew your subscription.";
+                    } else if (xhr.status === 500) {
+                        errorMessage = "Server error. Please try again later.";
+                    }
+
+                    table.clear().draw(); // Ensure table is cleared on error
                 }
-
-                table.clear().draw(); // Ensure table is cleared on error
-            }
-        });
+            });
+       
     });
 
 });

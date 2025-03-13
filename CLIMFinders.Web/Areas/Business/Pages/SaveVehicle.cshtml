@@ -1,5 +1,5 @@
 ﻿@page
-@model CLIMFinders.Web.Areas.Business.Pages.SaveVehicleModel
+@model SaveVehicleModel
 @{
     ViewData["Title"] = Model.Input.Id == 0 ? "Add Vehicle" : "Edit Vehicle";
 }
@@ -26,14 +26,14 @@
                         </div>
                         <div class="form-group mb-3">
                             <label asp-for="Input.MakeId" class="form-label"></label>
-                            <select asp-for="Input.MakeId" class="form-control" required asp-items="Model.VehicleMakes">
+                            <select asp-for="Input.MakeId" class="form-select" required asp-items="Model.VehicleMakes">
                                 <option value="">-- Choose One --</option>
                             </select>
                             <span asp-validation-for="Input.MakeId" class="text-danger"></span>
                         </div>
                         <div class="form-group mb-3" >
                             <label asp-for="Input.ModelId" class="form-label"></label>
-                            <select asp-for="Input.ModelId" class="form-control" required asp-items="Model.VehicleModels">
+                            <select asp-for="Input.ModelId" class="form-select" required asp-items="Model.VehicleModels">
                                 <option value="">-- Choose One --</option>
                             </select>
                             <span asp-validation-for="Input.ModelId" class="text-danger"></span>
@@ -43,21 +43,21 @@
                     <div class="col-md-6">
                         <div class="form-group mb-3" >
                             <label asp-for="Input.Year" class="form-label"></label>
-                            <select asp-for="Input.Year" class="form-control" required asp-items="Model.ModelYear">
+                            <select asp-for="Input.Year" class="form-select" required asp-items="Model.ModelYear">
                                 <option value="">-- Choose One --</option>
                             </select>
                             <span asp-validation-for="Input.Year" class="text-danger"></span>
                         </div>
                         <div class="form-group mb-3" >
                             <label asp-for="Input.ColorId" class="form-label"></label>
-                            <select asp-for="Input.ColorId" class="form-control" required asp-items="Model.VehicleColors">
+                            <select asp-for="Input.ColorId" class="form-select" required asp-items="Model.VehicleColors">
                                 <option value="">-- Choose One --</option>
                             </select>
                             <span asp-validation-for="Input.ColorId" class="text-danger"></span>
                         </div>
                         <div class="form-group mb-3" >
                             <label asp-for="Input.Status" class="form-label"></label>
-                            <select asp-for="Input.Status" class="form-control" required asp-items="Model.StatusOptions">
+                            <select asp-for="Input.Status" class="form-select" required asp-items="Model.StatusOptions">
                                 <option value="">-- Choose One --</option>
                             </select>
                             <span asp-validation-for="Input.Status" class="text-danger"></span>
@@ -66,7 +66,7 @@
                 </div>
                 <div class="form-group mb-3" >
                     <label asp-for="Input.Note" class="form-label"></label>
-                    <textarea asp-for="Input.Note" class="form-control" rows="2"></textarea>
+                    <textarea asp-for="Input.Note" class="form-control" rows="3"></textarea>
                 </div>
               
                 <button type="submit" id="testButton" class="btn btn-primary btn-block mt-3">Save </button>

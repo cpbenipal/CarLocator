@@ -21,12 +21,13 @@ namespace CLIMFinders.Web.Controllers
             return new JsonResult(new { sessionUrl });
         }
         [HttpPost("RenewSubscription")]
-        public IActionResult RenewSubscription([FromBody] RenewRequest renew) 
+        public IActionResult RenewSubscription([FromBody] RenewRequest renew)
         {
-            string sessionUrl = _services.CreateRenewalCheckoutSession(renew.SessionId, renew.PriceId);
+            string sessionUrl = _services.CreateRenewalCheckoutSession(renew.SessionId, renew.PriceId, renew.UserId);
             // Return the session URL for the redirect
             return new JsonResult(new { sessionUrl });
         }
+
         [HttpPost("CancelSubscription")]
         public IActionResult CancelSubscription([FromBody] CancelRequest renew)
         {

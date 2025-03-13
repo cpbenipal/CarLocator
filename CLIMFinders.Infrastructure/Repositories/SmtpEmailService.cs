@@ -20,15 +20,12 @@ namespace CLIMFinders.Infrastructure.Repositories
         public void SendEmail(
             string emailAddress,
             string subject,
-            string message, bool Isadmin = false
-        )
+            string message,string CcEmail="", bool Isadmin = false
+        ) 
         {
-            Execute(subject, message, emailAddress, Isadmin);            
+            Execute(subject, message, emailAddress, CcEmail, Isadmin);            
         }
-        private void Execute(
-           string subject,
-           string message,
-           string emailAddress, bool Isadmin
+        private void Execute(string subject,string message,string emailAddress, string CcEmail, bool Isadmin
        )
         {
             var smtpProvider = _smtpSettings.Server;
@@ -42,6 +39,10 @@ namespace CLIMFinders.Infrastructure.Repositories
             if (!Isadmin)
             {
                 emailMessage.Bcc.Add(new MailboxAddress("", _smtpSettings.AdminEmail));
+            }
+            if (!string.IsNullOrEmpty(CcEmail))
+            {
+                emailMessage.Cc.Add(new MailboxAddress("", CcEmail));
             }
             emailMessage.To.Add(new MailboxAddress("", EmailAddress));
             emailMessage.Subject = subject;

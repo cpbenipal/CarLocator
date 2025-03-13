@@ -9,7 +9,7 @@ namespace CLIMFinders.Application.Interfaces
     public interface IEmailService
     {
         // void SendEmail(string emailAddress, string subject, string body, string fromEmail = null, string displayName = null);
-        void SendEmail(string emailAddress, string subject, string message, bool Isadmin = false); 
+        void SendEmail(string emailAddress, string subject, string message, string CcEmail = "", bool Isadmin = false); 
     }
 }
  

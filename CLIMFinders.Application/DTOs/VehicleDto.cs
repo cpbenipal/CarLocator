@@ -4,6 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CLIMFinders.Application.DTOs
 {
+    public class SearchDto
+    {
+        [Required]
+        [StringLength(17, MinimumLength = 17, ErrorMessage = "VIN must be exactly 17 characters.")]
+        [RegularExpression(@"^[A-HJ-NPR-Z0-9]+$", ErrorMessage = "VIN can only contain letters (A-Z, except I, O, Q) and numbers (0-9).")]
+        
+        [DisplayName("Vehicle Identification Number")]
+        public string vinInput { get; set; } 
+    }
     public class VehicleDto
     {
         public int Id { get; set; }
@@ -36,7 +45,7 @@ namespace CLIMFinders.Application.DTOs
     }
     public class SearchResultDto
     {
-        public List<VehicleListDto> Result { get; set; } = [];
+        public IEnumerable<VehicleListDto> Result { get; set; } = [];
         public string Status { get; set; } = string.Empty;
     }
 

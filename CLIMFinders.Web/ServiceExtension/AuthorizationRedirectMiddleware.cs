@@ -13,12 +13,13 @@ namespace CLIMFinders.Web.ServiceExtension
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
+            
             var user = context.HttpContext.User;
 
             // If user is not authenticated, redirect to Login
             if (!user.Identity?.IsAuthenticated ?? true)
-            {
-                context.HttpContext.Response.Redirect("/Login");
+            { 
+                context.Result = new RedirectToPageResult("/Login");
                 return;
             }
 

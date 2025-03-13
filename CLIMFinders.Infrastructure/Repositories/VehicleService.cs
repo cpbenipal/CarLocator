@@ -148,6 +148,7 @@ namespace CLIMFinders.Infrastructure.Repositories
                     detail.Note = model.Note;
                     detail.PickedOn = model.PickedOn;
                     detail.Year = model.Year;
+                    detail.ModifiedOn = DateTime.Now;
                     detail.ModifiedById = _userService.GetUserId();
                     repository.Update(detail);
                     response.Id = detail.Id;

@@ -10,10 +10,9 @@ namespace CLIMFinders.Web.Controllers
 { 
     [Route("api/[controller]")]
     [ApiController]
-    public class SearchController(ISearchService searchService, ILogger<SearchController> logger) : ControllerBase
+    public class SearchController(ISearchService searchService) : ControllerBase
     {
-        private readonly ISearchService _searchService = searchService;
-        private readonly ILogger<SearchController> _logger = logger;
+        private readonly ISearchService _searchService = searchService;  
 
         [HttpGet("searchbyvin")]
         public IActionResult SearchByVin(string vin) 

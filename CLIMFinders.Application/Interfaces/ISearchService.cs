@@ -4,6 +4,6 @@ namespace CLIMFinders.Application.Interfaces
 {
     public interface ISearchService
     {
-        List<VehicleListDto> GetSearchResult(string VIN);
+        IEnumerable<VehicleListDto> GetSearchResult(string VIN);
     }
 }

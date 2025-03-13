@@ -26,8 +26,9 @@ namespace CLIMFinders.Web.ServiceExtension
             services.AddScoped<IEmailService, SmtpEmailService>();
             services.AddScoped<IEmailHelperUtils, EmailHelperUtils>();
             services.AddScoped<ISubscriptionPlanServices, SubscriptionPlanServices>();
-            services.AddScoped<Lazy<ISubscriptionPlanServices>>(sp =>
+            _ = services.AddScoped(sp =>
              new Lazy<ISubscriptionPlanServices>(() => sp.GetRequiredService<ISubscriptionPlanServices>()));
+           // services.AddSingleton<IAuthorizationHandler, CustomAuthorizationHandler>();
             services.AddHttpContextAccessor();
         }
     }

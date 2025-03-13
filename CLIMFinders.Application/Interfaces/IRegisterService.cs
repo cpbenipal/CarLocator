@@ -9,6 +9,6 @@ namespace CLIMFinders.Application.Interfaces
         ResponseDto UpdateBusiness(AddressDto dto);
         bool IsUserExists(string email, int Id = 0);
         bool ActivateAccount(string code);
-        void UpdateSubscription(string SessionId);
-    } 
+        void UpdateSubscription(string SessionId, int UserId);
+    }
 }

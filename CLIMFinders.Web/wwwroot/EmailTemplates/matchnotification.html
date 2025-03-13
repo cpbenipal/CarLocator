@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Impounded Notification</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #007bff;
+        }
+
+            .header img {
+                max-width: 150px;
+            }
+
+        .content {
+            padding: 20px;
+            text-align: left;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #28a745;
+            color: #ffffff;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <img src="{{LogoLink}}" alt="Impound Finders">
+            <h2>🚗 Vehicle Impounded Notification</h2>
+        </div>
+        <div class="content">
+            <p>Dear <strong>{{UserName}}</strong>,</p>
+
+            <p>We regret to inform you that your vehicle with the following details has been {{FacilityType}}:</p>
+
+            <table>
+                <tr><td><strong>🚘 Vehicle VIN:</strong></td><td>{{VIN}}</td></tr>
+                <tr><td><strong>📍 Impound Location:</strong></td><td>{{CompanyName}}</td></tr>
+                <tr><td><strong>📞 Contact:</strong></td><td>{{CompanyPhone}}</td></tr>
+                <tr><td><strong>📅 Impound Date:</strong></td><td>{{ImpoundDate}}</td></tr>
+                <tr><td><strong>📍 Address:</strong></td><td>{{CompanyAddress}}</td></tr>
+            </table>
+
+            <p>To retrieve your vehicle, please contact the impound company at **{{CompanyPhone}}** or visit the location.</p>
+
+            <p>If you believe this was a mistake, please contact our support team immediately.</p>
+
+            <p>Best regards,</p>
+            <p><strong>{{YourCompanyName}}</strong></p>
+        </div>
+
+        <div class="footer">
+            &copy; {{CopyRightYear}} {{YourCompanyName}} | All Rights Reserved
+        </div>
+    </div>
+
+</body>
+</html>

@@ -86,7 +86,7 @@ namespace CLIMFinders.StripeProcess
             var session = sessionService.Create(options);
             return session.Url;
         }
-        public void SendInvoiceOnSubscriptionSuccess(string sessionId, bool? IsUpdate)
+        public void SendInvoiceOnSubscriptionSuccess(string sessionId, int UserId)
         {
             var sessionService = new SessionService();
             var session = sessionService.Get(sessionId);
@@ -111,19 +111,24 @@ namespace CLIMFinders.StripeProcess
                         Email = invoice.CustomerEmail,
                         Name = invoice.CustomerName
                     };
-
-                    var RoleId = Convert.ToInt32(session.Metadata["RoleId"]);
-                    var SubRoleId = Convert.ToInt32(session.Metadata["SubRoleId"]);
-                    SubscriptionDto subscription = new()
+                    if (UserId == 0)
                     {
-                        SessionId = sessionId,
-                        SubscriptionId = session.SubscriptionId,
-                        TierId = RoleId,
-                    };
-                    _registerService.SaveUser(personInfo, RoleId, SubRoleId, subscription);
-
+                        var RoleId = Convert.ToInt32(session.Metadata["RoleId"]);
+                        var SubRoleId = Convert.ToInt32(session.Metadata["SubRoleId"]);
+                        SubscriptionDto subscription = new()
+                        {
+                            SessionId = sessionId,
+                            SubscriptionId = session.SubscriptionId,
+                            TierId = RoleId,
+                        };
+                        _registerService.SaveUser(personInfo, RoleId, SubRoleId, subscription);
+                    }
+                    else
+                    {
+                        _registerService.UpdateSubscription(sessionId, UserId);
+                    }
                     //return invoice.HostedInvoiceUrl;
-                    _emailService.SendEmail(personInfo.Email, "Your Invoice - Payment Successful", $"<p>Thank you for your payment!</p><p>You can download your invoice here: <a href='{invoice.HostedInvoiceUrl}'>View Invoice</a></p>");
+                    _emailService.SendEmail(personInfo.Email, "Your Invoice - Payment Successful", $"<p>Thank you for your payment!</p><p>You can download your invoice here: <a href='{invoice.HostedInvoiceUrl}'>View Invoice</a></p>","", true);
                 }
                 else
                 {
@@ -135,6 +140,7 @@ namespace CLIMFinders.StripeProcess
                 throw new Exception("No invoice found for this subscription.");
             }
         }
+
         public bool IsSubscriptionActive(string subscriptionId)
         {
             StripeConfiguration.ApiKey = stripeClient.ApiKey;
@@ -188,15 +194,15 @@ namespace CLIMFinders.StripeProcess
             return detail;
         }
         // Generate a checkout session link for renewing a subscription
-        public string CreateRenewalCheckoutSession(string sessionId, string plan)
+        // Generate a checkout session link for renewing a subscription
+        public string CreateRenewalCheckoutSession(string sessionId, string plan, int UserId)
         {
             var sessionService = new SessionService();
             var session = sessionService.Get(sessionId);
 
             var domain = _configuration["JwtSettings:Issuer"];
 
-            Dictionary<string, string> metadata = session.Metadata;
-
+            Dictionary<string, string> metadata = session.Metadata; 
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = ["card"],
@@ -209,7 +215,7 @@ namespace CLIMFinders.StripeProcess
                     Quantity = 1,
                 },
             ],
-                SuccessUrl = $"{domain}/SubscriptionSuccess?session_id={{CHECKOUT_SESSION_ID}}",
+                SuccessUrl = $"{domain}/SubscriptionSuccess?session_id={{CHECKOUT_SESSION_ID}}&userid={UserId}",
                 CancelUrl = $"{domain}/SubscriptionCancel",
                 Metadata = metadata
             };
@@ -218,6 +224,7 @@ namespace CLIMFinders.StripeProcess
 
             return sessionrenew.Url; // Return the checkout session link
         }
+
 
         public bool CancelSubscription(string subscriptionId)
         {

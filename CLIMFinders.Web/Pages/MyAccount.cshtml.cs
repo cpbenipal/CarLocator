@@ -1,10 +1,8 @@
 using CLIMFinders.Application.DTOs;
 using CLIMFinders.Application.Interfaces;
-using CLIMFinders.Infrastructure.Repositories;
-using CLIMFinders.Domain.Entities;
+using CLIMFinders.Web.ServiceExtension;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 

@@ -1,6 +1,7 @@
 using CLIMFinders.StripeProcess.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CLIMFinders.Web.Pages
 {
@@ -10,10 +11,13 @@ namespace CLIMFinders.Web.Pages
 
         [BindProperty(SupportsGet = true)]
         public string Session_Id { get; set; }
-
+        [BindProperty(SupportsGet = true)]
+        public int? UserId { get; set; }
         public void OnGet()
-        { 
-            _services.SendInvoiceOnSubscriptionSuccess(Session_Id, User.Identity?.IsAuthenticated);
-        } 
+        {
+            if (!string.IsNullOrEmpty(Session_Id) && UserId.HasValue)
+                _services.SendInvoiceOnSubscriptionSuccess(Session_Id, UserId.Value);
+            Response.Cookies.Delete("AuthToken");
+        }
     }
 }

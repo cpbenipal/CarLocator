@@ -27,13 +27,21 @@
                 </div>
             </div>
             <div class="col-md-4 border-right">
-
+                @{
+                    var LabelName = "Name";
+                    if (User.IsInRole(RoleEnum.Business.ToString()))
+                    {
+                        LabelName = "Company Name";
+                    }
+                }
                 <input type="hidden" asp-for="Input.Id" />
                 <div class="p-3 py-5">
                     <h4 class="text-right">Profile Information</h4>
                     <div class="row mt-2">
                         <div class="col-sm-12">
-                            <label asp-for="Input.Name" class="form-label"></label><input type="text" class="form-control" asp-for="Input.Name" />
+                            <label class="form-label">
+                                @LabelName
+                            </label><input type="text" class="form-control" asp-for="Input.Name" />
                         </div>
                     </div>
                     <div class="row mt-2">
@@ -70,18 +78,24 @@
                             <p><strong>Amount:</strong> @($"{planData.Amount:C}")</p>
                             <p>
                                 <strong>Status:</strong> @planData.Status
+                            </p>
+
+                            <p>
                                 @if (planData.Status == "active")
                                 {
-                                    <button type="button" data-datac="@planData.SubscriptionId" class="btn btn-link" id="acancel">Cancel</button>
+                                    <button type="button" data-datac="@planData.SubscriptionId" class="btn btn-danger" id="acancel">Click to Cancel</button>
+                                    
                                 }
                                 else
                                 {
                                     var jsonData = System.Text.Json.JsonSerializer.Serialize(new
                                     {
+                                        UserId = Model.Input.UserId,
                                         SessionId = @planData.SessionId,
                                         PriceId = @planData.PriceModel
                                     });
-                                    <button type="button" data-datac="@jsonData" class="btn btn-link" id="aRenew">Renew</button>
+                                    <button type="button" data-datac="@jsonData" id="aRenew" class="btn btn-success">Click to Renew</button> 
+
                                 }
                             </p>
                         </div>
@@ -127,12 +141,12 @@
                     </div>
                     <div class="mt-2">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <button class="btn btn-primary profile-button" id="btnUpdate" type="submit">Update</button>
+                        <button class="btn btn-success profile-button" id="btnUpdate" type="submit">Update</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
-</div> 
+</div>
 
 <script type="text/javascript" src="~/customJs/myaccountScript.js"></script>

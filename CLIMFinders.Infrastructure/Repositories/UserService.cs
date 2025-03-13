@@ -17,9 +17,13 @@ namespace CLIMFinders.Infrastructure.Repositories
         {
             return Convert.ToInt32(_httpContextAccessor.HttpContext?.User.FindFirst(CustomClaimTypes.BusinessId)?.Value);
         }
+        public string GetClaimByType(string type)
+        {
+            return _httpContextAccessor.HttpContext?.User.FindFirst(type)?.Value;
+        }
         public string GeneratePassword(int length)
         { 
             return Guid.NewGuid().ToString("n")[..length].ToUpper();
-        }
+        } 
     }
 } 

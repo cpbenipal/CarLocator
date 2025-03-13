@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
@@ -80,6 +81,10 @@ try
             .AddPolicy("SuperAdminPolicy", policy => policy.RequireRole(RoleEnum.SuperAdmin.ToString()))
             .AddPolicy("UsersPolicy", policy => policy.RequireRole(RoleEnum.Users.ToString()))
             .AddPolicy("BusinessPolicy", policy => policy.RequireRole(RoleEnum.Business.ToString()))
+            //.AddPolicy("RoleBasedAccess", policy =>
+            //  policy.Requirements.Add(
+            //      new CustomAuthorizationRequirement(RoleEnum.Business.ToString(),
+            //      RoleEnum.SuperAdmin.ToString(), RoleEnum.Users.ToString(),RoleEnum.Users.ToString())))
             .AddPolicy("ActiveSubscription", policy =>
             {
                 policy.RequireAssertion(context =>
