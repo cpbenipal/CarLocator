@@ -62,13 +62,13 @@ namespace CLIMFinders.Infrastructure.Repositories
                     Id = getExisting == null ? 0 : getExisting.Id
                 };
                 var res1 = repository.AddOrUpdate(v=>v.VehicleId == model.Id && v.UserId != model.UserId, entity);
-                var res = repository.GetByInclude(v=>v.Id == res1.Id, v=>v.User, v => v.User.Businesses, v=>v.Vehicles, v=>v.Vehicles.Users);
+                var res = repository.GetByInclude(v=>v.Id == res1.Id, v=>v.User, v => v.User.Businesses, v=>v.Vehicles, v=>v.Vehicles.Users, v=>v.Vehicles.Users.Businesses);
                 var facilityType = StatusOptions().FirstOrDefault(e => e.Value == res.Vehicles.Status.ToString()).Text;
                 string CompanyEmail = res.Vehicles.Users.Email;
                 string Name = _userService.GetClaimByType(ClaimTypes.Name);
                 string Email = _userService.GetClaimByType(ClaimTypes.Email);
-                var ContentToFill = GetVehicleImpoundEmail(Name, res.User.FullName, res.User.FullName, res.User.Businesses.Phone,
-                    res.Vehicles.PickedOn.ToString("MM/dd/yyyy HH:MM"), res.User.Businesses.Address,"", facilityType);
+                var ContentToFill = GetVehicleImpoundEmail(Name, res.Vehicles.VIN, res.Vehicles.Users.FullName, res.Vehicles.Users.Businesses.Phone,
+                    res.Vehicles.PickedOn.ToString("MM/dd/yyyy HH:MM"), res.Vehicles.Users.Businesses.Address,"", facilityType);
                 _emailService.SendEmail(Email, "Vehicle "+ facilityType + " Notification", ContentToFill, CompanyEmail, true);
 
             }
